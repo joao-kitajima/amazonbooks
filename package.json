@@ -1,0 +1,31 @@
+{
+  "name": "amazonbooks",
+  "version": "0.0.1",
+  "description": "Amazon Books Data Analysing Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joao-kitajima/amazonbooks.git"
+  },
+  "author": "Fernanda Shinoda, João Kitajima",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joao-kitajima/amazonbooks/issues"
+  },
+  "homepage": "https://github.com/joao-kitajima/amazonbooks#readme",
+  "dependencies": {
+    "teem": "0.0.21"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.13",
+    "@types/express-serve-static-core": "4.17.24",
+    "@types/node": "14.14.21"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
