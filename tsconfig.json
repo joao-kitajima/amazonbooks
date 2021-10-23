@@ -3,7 +3,7 @@
 		"module": "CommonJS",
 		"target": "ES2017",
 		"lib": ["ES2017", "DOM"],
-		"outDir": "src",
+		"outDir": "src/js",
 		"sourceMap": true,
 		"experimentalDecorators": true
 	},

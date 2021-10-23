@@ -2,10 +2,10 @@
   "name": "amazonbooks",
   "version": "0.0.1",
   "description": "Amazon Books Data Analysing Project",
-  "main": "index.js",
+  "main": "amazonbooks.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app"
+    "start": "node src/amazonbooks.js"
   },
   "repository": {
     "type": "git",
