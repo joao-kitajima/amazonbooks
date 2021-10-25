@@ -18,39 +18,34 @@ html, body {
 
 /* Fluid Typography CSS */
 body {
-  background-color: #000;
+  background-color: var(--color-terciary);
   font-family: var(--font-body);
   color: var(--color-darkPrimary);
 }
 
-/* Btn config padrão*/
-/* button{
-  background-color: var(--color-secundary);
-  padding: 5px 0;
-  border: none;
-  border-radius: 30px;
-  color: #eee;
+
+/* Button Settings */
+button {
   cursor: pointer;
-  transition: .3s;
-} */
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  outline: inherit;
+  padding: 0;
+}
 
-/* button:hover{
-  background-color: var(--color-secundary-hover);
-  transition: .3s;
-} */
+button:hover {
+  transition: .325s;
+}
 
-/* Textarea config padrão */
-/* textarea {
-  width: 100%;
-  padding: 10px;
-  min-height: 100px;
-  resize: none;
-  color: #000;
-} */
 
-/* button, input, textarea {
-  font-family: var(--font-body);
-} */
+/* Anchor Settings */
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 
 /* Headers Settings */
 h1 {
@@ -106,7 +101,6 @@ code {
   --color-secundary: #ff9900;
   --color-lighterSecundary: #f6ca00;
   --color-lightSecundary: #febd69;
-  /* f3a847 */
   --color-darkSecundary: #c45500;
 
   --color-terciary: #f2f2f2;
@@ -138,24 +132,24 @@ code {
 
 
 /* Scrollbar */
-/* ::-webkit-scrollbar{
+::-webkit-scrollbar{
   display: none;
-} */
+}
 
 /* Placeholder */
 /* Edge */
-/* ::-webkit-input-placeholder {
-  color: var(--color-primary-text);
-} */
+::-webkit-input-placeholder {
+  color: var(--color-darkPrimary);
+}
 
 /* Internet Explorer */
-/* :-ms-input-placeholder {
-  color: var(--color-primary-text);
-} */
+:-ms-input-placeholder {
+  color: var(--color-darkPrimary);
+}
 
-/* ::placeholder {
-  color: var(--color-primary-text);
-} */
+::placeholder {
+  color: var(--color-darkPrimary);
+}
 
 
 /* Custom Styles */
@@ -186,46 +180,6 @@ code {
   display: grid;
   place-items: center;
 }
-
-/* btn styling outlined */
-/* .btn-outlined{
-  background-color: var(--color-primary-hover);
-  border: 2px solid var(--color-secundary-hover);
-} */
-
-/* btn styling success */
-/* .btn-success{
-  background-color: var(--color-terciary);
-}
-.btn-success:hover{
-  background-color: var(--color-terciary-hover);
-} */
-
-/* top-container - serve para mobile onde a navbar ficará fixa,
-dando um margin-top para o conteudo ficar visivel */
-/* .top-container{ 
-  margin-top: 50px;
-} */
-
-/* responsividade dos estilos personalizados */
-/* @media only screen and (min-width: 414px){
-  .top-container{
-      margin-top: 60px;
-  }
-}
-
-@media only screen and (min-width: 480px){
-
-  .top-container{
-      margin-top: 70px;
-  }
-}
-
-@media only screen and (min-width: 768px){
-  .top-container{
-      margin-top: 80px;
-  }
-} */
 
 
 /* Fonts */
