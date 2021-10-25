@@ -33,6 +33,10 @@
       			color: inherit;
  			}
 
+			::-webkit-scrollbar{
+  				display: none;
+			}
+
 			.content {
 				display: flex;
 				height: 100vh;
@@ -43,7 +47,6 @@
 				height: 100vh;
 				width: 15vw;
 				background: linear-gradient(0deg, rgba(19,25,33,1) 5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 95%);
-				border-bottom-right-radius: 42px;
 				box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
 				-webkit-box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
 				-moz-box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
@@ -55,6 +58,7 @@
   				align-items: center;
 				font-family: var(--font-light);
 				font-size: .65em;
+				position: fixed;
 			}
 
 			.sidebarTop {
@@ -94,6 +98,7 @@
 			.dashboard {
 				min-width: 85vw;
 				height: 100vh;
+				margin-left: 15vw;
 			}
 
 			.title {
@@ -149,6 +154,7 @@
 
 				.dashboard {
 					min-width: 87.5vw;
+					margin-left: 12.5vw;
 				}
 			}
 
@@ -169,8 +175,16 @@
 
 				.dashboard {
 					min-width: 90vw;
+					margin-left: 10vw;
 				}
 			}
+
+			.gteste {
+					background-color: red;
+					width: 80%;
+					height: 680px;
+					margin-bottom: 3em;
+				}
 		</style>
 
 		<script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
@@ -218,9 +232,9 @@
 				</div>
 
 				<div class="graphs">
-					<h2>teste DASHBOARD</h2>
-					<h2>teste DASHBOARD</h2>
-					<h2>teste DASHBOARD</h2>
+					<div class="gteste"></div>
+					<div class="gteste"></div>
+					<div class="gteste"></div>
 				</div>
 			</div>
 		</div>
