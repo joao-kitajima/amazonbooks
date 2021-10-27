@@ -6,7 +6,7 @@ class IndexRoute {
 	}
 
 	public async teste(req: amazonbooks.Request, res: amazonbooks.Response) {
-		res.send("Eu sou um texto...");
+		res.render("index/index/teste");
 	}
 }
 

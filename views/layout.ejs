@@ -33,6 +33,12 @@
       			color: inherit;
  			}
 
+			:root {
+				--sidebar-width: 15vw;
+				--sidebar-mini-width: 5vw;
+				--sidebar-border-width: 12px;
+			}
+
 			::-webkit-scrollbar{
   				display: none;
 			}
@@ -45,7 +51,7 @@
 
 			.sidebar {
 				height: 100vh;
-				width: 15vw;
+				width: var(--sidebar-width);
 				background: linear-gradient(0deg, rgba(19,25,33,1) 5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 95%);
 				box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
 				-webkit-box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
@@ -58,7 +64,21 @@
   				align-items: center;
 				font-family: var(--font-light);
 				font-size: .65em;
-				position: fixed;
+				position: relative;
+				transition: width .325s;
+				flex-shrink: 0;
+			}
+
+			.sidebar--mini {
+				width: var(--sidebar-mini-width);
+			}
+
+			.sidebar--mini .linkText {
+				display: none;
+			}
+
+			.sidebar--mini .dashboard {
+				margin-left: var(--sidebar-mini-width);
 			}
 
 			.sidebarTop {
@@ -95,10 +115,15 @@
 				transition: .325s;
 			}
 
+			.sidebar-toggle {
+				cursor: pointer;
+			}
+
 			.dashboard {
 				min-width: 85vw;
 				height: 100vh;
-				margin-left: 15vw;
+				margin-left: var(--sidebar-width);
+				overflow-y: auto;
 			}
 
 			.title {
@@ -137,8 +162,12 @@
 			}
 
 			@media only screen and (min-width: 1600px) {
+				:root {
+					--sidebar-width: 12.5vw;
+				}
+				
 				.sidebar {
-					width: 12.5vw;
+					width: var(--sidebar-width);
 					font-size: .75em;
 				}
 
@@ -154,13 +183,17 @@
 
 				.dashboard {
 					min-width: 87.5vw;
-					margin-left: 12.5vw;
+					margin-left: var(--sidebar-width);
 				}
 			}
 
 			@media only screen and (min-width: 1920px) {
+				:root {
+					--sidebar-width: 10vw;
+				}
+				
 				.sidebar {
-					width: 10vw;
+					width: var(--sidebar-width);
 				}
 
 				.sidebar-header button img {
@@ -175,7 +208,7 @@
 
 				.dashboard {
 					min-width: 90vw;
-					margin-left: 10vw;
+					margin-left: var(--sidebar-width);
 				}
 			}
 
@@ -201,28 +234,26 @@
 					</div>
 	
 					<div class="sidebar-list">
-						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-pages" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;VISÃO GERAL</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-pages" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">VISÃO GERAL</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:book-half" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;LIVROS</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:book-half" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">LIVROS</span></a></h6>
 
-						<h6><a href="/"><span class="iconify" data-icon="healthicons:mental-disorders" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;AUTOAJUDA</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="healthicons:mental-disorders" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">AUTOAJUDA</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:outline-castle" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;FICÇÃO</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:outline-castle" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">FICÇÃO</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:bank" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;POLÍTICA</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:bank" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">POLÍTICA</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-school" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;ACADÊMICOS</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-school" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">ACADÊMICOS</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:blockquote-left" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;AUTORES</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:blockquote-left" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">AUTORES</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:round-apartment" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;EDITORAS</a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:round-apartment" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">EDITORAS</span></a></h6>
 					</div>
 				</div>
 
 				<div class="sidebarBottom">
-					<div class="sidebar-home">
-						<a href="/"><span class="iconify" data-icon="bi:reply-all-fill" style="color: var(--color-secundary);" data-width="36" data-height="36"></span></a>
-					</div>
+					<div class="sidebar-toggle" href="#"><span class="iconify" data-icon="bi:reply-all-fill" style="color: var(--color-secundary);" data-width="36" data-height="36"></span></div>
 				</div>
 			</div>
 	
@@ -238,5 +269,23 @@
 				</div>
 			</div>
 		</div>
+
+		<script>
+			{
+				const miniClass = "sidebar--mini";
+				const menuToggle = document.querySelector(".sidebar");
+				const itemToggle = document.querySelector(".sidebar-toggle");
+				const localStgKey = "menuToggled";
+
+				if(localStorage.getItem(localStgKey) === "true") {
+					menuToggle.classList.add(miniClass);
+				}
+
+				itemToggle.addEventListener("click", () => {
+					menuToggle.classList.toggle(miniClass);
+					localStorage.setItem(localStgKey, menuToggle.classList.contains(miniClass));
+				});
+			}
+		</script>
 	</body>
 </html>
