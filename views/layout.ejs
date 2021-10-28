@@ -36,7 +36,6 @@
 			:root {
 				--sidebar-width: 15vw;
 				--sidebar-mini-width: 5vw;
-				--sidebar-border-width: 12px;
 			}
 
 			::-webkit-scrollbar{
@@ -81,6 +80,18 @@
 				margin-left: var(--sidebar-mini-width);
 			}
 
+			.sidebar--mini .toggleIconOpen {
+				display: flex;
+			}
+
+			.sidebar--mini .toggleIconClose {
+				display: none;
+			}
+
+			.dashboard--mini {
+				min-width: calc(100vw - var(--sidebar-mini-width));
+			}
+
 			.sidebarTop {
 				display: flex;
 				flex-direction: column;
@@ -119,10 +130,13 @@
 				cursor: pointer;
 			}
 
+			.toggleIconOpen {
+				display: none;
+			}
+
 			.dashboard {
-				min-width: 85vw;
+				width: 100%;
 				height: 100vh;
-				margin-left: var(--sidebar-width);
 				overflow-y: auto;
 			}
 
@@ -164,10 +178,10 @@
 			@media only screen and (min-width: 1600px) {
 				:root {
 					--sidebar-width: 12.5vw;
+					--sidebar-mini-width: 3.5vw;
 				}
 				
 				.sidebar {
-					width: var(--sidebar-width);
 					font-size: .75em;
 				}
 
@@ -180,22 +194,14 @@
 					padding-left: 1.5em;
 					padding-right: 1.5em;
 				}
-
-				.dashboard {
-					min-width: 87.5vw;
-					margin-left: var(--sidebar-width);
-				}
 			}
 
 			@media only screen and (min-width: 1920px) {
 				:root {
 					--sidebar-width: 10vw;
+					--sidebar-mini-width: 2.5vw;
 				}
 				
-				.sidebar {
-					width: var(--sidebar-width);
-				}
-
 				.sidebar-header button img {
 					width: 174px;
 					height: 116px;
@@ -205,16 +211,11 @@
 					padding-left: 1.25em;
 					padding-right: 1.25em;
 				}
-
-				.dashboard {
-					min-width: 90vw;
-					margin-left: var(--sidebar-width);
-				}
 			}
 
 			.gteste {
 					background-color: red;
-					width: 80%;
+					width: 100%;
 					height: 680px;
 					margin-bottom: 3em;
 				}
@@ -253,7 +254,10 @@
 				</div>
 
 				<div class="sidebarBottom">
-					<div class="sidebar-toggle" href="#"><span class="iconify" data-icon="bi:reply-all-fill" style="color: var(--color-secundary);" data-width="36" data-height="36"></span></div>
+					<div class="sidebar-toggle">
+						<span class="iconify toggleIconOpen" data-icon="fluent:arrow-export-ltr-16-filled" style="color: var(--color-secundary);" data-width="36" data-height="36"></span>
+						<span class="iconify toggleIconClose" data-icon="fluent:arrow-export-rtl-16-filled" style="color: var(--color-secundary);" data-width="36" data-height="36"></span>
+					</div>
 				</div>
 			</div>
 	
@@ -263,7 +267,18 @@
 				</div>
 
 				<div class="graphs">
-					<div class="gteste"></div>
+					<div class="gteste">
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+						<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ullam aliquam repudiandae esse itaque velit praesentium saepe ipsum iure. Quae dolor quo tempora ipsa temporibus minima iusto accusantium earum at aliquam.</p>
+					</div>
 					<div class="gteste"></div>
 					<div class="gteste"></div>
 				</div>
@@ -281,7 +296,7 @@
 					menuToggle.classList.add(miniClass);
 				}
 
-				itemToggle.addEventListener("click", () => {
+				const toggleFunction = itemToggle.addEventListener("click", () => {
 					menuToggle.classList.toggle(miniClass);
 					localStorage.setItem(localStgKey, menuToggle.classList.contains(miniClass));
 				});
