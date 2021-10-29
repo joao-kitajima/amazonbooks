@@ -38,10 +38,6 @@
 				--sidebar-mini-width: 5vw;
 			}
 
-			::-webkit-scrollbar{
-  				display: none;
-			}
-
 			.content {
 				display: flex;
 				height: 100vh;
@@ -72,7 +68,37 @@
 				width: var(--sidebar-mini-width);
 			}
 
+			.sidebar--mini .sidebar-header button img {
+				-webkit-transform: rotate(-90deg);
+    			-moz-transform: rotate(-90deg);
+    			-o-transform: rotate(-90deg);
+    			-ms-transform: rotate(-90deg);
+    			transform: rotate(-90deg);
+				transition: .325s;
+			}
+
+			.sidebar--mini .border {
+				width: var(--sidebar-mini-width);
+				margin-top: 1rem;
+			}
+
+			.sidebar--mini .logoPreBorder {
+				width: 35%;
+			}
+
+			.sidebar--mini .logoPostBorder {
+				width: 35%;
+			}
+
+			.sidebar--mini .sidebar-list h6 {
+				font-size: .275rem;
+			}
+
 			.sidebar--mini .linkText {
+				display: none;
+			}
+
+			.sidebar--mini .spanAnchorTag {
 				display: none;
 			}
 
@@ -99,21 +125,40 @@
   				align-items: center;
 			}
 
-			.sidebar-header {
+			.border {
+				max-width: 100%;
+				display: flex;
+				justify-content: space-between;
+				display: none;
+			}
+
+			.logoPreBorder {
+				width: 15%;
+				border-bottom: hidden 1px transparent;
+			}
+
+			.logoPostBorder {
+				width: 15%;
+				border-bottom: hidden 1px transparent;
+			}
+
+			.logoBorder {
+				width: var(--sidebar-width);
 				border-bottom: solid 1px var(--color-terciary);
 			}
 
 			.sidebar-header button img {
 				width: 135px;
 				height: 90px;
+				transition: .325s;
 			}
 
 			.sidebar-list h6 a {
 				display: flex;
 				align-items: center;
 				padding: 8px;
-				margin-top: .25em;
-				margin-bottom: .25em;
+				margin-top: .5rem;
+				margin-bottom: .5rem;
 			}
 
 			.sidebar-list h6 a:hover {
@@ -161,8 +206,8 @@
 
 			@media only screen and (min-width: 1200px) {
 				.sidebar-list h6 a {
-					margin-top: .75em;
-					margin-bottom: .75em;
+					margin-top: .6rem;
+					margin-bottom: .6rem;
 				}
 			}
 
@@ -179,6 +224,8 @@
 				.sidebar-list h6 a {
 					padding-left: 2em;
 					padding-right: 2em;
+					margin-top: .85rem;
+					margin-bottom: .85rem;
 				}
 			}
 
@@ -200,6 +247,8 @@
 				.sidebar-list h6 a {
 					padding-left: 1.5em;
 					padding-right: 1.5em;
+					margin-top: 1.15rem;
+					margin-bottom: 1.15rem;
 				}
 				
 			}
@@ -218,6 +267,8 @@
 				.sidebar-list h6 a {
 					padding-left: 1.25em;
 					padding-right: 1.25em;
+					margin-top: 2rem;
+					margin-bottom: 2rem;
 				}
 			}
 
@@ -241,25 +292,33 @@
 							<img src="/public/images/amazon-logo_01.png" alt="Amazon Logo" />
 						</button>
 					</div>
+
+					<div class="border">
+						<div class="logoPreBorder"></div>
+
+						<div class="logoBorder"></div>
+
+						<div class="logoPostBorder"></div>
+					</div>
 				</div>
 
 				<div class="sidebarMid">
 					<div class="sidebar-list">
-						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-pages" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">VISÃO GERAL</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-pages" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">VISÃO GERAL</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:book-half" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">LIVROS</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:book-half" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">LIVROS</span></a></h6>
 
-						<h6><a href="/"><span class="iconify" data-icon="healthicons:mental-disorders" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">AUTOAJUDA</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="healthicons:mental-disorders" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">AUTOAJUDA</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:outline-castle" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">FICÇÃO</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:outline-castle" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">FICÇÃO</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:bank" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">POLÍTICA</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:bank" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">POLÍTICA</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-school" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">ACADÊMICOS</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:baseline-school" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">ACADÊMICOS</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="bi:blockquote-left" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">AUTORES</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="bi:blockquote-left" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">AUTORES</span></a></h6>
 						
-						<h6><a href="/"><span class="iconify" data-icon="ic:round-apartment" style="color: inherit;" data-width="24" data-height="24"></span>&#160;&#160;<span class="linkText">EDITORAS</span></a></h6>
+						<h6><a href="/"><span class="iconify" data-icon="ic:round-apartment" style="color: inherit;" data-width="24" data-height="24"></span><span class="spanAnchorTag">&#160;&#160;</span><span class="linkText">EDITORAS</span></a></h6>
 					</div>
 				</div>
 
