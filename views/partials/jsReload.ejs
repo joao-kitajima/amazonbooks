@@ -1,0 +1,17 @@
+<script>
+    {
+        const miniClass = "sidebar--mini";
+        const menuToggle = document.querySelector(".sidebar");
+        const itemToggle = document.querySelector(".sidebar-toggle");
+        const localStgKey = "menuToggled";
+
+        if(localStorage.getItem(localStgKey) === "true") {
+            menuToggle.classList.add(miniClass);
+        }
+
+        const toggleFunction = itemToggle.addEventListener("click", () => {
+            menuToggle.classList.toggle(miniClass);
+            localStorage.setItem(localStgKey, menuToggle.classList.contains(miniClass));
+        });
+    }
+</script>

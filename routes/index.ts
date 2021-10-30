@@ -5,8 +5,8 @@ class IndexRoute {
 		res.render("index/index");
 	}
 
-	public async teste(req: amazonbooks.Request, res: amazonbooks.Response) {
-		res.render("index/teste");
+	public async autores(req: amazonbooks.Request, res: amazonbooks.Response) {
+		res.render("index/authors");
 	}
 }
 

@@ -1,0 +1,292 @@
+<style>
+    body {
+        background-color: var(--color-terciary);
+    }
+
+    button {
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: inherit;
+        font: inherit;
+        outline: inherit;
+        padding: 0;
+    }
+
+    a, a:hover, a:focus, a:active {
+          text-decoration: none;
+          color: inherit;
+     }
+
+    :root {
+        --sidebar-width: 15vw;
+        --sidebar-mini-width: 5vw;
+    }
+
+    .content {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    .sidebar {
+        height: 100vh;
+        width: var(--sidebar-width);
+        background: linear-gradient(0deg, rgba(19,25,33,1) 5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 95%);
+        box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
+        -webkit-box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
+        -moz-box-shadow: 4px 4px 5px 0px rgba(15,17,17, 0.4);
+        color: #fff;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+        font-family: var(--font-light);
+        font-size: .65em;
+        position: relative;
+        transition: width .325s;
+        flex-shrink: 0;
+    }
+
+    .sidebar--mini {
+        width: var(--sidebar-mini-width);
+    }
+
+    .sidebar--mini .sidebarTop {
+        margin-top: 1rem;
+    }
+
+    .sidebar--mini .sidebar-header button img {
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        transition: .325s;
+    }
+
+    .sidebar--mini .border {
+        width: var(--sidebar-mini-width);
+        margin-top: 1rem;
+    }
+
+    .sidebar--mini .logoPreBorder {
+        width: 35%;
+    }
+
+    .sidebar--mini .logoPostBorder {
+        width: 35%;
+    }
+
+    .sidebar--mini .sidebar-list h6 {
+        font-size: .275rem;
+    }
+
+    .sidebar--mini .linkText {
+        display: none;
+    }
+
+    .sidebar--mini .spanAnchorTag {
+        display: none;
+    }
+
+    .sidebar--mini .listIcon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .sidebar--mini .toggleIconOpen {
+        width: 28px;
+        height: 28px;
+    }
+
+    .sidebar--mini .dashboard {
+        margin-left: var(--sidebar-mini-width);
+    }
+
+    .sidebar--mini .toggleIconOpen {
+        display: flex;
+    }
+
+    .sidebar--mini .toggleIconClose {
+        display: none;
+    }
+
+    .dashboard--mini {
+        min-width: calc(100vw - var(--sidebar-mini-width));
+    }
+
+    .sidebarTop {
+        display: flex;
+        flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+    }
+
+    .border {
+        max-width: 100%;
+        display: flex;
+        justify-content: space-between;
+        display: none;
+    }
+
+    .logoPreBorder {
+        width: 15%;
+        border-bottom: hidden 1px transparent;
+    }
+
+    .logoPostBorder {
+        width: 15%;
+        border-bottom: hidden 1px transparent;
+    }
+
+    .logoBorder {
+        width: var(--sidebar-width);
+        border-bottom: solid 1px var(--color-terciary);
+    }
+
+    .sidebar-header button img {
+        width: 135px;
+        height: 90px;
+        transition: .325s;
+    }
+
+    .sidebar-list h6 a {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+    }
+
+    .sidebar-list h6 a:hover {
+        color: var(--color-darkPrimary);
+        background-color: var(--color-secundary);
+        border-radius: 7.25px;
+        -webkit-box-shadow: 2px 2px 5px 0px rgba(196, 85, 0, 0.4);
+        -moz-box-shadow: 2px 2px 5px 0px rgba(196, 85, 0, 0.4);
+        box-shadow: 2px 2px 5px 0px rgba(196, 85, 0, 0.4);
+        transition: .325s;
+    }
+
+    .sidebar-toggle {
+        cursor: pointer;
+    }
+
+    .toggleIconOpen {
+        display: none;
+    }
+
+    .dashboard {
+        width: 100%;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .title {
+        width: 100%;
+    }
+    
+    .title h1 {
+        padding: 12px;
+        background: linear-gradient(90deg, rgba(255,174,0,1) 5%, rgba(255,153,0,1) 50%, rgba(255,174,0,1) 95%);
+        -webkit-box-shadow: 0px 4px 5px 0px rgba(15,17,17, 0.5);
+        -moz-box-shadow: 0px 4px 5px 0px rgba(15,17,17, 0.5);
+        box-shadow: 0px 4px 5px 0px rgba(15,17,17, 0.5);
+        text-align: center;
+        font-family: var(--font-theme);
+        letter-spacing: .5rem;
+    }
+
+    .graphs {
+        margin: 12px;
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .sidebar-list h6 a {
+            margin-top: .6rem;
+            margin-bottom: .6rem;
+        }
+    }
+
+    @media only screen and (min-width: 1440px) {
+        .sidebar {
+            font-size: .7em;
+        }
+        
+        .sidebar-header button img {
+            width: 150px;
+            height: 100px;
+        }
+
+        .sidebar-list h6 a {
+            padding-left: 2em;
+            padding-right: 2em;
+            margin-top: .85rem;
+            margin-bottom: .85rem;
+        }
+    }
+
+    @media only screen and (min-width: 1600px) {
+        :root {
+            --sidebar-width: 12.5vw;
+            --sidebar-mini-width: 3.5vw;
+        }
+        
+        .sidebar {
+            font-size: .75em;
+        }
+
+        .sidebar-header button img {
+            width: 165px;
+            height: 110px;
+        }
+
+        .sidebar--mini .sidebar-header button img {
+            width: 114px;
+            height: 76px;
+        }
+
+        .sidebar-list h6 a {
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+            margin-top: 1.15rem;
+            margin-bottom: 1.15rem;
+        }
+        
+    }
+
+    @media only screen and (min-width: 1920px) {
+        :root {
+            --sidebar-width: 10vw;
+            --sidebar-mini-width: 2.5vw;
+        }
+
+        .sidebar--mini .sidebar-header button img {
+            width: 120px;
+            height: 80px;
+        }
+        
+        .sidebar-header button img {
+            width: 174px;
+            height: 116px;
+        }
+
+        .sidebar-list h6 a {
+            padding-left: 1.25em;
+            padding-right: 1.25em;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .gteste {
+            background-color: red;
+            width: 100%;
+            height: 680px;
+            margin-bottom: 3em;
+        }
+</style>
+
+<script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
