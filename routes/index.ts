@@ -6,7 +6,7 @@ class IndexRoute {
 			layout: "landingPage"
 		};
 		
-		res.render("index/landingPageBodyContent", pageSettings);
+		res.render("index/index", pageSettings);
 	}
 	
 	public async dashboard(req: amazonbooks.Request, res: amazonbooks.Response) {

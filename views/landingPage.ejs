@@ -6,9 +6,16 @@
 
         <style type="text/css">
             body {
-                background: linear-gradient(0deg, rgba(255,153,0, 1) 50%, rgba(19,25,33, 1) 50%);
                 overflow: hidden;
-                color: #fff;
+            }
+
+            a, a:hover, a:focus, a:active {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            :root {
+                --backView-left--width: 25%;
             }
 
             .landingContent {
@@ -16,40 +23,147 @@
                 height: 100vh;
             }
 
-            .amazonDivision {
-                width: 100%;
-                height: 75%;
-                padding: 0;
-                background-color: var(--color-darkPrimary);
-                transform: skewY(-11deg);
-                position: absolute;
+            .backView {
+                width: inherit;
+                height: inherit;
+                display: flex;
             }
 
-            .aest {
+            .backView-left {
+                width: var(--backView-left--width);
+                background: linear-gradient(0deg, rgba(19,25,33,1) 2.5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 97.5%);
+            }
+
+            .backView-right {
+                width: calc(100% - var(--backView-left--width));
+                background: linear-gradient(90deg, rgba(255,153,0,1) 5%, rgba(255,174,0,1) 50%, rgba(255,153,0,1) 95%);
+                -webkit-box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
+                -moz-box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
+                box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
+            }
+
+            .backView-right-top {
+                height: 75%;
+            }
+
+            .backView-right-mid {
+                height: 15%;
                 display: flex;
+            }
+
+            .leftBar {
+                width: 20%;
+            }
+
+            .rightBar {
+                width: 80%;
+                background: linear-gradient(90deg, rgba(19,25,33,1) 2.5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 97.5%);
+                border-top-left-radius: 12px;
+                border-bottom-left-radius: 12px;
+                -webkit-box-shadow: -2.5px 2.5px 5px 0px rgba(15,17,17,1);
+                -moz-box-shadow: -2.5px 2.5px 5px 0px rgba(15,17,17,1);
+                box-shadow: -2.5px 2.5px 5px 0px rgba(15,17,17,1);
+                padding: 12px;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .buttonIcon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .buttonAnchor {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-align-self: center;
+                -ms-flex-item-align: center;
+                align-self: center;
+                text-decoration: none;
+                cursor: pointer;
+                background-color: transparent;
+                border: 4px solid var(--color-secundary);
+                border-radius: 4px;
+                color: var(--color-darkPrimary);
+                padding: 16px;
+                border-color: var(--color-secundary);
+                box-shadow: 0 0 40px 40px var(--color-secundary) inset, 0 0 0 0 var(--color-secundary);
+                -webkit-transition: all 140ms ease-in-out;
+                transition: all 140ms ease-in-out;
+                text-transform: uppercase;
+            }
+
+            .buttonAnchor:hover, .buttonAnchor:focus {
+              color: #fff;
+              border-radius: 0;
+              outline: 0;
+              box-shadow: 0 0 7.25px 0 var(--color-secundary) inset, 0 0 5px 4px var(--color-secundary);
+            }
+
+            .buttonAnchorSpan {
+                display: none;
+            }
+
+            .buttonImg {
+                position: absolute;
+                right: 0;
+                display: flex;
+                align-self: center;
+            }
+
+            .buttonImg img {
+                width: 150px;
+                height: 100px;
+            }
+
+            .backView-right-bot {
+                height: 10%;
+            }
+
+            @media only screen and (min-width: 1600px) {
+                .buttonAnchorSpan {
+                    display: block;
+                }
+
+                .buttonImg {
+                    margin-right: 1.15em;
+                }
             }
         </style>
 	</head>
 
 	<body>
         <div class="landingContent">
-            <div class="amazonDivision"></div>
+            <div class="backView">
+                <div class="backView-left"></div>
 
-            <div class="aest">
-                <div class="aest-carr"></div>
+                <div class="backView-right">
+                    <div class="backView-right-top"></div>
 
-                <div class="aest-txt">
-                    <div class="aest-txt-syn">
-                        <h1>TEST H1</h1>
+                    <div class="backView-right-mid">
+                        <div class="leftBar"></div>
 
-                        <p>TEST PH</p>
+                        <div class="rightBar">
+                            <div class="buttonIcon">
+                                <a class="buttonAnchor" href="/dashboard">Acessar Visualização<span class="buttonAnchorSpan">&#160;de Dados</span></a>
+                            </div>
+
+                            <a class="buttonImg">
+                                <img src="/public/images/amazon-logo_01.png" alt="Amazon Logo" />
+                            </a>
+                        </div>
                     </div>
-
-                    <div class="aest-txt-button">pepe</div>
+                    
+                    <div class="backView-right-bot"></div>
                 </div>
             </div>
+
+            <div></div>
         </div>
 
-		<%- body %>
+		<!-- <%- body %> -->
 	</body>
 </html>

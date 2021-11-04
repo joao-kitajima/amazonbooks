@@ -4,10 +4,10 @@ class IndexRoute {
         let pageSettings = {
             layout: "landingPage"
         };
-        res.render("index/landingPageBodyContent", pageSettings);
+        res.render("index/index", pageSettings);
     }
     async dashboard(req, res) {
-        res.render("index/index");
+        res.render("index/dashboard");
     }
     async autores(req, res) {
         res.render("index/authors");
