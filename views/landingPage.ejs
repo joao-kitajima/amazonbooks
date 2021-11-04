@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
+	<head>
+		<%- include("partials/headTag.ejs") %>
+
+        <style type="text/css">
+            body {
+                background: linear-gradient(0deg, rgba(255,153,0, 1) 50%, rgba(19,25,33, 1) 50%);
+                overflow: hidden;
+                color: #fff;
+            }
+
+            .landingContent {
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .amazonDivision {
+                width: 100%;
+                height: 75%;
+                padding: 0;
+                background-color: var(--color-darkPrimary);
+                transform: skewY(-11deg);
+                position: absolute;
+            }
+
+            .aest {
+                display: flex;
+            }
+        </style>
+	</head>
+
+	<body>
+        <div class="landingContent">
+            <div class="amazonDivision"></div>
+
+            <div class="aest">
+                <div class="aest-carr"></div>
+
+                <div class="aest-txt">
+                    <div class="aest-txt-syn">
+                        <h1>TEST H1</h1>
+
+                        <p>TEST PH</p>
+                    </div>
+
+                    <div class="aest-txt-button">pepe</div>
+                </div>
+            </div>
+        </div>
+
+		<%- body %>
+	</body>
+</html>
