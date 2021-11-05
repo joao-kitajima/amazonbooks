@@ -2,17 +2,17 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br">
 	<head>
-		<%- include("partials/headTag.ejs") %>
+		<%- include("partials/dashboard/content/headTag.ejs") %>
 		
-		<%- include("partials/dashboardStyle.ejs") %>
+		<%- include("partials/dashboard/styles/dashboardStyle.ejs") %>
 	</head>
 
 	<body>
 		<div class="content">
-			<%- include("partials/sidebarStyle.ejs") %>
+			<%- include("partials/dashboard/content/sidebarContent.ejs") %>
 	
 			<div class="dashboard">
-				<%- include("partials/dashContentTitle.ejs") %>
+				<%- include("partials/dashboard/content/dashContentTitle.ejs") %>
 
 				<div class="graphs">
 					<%- body %>
@@ -20,6 +20,6 @@
 			</div>
 		</div>
 
-		<%- include("partials/jsReload.ejs") %>
+		<%- include("partials/dashboard/content/jsReload.ejs") %>
 	</body>
 </html>
