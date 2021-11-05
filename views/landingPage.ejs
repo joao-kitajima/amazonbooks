@@ -16,6 +16,9 @@
 
             :root {
                 --backView-left--width: 25%;
+                --slider--width: 360px;
+                --slider-height: 360px;
+                --img-counter: 4;
             }
 
             .landingContent {
@@ -27,14 +30,17 @@
                 width: inherit;
                 height: inherit;
                 display: flex;
+                z-index: -9999;
             }
 
             .backView-left {
+                position: relative;
                 width: var(--backView-left--width);
                 background: linear-gradient(0deg, rgba(19,25,33,1) 2.5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 97.5%);
             }
 
             .backView-right {
+                position: relative;
                 width: calc(100% - var(--backView-left--width));
                 background: linear-gradient(90deg, rgba(255,153,0,1) 5%, rgba(255,174,0,1) 50%, rgba(255,153,0,1) 95%);
                 -webkit-box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
@@ -123,6 +129,61 @@
                 height: 10%;
             }
 
+            .frontView {
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 50vw;
+                height: 100vh;
+                z-index: 9999;
+                margin: 0;
+            }
+
+            .frontView-carrousel {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .frontViewSlider {
+                width: var(--slider--width);
+                height: var(--slider-height);
+                overflow: hidden;
+                border-radius: 50%;
+                -webkit-box-shadow: 5px 0px 10px 0px rgba(15,17,17,0.5);
+                -moz-box-shadow: 5px 0px 10px 0px rgba(15,17,17,0.5);
+                box-shadow: 5px 0px 10px 0px rgba(15,17,17,0.5);
+                /* animation: scroll 4s linear infinite; */
+            }
+            
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(calc(-1 * calc(var(--slider--width) * calc(var(--img-counter) / 2))));
+                }
+            }
+
+            .carrousel {
+                width: calc(var(--slider--width) * var(--img-counter));
+                height: var(--slider-height);
+                display: flex;
+            }
+
+            .carrouselImg img {
+                max-width: var(--slider--width);
+                max-height: var(--slider-height);
+            }
+
+            /* .frontView-txt {
+                width: 50%;
+                max-height: 50%;
+            } */
+
             @media only screen and (min-width: 1600px) {
                 .buttonAnchorSpan {
                     display: block;
@@ -159,9 +220,43 @@
                     
                     <div class="backView-right-bot"></div>
                 </div>
-            </div>
 
-            <div></div>
+                <div class="frontView">
+                    <div class="frontView-carrousel">
+                        <div class="frontViewSlider">
+                            <div class="carrousel">
+                                <div class="carrouselImg"><img src="/public/images/book_08.jpg" alt=""/></div>
+                                
+                                <div class="carrouselImg"><img src="/public/images/book_10.jpg" alt=""/></div>
+                                
+                                <div class="carrouselImg"><img src="/public/images/book_09.jpg" alt=""/></div>
+        
+                                <div class="carrouselImg"><img src="/public/images/book_05.jpg" alt=""/></div>
+                                
+                                <!-- <div class="carrouselImg"><img src="" alt=""/></div> -->
+                                
+                                <!-- <div class="carrouselImg"><img src="" alt=""/></div> -->
+                            </div>
+    
+                            <div class="carrouselNav">
+                                <div class="carrNavBtn"></div>
+                                
+                                <div class="carrNavBtn"></div>
+                                
+                                <div class="carrNavBtn"></div>
+                                
+                                <div class="carrNavBtn"></div>
+                                
+                                <!-- <div class="carrNavBtn"></div> -->
+                                
+                                <!-- <div class="carrNavBtn"></div> -->
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- <div class="frontView-txt"></div> -->
+                </div>
+            </div>
         </div>
 
 		<!-- <%- body %> -->
