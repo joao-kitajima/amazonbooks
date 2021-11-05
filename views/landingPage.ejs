@@ -14,10 +14,30 @@
                 color: inherit;
             }
 
+            @font-face {
+                font-family: 'Bookerly';
+                src: url(/public/fonts/Bookerly-Regular.ttf) format("truetype");
+            }
+
+            @font-face {
+                font-family: 'Bookerly-Italic';
+                src: url(/public/fonts/Bookerly-Italic.ttf) format("truetype");
+            }
+
+            @font-face {
+                font-family: 'Bookerly-Bold';
+                src: url(/public/fonts/Bookerly-Bold.ttf) format("truetype");
+            }
+
+            @font-face {
+                font-family: 'Bookerly-BoldItalic';
+                src: url(/public/fonts/Bookerly-BoldItalic.ttf) format("truetype");
+            }
+
             :root {
                 --backView-left--width: 25%;
-                --slider--width: 360px;
-                --slider-height: 360px;
+                --slider--width: 420px;
+                --slider-height: 420px;
                 --img-counter: 4;
             }
 
@@ -39,17 +59,62 @@
                 background: linear-gradient(0deg, rgba(19,25,33,1) 2.5%, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 97.5%);
             }
 
+            .backView-left h1 {
+                color: #fff;
+                text-align: center;
+                margin-top: 1em;
+                font-family: var(--font-theme);
+                text-shadow: 1.5px 2px 2px var(--color-darkerPrimary);
+                font-size: 1.25rem;
+            }
+
             .backView-right {
                 position: relative;
                 width: calc(100% - var(--backView-left--width));
                 background: linear-gradient(90deg, rgba(255,153,0,1) 5%, rgba(255,174,0,1) 50%, rgba(255,153,0,1) 95%);
-                -webkit-box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
-                -moz-box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
-                box-shadow: -5px 0px 10px 0px rgba(15,17,17, 0.5);
+                -webkit-box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
+                -moz-box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
+                box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
             }
 
             .backView-right-top {
                 height: 75%;
+                display: grid;
+                place-items: center;
+            }
+
+            .mktTxt {
+                width: 100%;
+                text-align: center;
+            }
+
+            .mktTxt-mid p {
+                font-family: 'Bookerly-BoldItalic';
+                font-size: 1.15rem;
+                line-height: 1.75rem;
+                text-align: end;
+                margin-right: 3.75rem;
+            }
+
+            .mktTxt-mid p::before, .mktTxt-mid p::after {
+                font-size: 2em;
+            }
+
+            .mktTxt-mid p::before {
+                content: '\201C';
+            }
+
+            .mktTxt-mid p::after {
+                content: '\201D';
+            }
+
+            .mktTxt-bot {
+                text-align: right;
+                margin-right: 4.25em;
+            }
+
+            .mktTxt-bot sub {
+                font-family: 'Bookerly';
             }
 
             .backView-right-mid {
@@ -96,7 +161,7 @@
                 color: var(--color-darkPrimary);
                 padding: 16px;
                 border-color: var(--color-secundary);
-                box-shadow: 0 0 40px 40px var(--color-secundary) inset, 0 0 0 0 var(--color-secundary);
+                box-shadow: 0 0 40px 40px var(--color-secundary) inset, 0 0 0 0 var(--color-secundary), 10px 10px 5px 0px rgba(15,17,17,0.75);
                 -webkit-transition: all 140ms ease-in-out;
                 transition: all 140ms ease-in-out;
                 text-transform: uppercase;
@@ -158,7 +223,7 @@
                 /* animation: scroll 4s linear infinite; */
             }
             
-            @keyframes scroll {
+            /* @keyframes scroll {
                 0% {
                     transform: translateX(0);
                 }
@@ -166,7 +231,7 @@
                 100% {
                     transform: translateX(calc(-1 * calc(var(--slider--width) * calc(var(--img-counter) / 2))));
                 }
-            }
+            } */
 
             .carrousel {
                 width: calc(var(--slider--width) * var(--img-counter));
@@ -179,12 +244,74 @@
                 max-height: var(--slider-height);
             }
 
-            /* .frontView-txt {
-                width: 50%;
-                max-height: 50%;
-            } */
-
             @media only screen and (min-width: 1600px) {
+                :root {
+                    --slider--width: 540px;
+                    --slider-height: 540px;
+                }
+
+                .backView-left h1 {
+                    font-size: 1.75rem;
+                }
+
+                .mktTxt-mid p {
+                    font-size: 1.5rem;
+                    line-height: 2.25rem;
+                    margin-right: 5rem;
+                }
+
+                .mktTxt-mid p::before, .mktTxt-mid p::after {
+                    font-size: 2.5em;
+                }
+
+                .mktTxt-bot sub {
+                    font-size: 1rem;
+                }
+                
+                .buttonAnchorSpan {
+                    display: block;
+                }
+
+                .buttonImg {
+                    margin-right: 1.15em;
+                }
+            }
+
+            @media only screen and (min-width: 1600px) and (max-height: 768px) {
+                :root {
+                    --slider--width: 420px;
+                    --slider-height: 420px;
+                }
+            }
+
+            @media only screen and (min-width: 1920px) {
+                :root {
+                    --slider--width: 686px;
+                    --slider-height: 686px;
+                }
+
+                .backView-left h1 {
+                    font-size: 2rem;
+                }
+
+                .mktTxt-mid p {
+                    font-size: 1.75rem;
+                    line-height: 2.85rem;
+                    margin-right: 10rem;
+                }
+
+                .mktTxt-mid p::before, .mktTxt-mid p::after {
+                    font-size: 2.75em;
+                }
+
+                .mktTxt-bot {
+                    margin-right: 10em;
+                }
+
+                .mktTxt-bot sub {
+                    font-size: 1.25rem;
+                }
+                
                 .buttonAnchorSpan {
                     display: block;
                 }
@@ -199,10 +326,22 @@
 	<body>
         <div class="landingContent">
             <div class="backView">
-                <div class="backView-left"></div>
+                <div class="backView-left">
+                    <h1><span>Amazon Books</span><br />Data Analysing</h1>
+                </div>
 
                 <div class="backView-right">
-                    <div class="backView-right-top"></div>
+                    <div class="backView-right-top">
+                        <div class="mktTxt">
+                            <div class="mktTxt-mid">
+                                <p>Ninguém ignora tudo.<br />Ninguém sabe tudo.<br />Todos nós sabemos alguma coisa.<br />Todos nós ignoramos alguma coisa.<br />Por isso aprendemos sempre.</p>
+                            </div>
+                            
+                            <div class="mktTxt-bot">
+                                <sub> - Paulo Freire </sub>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="backView-right-mid">
                         <div class="leftBar"></div>
@@ -226,35 +365,9 @@
                         <div class="frontViewSlider">
                             <div class="carrousel">
                                 <div class="carrouselImg"><img src="/public/images/book_08.jpg" alt=""/></div>
-                                
-                                <div class="carrouselImg"><img src="/public/images/book_10.jpg" alt=""/></div>
-                                
-                                <div class="carrouselImg"><img src="/public/images/book_09.jpg" alt=""/></div>
-        
-                                <div class="carrouselImg"><img src="/public/images/book_05.jpg" alt=""/></div>
-                                
-                                <!-- <div class="carrouselImg"><img src="" alt=""/></div> -->
-                                
-                                <!-- <div class="carrouselImg"><img src="" alt=""/></div> -->
-                            </div>
-    
-                            <div class="carrouselNav">
-                                <div class="carrNavBtn"></div>
-                                
-                                <div class="carrNavBtn"></div>
-                                
-                                <div class="carrNavBtn"></div>
-                                
-                                <div class="carrNavBtn"></div>
-                                
-                                <!-- <div class="carrNavBtn"></div> -->
-                                
-                                <!-- <div class="carrNavBtn"></div> -->
                             </div>
                         </div>
                     </div>
-    
-                    <!-- <div class="frontView-txt"></div> -->
                 </div>
             </div>
         </div>

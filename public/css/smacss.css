@@ -83,7 +83,11 @@ code {
   --font-body: 'AmazonEmber-Regular';
   --font-light: 'AmazonEmber-Light';
   --font-bold: 'AmazonEmber-Bold';
-  --font-theme: 'AmazonEmber-Theme';  
+  --font-theme: 'AmazonEmber-Theme';
+  --font-bookerly-regular: 'Bookerly';
+  --font-bookerly-italic: 'Bookerly-Italic';
+  --font-bookerly-bold: 'Bookerly-Bold';
+  --font-bookerly-bold-italic: 'Bookerly-Bold-Italic';
   --font-code: 'Fira Code', monospace;
 
   /* Font-Size */
@@ -214,8 +218,18 @@ code {
 }
 
 @font-face {
-  font-family: 'Bookerly-Regular';
+  font-family: 'Bookerly-BoldItalic';
+  src: url(/public/fonts/Bookerly-BoldItalic.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: 'Bookerly';
   src: url(/public/fonts/Bookerly-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: 'Bookerly-Italic';
+  src: url(/public/fonts/Bookerly-Italic.ttf) format("truetype");
 }
 
 
