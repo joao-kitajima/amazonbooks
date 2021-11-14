@@ -1,0 +1,14 @@
+editoras
+
+<h5><%= pubList[0].proPublisher %></h5>
+<% pubList.forEach((p) =>{ %>
+    <p>
+        <hr>
+        <%= p.proName %> 
+        <br>   
+        <%= p.proPrice %> 
+        <br>  
+        <%= p.catName %>   
+        <hr> 
+    </p>
+<% }) %>
