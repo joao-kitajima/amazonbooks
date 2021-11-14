@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/joao-kitajima/amazonbooks#readme",
   "dependencies": {
+    "sqlite3": "^4.2.0",
     "teem": "0.0.21"
   },
   "devDependencies": {
