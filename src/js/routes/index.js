@@ -1,11 +1,14 @@
 "use strict";
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('../../ESPM/4oSemestre/Python/code/Inter/projeto/conexao.db', sqlite3.OPEN_READONLY, (err) => {
+const path = require('path');
+const dbPath = path.join(__dirname, '/../../../db/conn.db');
+console.log(dbPath);
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
         return console.log(err.message);
     }
     else {
-        console.log("Conectado ao DB com sucesso!");
+        console.log("Successfully connected to DB!");
     }
 });
 class IndexRoute {
@@ -56,7 +59,7 @@ class IndexRoute {
         })();
     }
     async livros(req, res) {
-        let autList = [];
+        let livList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -65,9 +68,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        autList.push(a);
+                        livList.push(a);
                     });
-                    res.render("index/books", { autList: autList });
+                    res.render("index/books", { livList: livList });
                 });
             }
             catch (error) {
@@ -76,7 +79,7 @@ class IndexRoute {
         })();
     }
     async autoajuda(req, res) {
-        let autList = [];
+        let ajuList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -85,9 +88,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        autList.push(a);
+                        ajuList.push(a);
                     });
-                    res.render("index/selfHelp", { autList: autList });
+                    res.render("index/selfHelp", { ajuList: ajuList });
                 });
             }
             catch (error) {
@@ -96,7 +99,7 @@ class IndexRoute {
         })();
     }
     async ficcao(req, res) {
-        let autList = [];
+        let ficList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -105,9 +108,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        autList.push(a);
+                        ficList.push(a);
                     });
-                    res.render("index/fiction", { autList: autList });
+                    res.render("index/fiction", { ficList: ficList });
                 });
             }
             catch (error) {
@@ -116,7 +119,7 @@ class IndexRoute {
         })();
     }
     async politica(req, res) {
-        let autList = [];
+        let polList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -125,9 +128,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        autList.push(a);
+                        polList.push(a);
                     });
-                    res.render("index/politics", { autList: autList });
+                    res.render("index/politics", { polList: polList });
                 });
             }
             catch (error) {
@@ -136,7 +139,7 @@ class IndexRoute {
         })();
     }
     async academicos(req, res) {
-        let autList = [];
+        let acaList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -145,9 +148,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        autList.push(a);
+                        acaList.push(a);
                     });
-                    res.render("index/academics", { autList: autList });
+                    res.render("index/academics", { acaList: acaList });
                 });
             }
             catch (error) {

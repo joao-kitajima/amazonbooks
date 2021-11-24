@@ -1,11 +1,14 @@
 ﻿import amazonbooks = require("teem");
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('../../ESPM/4oSemestre/Python/code/Inter/projeto/conexao.db', sqlite3.OPEN_READONLY, (err) =>{
+const path = require('path');
+const dbPath = path.join(__dirname, '/../../../db/conn.db');
+console.log(dbPath);
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) =>{
     if (err){
         return console.log(err.message);
     } else {
-        console.log("Conectado ao DB com sucesso!");
+        console.log("Successfully connected to DB!");
     }
 });
 
