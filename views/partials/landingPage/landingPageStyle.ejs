@@ -65,7 +65,9 @@
     .backView-right {
         position: relative;
         width: calc(100% - var(--backView-left--width));
-        background: linear-gradient(90deg, rgba(255,153,0,1) 5%, rgba(255,174,0,1) 50%, rgba(255,153,0,1) 95%);
+        /* background: linear-gradient(90deg, rgba(255,153,0,1) 5%, rgba(255,174,0,1) 50%, rgba(255,153,0,1) 95%); */
+        background: linear-gradient(90deg, rgba(252,252,252,1) 2.5%, rgba(242,242,242,1) 50%, rgba(252,252,252,1) 97.5%);
+        /* background-color: var(--color-lightTerciary); */
         -webkit-box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
         -moz-box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
         box-shadow: -10px 0px 10px 0px rgba(15,17,17, 0.75);
@@ -77,9 +79,9 @@
         place-items: center;
     }
 
-    .mktTxt {
-        width: 100%;
-        text-align: center;
+    .animated {
+        width: 50%;
+        margin-left: 25%;
     }
 
     .mktTxt-mid p {
