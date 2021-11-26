@@ -4,3 +4,38 @@
 <h1> <%= catList[2] ? catList[2].catName : "não" %></h1>
 <h1> <%= catList[3] ? catList[3].catName : "não" %></h1>
 <h1> <%= catList[4] ? catList[4].catName : "não" %></h1>
+
+
+<style type="text/css">
+    #chart_01 {
+        width: 480px;
+        height: 480px;
+    }
+
+    .apexcharts-canvas {
+        border: 2px solid #000;
+    }
+</style>
+
+<div id="chart_01"></div>
+<div id="chart_02"></div>
+
+<script type="text/javascript">
+    var options = {
+        chart: {
+          type: 'line'
+        },
+        series: [{
+          name: 'sales',
+          data: [30,40,35,50,49,60,70,91,125]
+        }],
+        xaxis: {
+          categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+        }
+    }
+
+    var chart = new ApexCharts(document.querySelector("#chart_01"), options);
+    var chart2 = new ApexCharts(document.querySelector("#chart_02"), options);
+
+    chart.render();
+</script>
