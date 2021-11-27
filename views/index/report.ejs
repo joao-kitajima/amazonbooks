@@ -4,8 +4,15 @@
 <h1> <%= catList[2] ? catList[2].catName : "não" %></h1>
 <h1> <%= catList[3] ? catList[3].catName : "não" %></h1>
 <h1> <%= catList[4] ? catList[4].catName : "não" %></h1>
+<h1> <%= autList[4] ? autList[4].autName : "não" %></h1>
+<h1> <%= proList[0] ? proList[0].proPosition : "não" %></h1>
+<h1> <%= proList[0] ? proList[0].proScrapDate : "não" %></h1>
 
-
+<h1> <%= proList[0] ? proList[0].proName: "não" %></h1>
+<% if(catList) {%>
+  <% console.log(catList) %>
+<% } %>
+<%= catList %>
 <style type="text/css">
     #chart_01, #chart_02 {
         width: 480px;
@@ -25,29 +32,14 @@
 <div id="chart_02"></div>
 
 
+<%- contentFor("scripts") %>
 <script type="text/javascript">
-<<<<<<< HEAD:views/index/dashboard.ejs
-=======
-    var options = {
-        chart: {
-          type: 'line',
-          toolbar: {
-              show: false
-          }
-        },
-        series: [{
-          name: 'sales',
-          data: [30,40,35,50,49,60,70,91,125]
-        }],
-        xaxis: {
-          categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-        }
-    }
->>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b:views/index/report.ejs
-
   var options = {
       chart: {
-        type: 'line'
+        type: 'line',
+        toolbar: {
+            show: false
+        }
       },
       series: [{
         name: 'sales',
@@ -58,13 +50,10 @@
       }
   }
 
+
   var chart = new ApexCharts(document.querySelector("#chart_01"), options);
   var chart2 = new ApexCharts(document.querySelector("#chart_02"), options);
 
-<<<<<<< HEAD:views/index/dashboard.ejs
   chart.render();
-=======
-    chart.render();
-    chart2.render();
->>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b:views/index/report.ejs
+  chart2.render();
 </script>

@@ -1,5 +1,6 @@
 "use strict";
 const amazonbooks_1 = require("../amazonbooks");
+const Category_1 = require("../models/Category");
 class IndexRoute {
     async index(req, res) {
         let pageSettings = {
@@ -8,18 +9,38 @@ class IndexRoute {
         res.render("index/index", pageSettings);
     }
     async diagnostico(req, res) {
-        let catList = [];
+        let autList = [];
+        let proList = [];
+        let catList;
+        catList = Category_1.default.listarCategorias();
         (async () => {
             try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                await amazonbooks_1.db.all('SELECT * from Category', async (err, rows) => {
+                /* // Creating the Books table (Book_ID, Title, Author, Comments)
+                await db.all('SELECT * from Category', async (err, rows) =>{
+                    if(err){
+                        throw err;
+                    }
+                    await rows.forEach((c)=>{
+                        catList.push(c)
+                    })
+                }) */
+                await amazonbooks_1.db.all(`SELECT proPosition, proScrapDate, proName FROM Product
+					WHERE proName = "Mulheres que correm com os lobos";`, async (err, rows) => {
                     if (err) {
                         throw err;
                     }
-                    await rows.forEach((c) => {
-                        catList.push(c);
+                    await rows.forEach((p) => {
+                        proList.push(p);
                     });
-                    res.render("index/report", { catList: catList });
+                });
+                await amazonbooks_1.db.all('SELECT * from Author', async (err, rows) => {
+                    if (err) {
+                        throw err;
+                    }
+                    await rows.forEach((a) => {
+                        autList.push(a);
+                    });
+                    res.render("index/report", { catList: await catList.then((result => result)), db: amazonbooks_1.db, autList: autList, proList: proList });
                 });
             }
             catch (error) {
@@ -131,12 +152,7 @@ class IndexRoute {
         let autList = [];
         (async () => {
             try {
-<<<<<<< HEAD
-                // Creating the Books table (Book_ID, Title, Author, Comments)
                 await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-=======
-                await db.all('SELECT autName from Author', async (err, rows) => {
->>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b
                     if (err) {
                         throw err;
                     }

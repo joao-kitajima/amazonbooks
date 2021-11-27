@@ -15,7 +15,7 @@
 	
 			<div class="dashboard">
 				<%- include("partials/dashboard/content/dashContentTitle.ejs") %>
-
+				
 				<div class="graphs">
 					<%- body %>
 				</div>
@@ -23,5 +23,6 @@
 		</div>
 
 		<%- include("partials/dashboard/content/jsReload.ejs") %>
+		<%- defineContent("scripts") %>
 	</body>
 </html>

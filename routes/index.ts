@@ -1,5 +1,6 @@
 ﻿import amazonbooks = require("teem");
 import { db } from '../amazonbooks';
+import Category from '../models/Category';
 
 class IndexRoute {
 	public async index(req: amazonbooks.Request, res: amazonbooks.Response) {
@@ -11,19 +12,31 @@ class IndexRoute {
 	}
 	
 	public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
-		let catList = []; 
+		let autList = []; 
+		let proList = [];
+		let catList: Promise<Category[]>
+		catList = Category.listarCategorias();
 
 		(async () => {
 			try {
-			  	// Creating the Books table (Book_ID, Title, Author, Comments)
-			  	await db.all('SELECT * from Category', async (err, rows) =>{
+		
+				await db.all(`SELECT proPosition, proScrapDate, proName FROM Product
+					WHERE proName = "Mulheres que correm com os lobos";`, async (err, rows)=>{
+						if(err){
+							throw err;
+						}
+						await rows.forEach((p) =>{
+							proList.push(p)
+						})
+					})
+				await db.all('SELECT * from Author', async (err, rows) =>{
 					if(err){
 						throw err;
 					}
-					await rows.forEach((c)=>{
-						catList.push(c)
+					await rows.forEach((a)=>{
+						autList.push(a)
 					})
-					res.render("index/dashboard", {catList: catList, db: db});
+					res.render("index/report", {catList: await catList.then((result => result)), db: db, autList: autList, proList: proList});
 				})	
 			}
 			catch (error) { throw error; }
