@@ -7,7 +7,7 @@ export default class Category {
 
 
     // get todas categorias
-    public static async listarCategorias(): Promise<Category[]>{
+    public static async listarCategories(): Promise<Category[]>{
         let catList: Category[] = [];
         await db.all(`SELECT * FROM Category`, async (err, rows) =>{
             if (err){

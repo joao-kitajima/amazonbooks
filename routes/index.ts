@@ -18,7 +18,7 @@ class IndexRoute {
 		let autList = []; 
 		let proList = [];
 		let catList: Promise<Category[]>
-		catList = Category.listarCategorias();
+		catList = Category.listarCategories();
 
 		(async () => {
 			try {
