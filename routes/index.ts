@@ -3,6 +3,7 @@ import { db } from '../amazonbooks';
 import Category from '../models/Category';
 
 class IndexRoute {
+	/* PÁGINA INICIAL */
 	public async index(req: amazonbooks.Request, res: amazonbooks.Response) {
 		let pageSettings = {
 			layout: "landingPage"
@@ -11,6 +12,8 @@ class IndexRoute {
 		res.render("index/index", pageSettings);
 	}
 	
+
+	/* DIAGNÓSTICO */
 	public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
 		let autList = []; 
 		let proList = [];
@@ -45,6 +48,8 @@ class IndexRoute {
 		
 	}
 
+
+	/* VISÃO GERAL */
 	public async visao_geral(req: amazonbooks.Request, res: amazonbooks.Response){
 		let livList = [];
 
@@ -65,6 +70,8 @@ class IndexRoute {
 		  })();
 	}
 
+
+	/* AUTOAJUDA */
 	public async autoajuda(req: amazonbooks.Request, res: amazonbooks.Response){
 		let ajuList = [];
 
@@ -85,6 +92,8 @@ class IndexRoute {
 		  })();
 	}
 
+
+	/* INFANTIL */
 	public async infantil(req: amazonbooks.Request, res: amazonbooks.Response){
 		let kidList = [];
 
@@ -105,6 +114,8 @@ class IndexRoute {
 		  })();
 	}
 
+
+	/* DIREITO */
 	public async direito(req: amazonbooks.Request, res: amazonbooks.Response){
 		let dirList = [];
 
@@ -125,6 +136,8 @@ class IndexRoute {
 		  })();
 	}
 
+
+	/* HQs e MANGÁS */
 	public async hqs_mangas(req: amazonbooks.Request, res: amazonbooks.Response){
 		let acaList = [];
 
@@ -145,6 +158,8 @@ class IndexRoute {
 		  })();
 	}
 
+
+	/* AUTORES */
 	public async autores(req: amazonbooks.Request, res: amazonbooks.Response) {
 		let autList = [];
 
@@ -166,18 +181,32 @@ class IndexRoute {
 
 	}
 
+
+	/* EDITORAS */
 	public async editoras(req: amazonbooks.Request, res: amazonbooks.Response){
 		let pubList = [];
 
 		(async () => {
 			try {
 			  	// Creating the Books table (Book_ID, Title, Author, Comments)
-			  	await db.all(`
-				  SELECT proName, proPrice, proPublisher, c.catName 
-					FROM Product p 
-					INNER JOIN Category c 
-					INNER JOIN Product_Category pc 
-					WHERE proPublisher = "Todolivro" and p.proCode = pc.proCode and c.catCode = pc.catCode ;`, 
+			  	// await db.all(`
+				//   SELECT proName, proPrice, proPublisher, c.catName 
+				// 	FROM Product p 
+				// 	INNER JOIN Category c 
+				// 	INNER JOIN Product_Category pc 
+				// 	WHERE proPublisher = "Todolivro" and p.proCode = pc.proCode and c.catCode = pc.catCode ;`, 
+				//   async (err, rows) =>{
+				// 	if(err){
+				// 		throw err;
+				// 	}
+				// 	await rows.forEach((a)=>{
+				// 		pubList.push(a)
+				// 	})
+				// 	res.render("index/publishers", {pubList: pubList});
+				// })
+
+				await db.all(`
+				  SELECT * from Category;`, 
 				  async (err, rows) =>{
 					if(err){
 						throw err;
@@ -186,7 +215,7 @@ class IndexRoute {
 						pubList.push(a)
 					})
 					res.render("index/publishers", {pubList: pubList});
-				})	
+				})
 			}
 			catch (error) { throw error; }
 		  })();
