@@ -1,16 +1,5 @@
 ﻿import amazonbooks = require("teem");
-const sqlite3 = require('sqlite3').verbose();
-
-const path = require('path');
-const dbPath = path.join(__dirname, '/../../../db/conn.db');
-console.log(dbPath);
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) =>{
-    if (err){
-        return console.log(err.message);
-    } else {
-        console.log("Successfully connected to DB!");
-    }
-});
+import { db } from '../amazonbooks';
 
 class IndexRoute {
 	public async index(req: amazonbooks.Request, res: amazonbooks.Response) {
@@ -34,7 +23,7 @@ class IndexRoute {
 					await rows.forEach((c)=>{
 						catList.push(c)
 					})
-					res.render("index/dashboard", {catList: catList});
+					res.render("index/dashboard", {catList: catList, db: db});
 				})	
 			}
 			catch (error) { throw error; }

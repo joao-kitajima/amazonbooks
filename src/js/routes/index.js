@@ -1,16 +1,5 @@
 "use strict";
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const dbPath = path.join(__dirname, '/../../../db/conn.db');
-console.log(dbPath);
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
-    if (err) {
-        return console.log(err.message);
-    }
-    else {
-        console.log("Successfully connected to DB!");
-    }
-});
+const amazonbooks_1 = require("../amazonbooks");
 class IndexRoute {
     async index(req, res) {
         let pageSettings = {
@@ -23,7 +12,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT * from Category', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT * from Category', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -43,7 +32,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -63,7 +52,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -83,7 +72,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -103,7 +92,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -123,7 +112,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -143,7 +132,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT autName from Author', async (err, rows) => {
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
                     if (err) {
                         throw err;
                     }
@@ -163,7 +152,7 @@ class IndexRoute {
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all(`
+                await amazonbooks_1.db.all(`
 				  SELECT proName, proPrice, proPublisher, c.catName 
 					FROM Product p 
 					INNER JOIN Category c 
