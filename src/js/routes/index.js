@@ -1,12 +1,14 @@
 "use strict";
 const amazonbooks_1 = require("../amazonbooks");
 class IndexRoute {
+    /* PÁGINA INICIAL */
     async index(req, res) {
         let pageSettings = {
             layout: "landingPage"
         };
         res.render("index/index", pageSettings);
     }
+    /* DIAGNÓSTICO */
     async diagnostico(req, res) {
         let catList = [];
         (async () => {
@@ -19,7 +21,7 @@ class IndexRoute {
                     await rows.forEach((c) => {
                         catList.push(c);
                     });
-                    res.render("index/report", { catList: catList });
+                    res.render("index/report", { catList: catList, db: amazonbooks_1.db });
                 });
             }
             catch (error) {
@@ -27,6 +29,7 @@ class IndexRoute {
             }
         })();
     }
+    /* VISÃO GERAL */
     async visao_geral(req, res) {
         let livList = [];
         (async () => {
@@ -47,6 +50,7 @@ class IndexRoute {
             }
         })();
     }
+    /* AUTOAJUDA */
     async autoajuda(req, res) {
         let ajuList = [];
         (async () => {
@@ -67,6 +71,7 @@ class IndexRoute {
             }
         })();
     }
+    /* INFANTIL */
     async infantil(req, res) {
         let kidList = [];
         (async () => {
@@ -87,6 +92,7 @@ class IndexRoute {
             }
         })();
     }
+    /* DIREITO */
     async direito(req, res) {
         let dirList = [];
         (async () => {
@@ -107,6 +113,7 @@ class IndexRoute {
             }
         })();
     }
+    /* HQs e MANGÁS */
     async hqs_mangas(req, res) {
         let acaList = [];
         (async () => {
@@ -127,16 +134,12 @@ class IndexRoute {
             }
         })();
     }
+    /* AUTORES */
     async autores(req, res) {
         let autList = [];
         (async () => {
             try {
-<<<<<<< HEAD
-                // Creating the Books table (Book_ID, Title, Author, Comments)
                 await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-=======
-                await db.all('SELECT autName from Author', async (err, rows) => {
->>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b
                     if (err) {
                         throw err;
                     }
@@ -151,17 +154,29 @@ class IndexRoute {
             }
         })();
     }
+    /* EDITORAS */
     async editoras(req, res) {
         let pubList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
+                // await db.all(`
+                //   SELECT proName, proPrice, proPublisher, c.catName 
+                // 	FROM Product p 
+                // 	INNER JOIN Category c 
+                // 	INNER JOIN Product_Category pc 
+                // 	WHERE proPublisher = "Todolivro" and p.proCode = pc.proCode and c.catCode = pc.catCode ;`, 
+                //   async (err, rows) =>{
+                // 	if(err){
+                // 		throw err;
+                // 	}
+                // 	await rows.forEach((a)=>{
+                // 		pubList.push(a)
+                // 	})
+                // 	res.render("index/publishers", {pubList: pubList});
+                // })
                 await amazonbooks_1.db.all(`
-				  SELECT proName, proPrice, proPublisher, c.catName 
-					FROM Product p 
-					INNER JOIN Category c 
-					INNER JOIN Product_Category pc 
-					WHERE proPublisher = "Todolivro" and p.proCode = pc.proCode and c.catCode = pc.catCode ;`, async (err, rows) => {
+				  SELECT * from Category;`, async (err, rows) => {
                     if (err) {
                         throw err;
                     }
