@@ -7,13 +7,17 @@
 
 
 <style type="text/css">
-    #chart_01 {
+    #chart_01, #chart_02 {
         width: 480px;
         height: 480px;
     }
 
     .apexcharts-canvas {
-        border: 2px solid #000;
+        background-color: #fff;
+        border-radius: 4px;
+        -webkit-box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
+        -moz-box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
+        box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
     }
 </style>
 
@@ -22,6 +26,24 @@
 
 
 <script type="text/javascript">
+<<<<<<< HEAD:views/index/dashboard.ejs
+=======
+    var options = {
+        chart: {
+          type: 'line',
+          toolbar: {
+              show: false
+          }
+        },
+        series: [{
+          name: 'sales',
+          data: [30,40,35,50,49,60,70,91,125]
+        }],
+        xaxis: {
+          categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+        }
+    }
+>>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b:views/index/report.ejs
 
   var options = {
       chart: {
@@ -39,5 +61,10 @@
   var chart = new ApexCharts(document.querySelector("#chart_01"), options);
   var chart2 = new ApexCharts(document.querySelector("#chart_02"), options);
 
+<<<<<<< HEAD:views/index/dashboard.ejs
   chart.render();
+=======
+    chart.render();
+    chart2.render();
+>>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b:views/index/report.ejs
 </script>

@@ -10,7 +10,7 @@ class IndexRoute {
 		res.render("index/index", pageSettings);
 	}
 	
-	public async dashboard(req: amazonbooks.Request, res: amazonbooks.Response) {
+	public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
 		let catList = []; 
 
 		(async () => {
@@ -32,28 +32,7 @@ class IndexRoute {
 		
 	}
 
-	public async autores(req: amazonbooks.Request, res: amazonbooks.Response) {
-		let autList = [];
-
-		(async () => {
-			try {
-			  	// Creating the Books table (Book_ID, Title, Author, Comments)
-			  	await db.all('SELECT autName from Author', async (err, rows) =>{
-					if(err){
-						throw err;
-					}
-					await rows.forEach((a)=>{
-						autList.push(a)
-					})
-					res.render("index/authors", {autList: autList});
-				})	
-			}
-			catch (error) { throw error; }
-		  })();
-
-	}
-
-	public async livros(req: amazonbooks.Request, res: amazonbooks.Response){
+	public async visao_geral(req: amazonbooks.Request, res: amazonbooks.Response){
 		let livList = [];
 
 		(async () => {
@@ -66,7 +45,7 @@ class IndexRoute {
 					await rows.forEach((a)=>{
 						livList.push(a)
 					})
-					res.render("index/books", {livList: livList});
+					res.render("index/general", {livList: livList});
 				})	
 			}
 			catch (error) { throw error; }
@@ -93,8 +72,8 @@ class IndexRoute {
 		  })();
 	}
 
-	public async ficcao(req: amazonbooks.Request, res: amazonbooks.Response){
-		let ficList = [];
+	public async infantil(req: amazonbooks.Request, res: amazonbooks.Response){
+		let kidList = [];
 
 		(async () => {
 			try {
@@ -104,17 +83,17 @@ class IndexRoute {
 						throw err;
 					}
 					await rows.forEach((a)=>{
-						ficList.push(a)
+						kidList.push(a)
 					})
-					res.render("index/fiction", {ficList: ficList});
+					res.render("index/kids", {kidList: kidList});
 				})	
 			}
 			catch (error) { throw error; }
 		  })();
 	}
 
-	public async politica(req: amazonbooks.Request, res: amazonbooks.Response){
-		let polList = [];
+	public async direito(req: amazonbooks.Request, res: amazonbooks.Response){
+		let dirList = [];
 
 		(async () => {
 			try {
@@ -124,16 +103,16 @@ class IndexRoute {
 						throw err;
 					}
 					await rows.forEach((a)=>{
-						polList.push(a)
+						dirList.push(a)
 					})
-					res.render("index/politics", {polList: polList});
+					res.render("index/laws", {dirList: dirList});
 				})	
 			}
 			catch (error) { throw error; }
 		  })();
 	}
 
-	public async academicos(req: amazonbooks.Request, res: amazonbooks.Response){
+	public async hqs_mangas(req: amazonbooks.Request, res: amazonbooks.Response){
 		let acaList = [];
 
 		(async () => {
@@ -146,11 +125,32 @@ class IndexRoute {
 					await rows.forEach((a)=>{
 						acaList.push(a)
 					})
-					res.render("index/academics", {acaList: acaList});
+					res.render("index/hqs_mangas", {acaList: acaList});
 				})	
 			}
 			catch (error) { throw error; }
 		  })();
+	}
+
+	public async autores(req: amazonbooks.Request, res: amazonbooks.Response) {
+		let autList = [];
+
+		(async () => {
+			try {
+			  	await db.all('SELECT autName from Author', async (err, rows) =>{
+					if(err){
+						throw err;
+					}
+					await rows.forEach((a)=>{
+						autList.push(a)
+					})
+					res.render("index/authors", {autList: autList});
+				})	
+			}
+			catch (error) { throw error; }
+		  })();
+
+
 	}
 
 	public async editoras(req: amazonbooks.Request, res: amazonbooks.Response){

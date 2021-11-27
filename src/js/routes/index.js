@@ -7,7 +7,7 @@ class IndexRoute {
         };
         res.render("index/index", pageSettings);
     }
-    async dashboard(req, res) {
+    async diagnostico(req, res) {
         let catList = [];
         (async () => {
             try {
@@ -19,7 +19,7 @@ class IndexRoute {
                     await rows.forEach((c) => {
                         catList.push(c);
                     });
-                    res.render("index/dashboard", { catList: catList });
+                    res.render("index/report", { catList: catList });
                 });
             }
             catch (error) {
@@ -27,27 +27,7 @@ class IndexRoute {
             }
         })();
     }
-    async autores(req, res) {
-        let autList = [];
-        (async () => {
-            try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        autList.push(a);
-                    });
-                    res.render("index/authors", { autList: autList });
-                });
-            }
-            catch (error) {
-                throw error;
-            }
-        })();
-    }
-    async livros(req, res) {
+    async visao_geral(req, res) {
         let livList = [];
         (async () => {
             try {
@@ -59,7 +39,7 @@ class IndexRoute {
                     await rows.forEach((a) => {
                         livList.push(a);
                     });
-                    res.render("index/books", { livList: livList });
+                    res.render("index/general", { livList: livList });
                 });
             }
             catch (error) {
@@ -87,8 +67,8 @@ class IndexRoute {
             }
         })();
     }
-    async ficcao(req, res) {
-        let ficList = [];
+    async infantil(req, res) {
+        let kidList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -97,9 +77,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        ficList.push(a);
+                        kidList.push(a);
                     });
-                    res.render("index/fiction", { ficList: ficList });
+                    res.render("index/kids", { kidList: kidList });
                 });
             }
             catch (error) {
@@ -107,8 +87,8 @@ class IndexRoute {
             }
         })();
     }
-    async politica(req, res) {
-        let polList = [];
+    async direito(req, res) {
+        let dirList = [];
         (async () => {
             try {
                 // Creating the Books table (Book_ID, Title, Author, Comments)
@@ -117,9 +97,9 @@ class IndexRoute {
                         throw err;
                     }
                     await rows.forEach((a) => {
-                        polList.push(a);
+                        dirList.push(a);
                     });
-                    res.render("index/politics", { polList: polList });
+                    res.render("index/laws", { dirList: dirList });
                 });
             }
             catch (error) {
@@ -127,7 +107,7 @@ class IndexRoute {
             }
         })();
     }
-    async academicos(req, res) {
+    async hqs_mangas(req, res) {
         let acaList = [];
         (async () => {
             try {
@@ -139,7 +119,31 @@ class IndexRoute {
                     await rows.forEach((a) => {
                         acaList.push(a);
                     });
-                    res.render("index/academics", { acaList: acaList });
+                    res.render("index/hqs_mangas", { acaList: acaList });
+                });
+            }
+            catch (error) {
+                throw error;
+            }
+        })();
+    }
+    async autores(req, res) {
+        let autList = [];
+        (async () => {
+            try {
+<<<<<<< HEAD
+                // Creating the Books table (Book_ID, Title, Author, Comments)
+                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
+=======
+                await db.all('SELECT autName from Author', async (err, rows) => {
+>>>>>>> 43b6fca13ffdfb1463687c1237ca06d28d84f12b
+                    if (err) {
+                        throw err;
+                    }
+                    await rows.forEach((a) => {
+                        autList.push(a);
+                    });
+                    res.render("index/authors", { autList: autList });
                 });
             }
             catch (error) {
