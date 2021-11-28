@@ -1,6 +1,5 @@
 "use strict";
 const amazonbooks_1 = require("../amazonbooks");
-const Category_1 = require("../models/Category");
 class IndexRoute {
     /* PÁGINA INICIAL */
     async index(req, res) {
@@ -9,92 +8,107 @@ class IndexRoute {
         };
         res.render("index/index", pageSettings);
     }
+    /*
+    public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
+
+
+
+
+        res.render("index/report", {catList: JSON.stringify(await Category.listCategories()), autList: JSON.stringify(await Author.listAuthors()), proList: JSON.stringify(await Product.listProducts())});
+    }
+    */
     /* DIAGNÓSTICO */
     async diagnostico(req, res) {
-        let autList = [];
+        let catList = [];
         let proList = [];
-        let catList;
-        catList = Category_1.default.listarCategorias();
-        (async () => {
-            try {
-                /* // Creating the Books table (Book_ID, Title, Author, Comments)
-                await db.all('SELECT * from Category', async (err, rows) =>{
-                    if(err){
-                        throw err;
-                    }
-                    await rows.forEach((c)=>{
-                        catList.push(c)
-                    })
-                }) */
-                await amazonbooks_1.db.all(`SELECT proPosition, proScrapDate, proName FROM Product
-					WHERE proName = "Mulheres que correm com os lobos";`, async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((p) => {
-                        proList.push(p);
-                    });
-                });
-                await amazonbooks_1.db.all('SELECT * from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        autList.push(a);
-                    });
-<<<<<<< HEAD
-                    res.render("index/report", { catList: await catList.then((result => result)), db: amazonbooks_1.db, autList: autList, proList: proList });
-=======
-                    res.render("index/report", { catList: catList, db: amazonbooks_1.db });
->>>>>>> 1f6e3484741185a8cdcd13d7612a27bd5a5a9304
-                });
+        let autList = [];
+        await amazonbooks_1.db.all('SELECT * from Category', async (err, rows) => {
+            if (err) {
+                throw err;
             }
-            catch (error) {
-                throw error;
+            await rows.forEach((cat) => {
+                catList.push(cat);
+            });
+        });
+        await amazonbooks_1.db.all('SELECT * from Product', async (err, rows) => {
+            if (err) {
+                throw err;
             }
-        })();
+            await rows.forEach((p) => {
+                proList.push(p);
+            });
+        });
+        await amazonbooks_1.db.all('SELECT * from Author', async (err, rows) => {
+            if (err) {
+                throw err;
+            }
+            await rows.forEach((aut) => {
+                autList.push(aut);
+            });
+            res.render("index/report", { autList: JSON.stringify(autList), catList: JSON.stringify(catList), proList: JSON.stringify(proList) });
+        });
     }
     /* VISÃO GERAL */
     async visao_geral(req, res) {
-        let livList = [];
-        (async () => {
-            try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        livList.push(a);
-                    });
-                    res.render("index/general", { livList: livList });
-                });
+        let seriesRevPag = [], seriesStrPag = [];
+        let catRevPag = {}, catStrPag = {};
+        await amazonbooks_1.db.all(`SELECT a.proReview, a.proPages, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proReview != "N/A" and a.proPages != "N/A"
+		ORDER BY a.catCode`, async (err, rows) => {
+            if (err) {
+                throw err;
             }
-            catch (error) {
-                throw error;
+            await rows.forEach((r) => {
+                var c = catRevPag[r.catName];
+                if (!c) {
+                    c = {
+                        name: r.catName,
+                        data: []
+                    };
+                    catRevPag[r.catName] = c;
+                    seriesRevPag.push(c);
+                }
+                c.data.push([r.proReview, r.proPages]);
+            });
+        });
+        await amazonbooks_1.db.all(`SELECT a.proStar, a.proPages, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proStar != "N/A" and a.proPages != "N/A"
+		ORDER BY a.catCode`, async (err, rows) => {
+            if (err) {
+                throw err;
             }
-        })();
+            await rows.forEach((r) => {
+                var sp = catStrPag[r.catName];
+                if (!sp) {
+                    sp = {
+                        name: r.catName,
+                        data: []
+                    };
+                    catStrPag[r.catName] = sp;
+                    seriesStrPag.push(sp);
+                }
+                sp.data.push([r.proStar, r.proPages]);
+            });
+            res.render("index/general", { seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag) });
+        });
     }
     /* AUTOAJUDA */
     async autoajuda(req, res) {
         let ajuList = [];
-        (async () => {
-            try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        ajuList.push(a);
-                    });
-                    res.render("index/selfHelp", { ajuList: ajuList });
-                });
-            }
-            catch (error) {
-                throw error;
-            }
-        })();
     }
     /* INFANTIL */
     async infantil(req, res) {

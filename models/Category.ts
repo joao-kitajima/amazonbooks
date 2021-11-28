@@ -7,7 +7,7 @@ export default class Category {
 
 
     // get todas categorias
-    public static async listarCategories(): Promise<Category[]>{
+    public static async listCategories(): Promise<Category[]>{
         let catList: Category[] = [];
         await db.all(`SELECT * FROM Category`, async (err, rows) =>{
             if (err){
@@ -20,5 +20,5 @@ export default class Category {
         
         return catList;
     } 
-    // get categoria especifica
+
 }

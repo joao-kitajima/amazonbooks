@@ -5,7 +5,7 @@ export default class Author {
     public autName: string;
 
     // Listar todos autores
-    public static async listarAuthors(): Promise<Author[]>{
+    public static async listAuthors(): Promise<Author[]>{
         var autList: Author[] = [];
 
         await db.all(`SELECT * FROM Author`, async (err, rows) =>{
@@ -21,7 +21,7 @@ export default class Author {
     }
 
     // Listar autores de uma categoria especifica
-    public static async listarAuthorsCat(catName: string): Promise<Author[]>{
+    public static async listAuthorsCat(catName: string): Promise<Author[]>{
         var autList: Author[] = [];
 
         await db.all(`SELECT * FROM Author WHERE catName = ?`, [catName], async (err, rows) =>{

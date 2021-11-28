@@ -1,18 +1,16 @@
-<h1> <%= typeof catList[0] ? "sim" : "não" %></h1>
+<h1> <%= typeof catList[0] ? catList : "não" %></h1>
 <h1> <%= catList[0] ? catList[0].catName : "não" %></h1>
 <h1> <%= catList[1] ? catList[1].catName : "não" %></h1>
 <h1> <%= catList[2] ? catList[2].catName : "não" %></h1>
 <h1> <%= catList[3] ? catList[3].catName : "não" %></h1>
-<h1> <%= catList[4] ? catList[4].catName : "não" %></h1>
-<h1> <%= autList[4] ? autList[4].autName : "não" %></h1>
+<h1> <%= catList[4] ? catList[4].catName : "nãocat" %></h1>
+<h1> <%= autList[4] ? autList[4].autName : "autor" %></h1>
 <h1> <%= proList[0] ? proList[0].proPosition : "não" %></h1>
 <h1> <%= proList[0] ? proList[0].proScrapDate : "não" %></h1>
 
-<h1> <%= proList[0] ? proList[0].proName: "não" %></h1>
-<% if(catList) {%>
-  <% console.log(catList) %>
-<% } %>
-<%= catList %>
+<h1> <%= proList[0] ? proList[0].proName: "produto" %></h1>
+
+
 <style type="text/css">
     #chart_01, #chart_02 {
         width: 480px;
@@ -34,6 +32,21 @@
 
 <%- contentFor("scripts") %>
 <script type="text/javascript">
+  var nameList = []
+  var linkList = []
+  var cc = '<%- catList %>'
+  console.log(cc)
+  var data = JSON.parse(cc);
+  data.forEach(cat=>{
+    nameList.push(cat.catName);
+    linkList.push(cat.catLink);
+  })
+  console.log(data)
+  console.log(nameList)
+  console.log(linkList)
+  /* data.forEach((cat)=>{
+    console.log(cat.catName)
+  }); */
   var options = {
       chart: {
         type: 'line',

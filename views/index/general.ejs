@@ -1,1 +1,67 @@
-livros
+
+
+<div id="chartRevPag"></div>
+---
+<div id="chartStrPag"></div>
+
+<!-- Review x Pages -->
+<script>
+    var seriesRevPag = `<%- seriesRevPag %>`
+
+    var optionsRevPag = {
+    series: JSON.parse(seriesRevPag),
+        chart: {
+        height: 350,
+        type: 'scatter',
+        zoom: {
+        enabled: true,
+        type: 'xy'
+        }
+    },
+    xaxis: {
+            tickAmount: 10,
+            labels: {
+            formatter: function(val) {
+                return parseFloat(val).toFixed(1)
+            }
+        }
+    },
+    yaxis: {
+        tickAmount: 7
+        }
+    };
+
+    var chartRevPag = new ApexCharts(document.querySelector("#chartRevPag"), optionsRevPag);
+    chartRevPag.render();
+</script>
+
+<!-- Stars x Pages -->
+<script>
+    var seriesStrPag = `<%- seriesStrPag %>`
+
+    var optionsStrPag = {
+    series: JSON.parse(seriesStrPag),
+        chart: {
+        height: 350,
+        type: 'scatter',
+        zoom: {
+        enabled: true,
+        type: 'xy'
+        }
+    },
+    xaxis: {
+            tickAmount: 10,
+            labels: {
+            formatter: function(val) {
+                return parseFloat(val).toFixed(1)
+            }
+        }
+    },
+    yaxis: {
+        tickAmount: 7
+        }
+    };
+
+    var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), optionsStrPag);
+    chartStrPag.render();
+</script>

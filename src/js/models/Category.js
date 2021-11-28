@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const amazonbooks_1 = require("../amazonbooks");
 class Category {
     // get todas categorias
-    static async listarCategorias() {
+    static async listCategories() {
         let catList = [];
         await amazonbooks_1.db.all(`SELECT * FROM Category`, async (err, rows) => {
             if (err) {
