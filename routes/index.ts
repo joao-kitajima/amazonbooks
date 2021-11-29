@@ -18,11 +18,21 @@ class IndexRoute {
 		res.render(
 			'index/report',
 			{
+				earliest_date: await scalar('SELECT MIN(proScrapDate) FROM Product;'),
+				latest_date: await scalar('SELECT MAX(proScrapDate) FROM Product;'),
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product;'),
 				total_books: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author;'),
 				total_authors: await scalar('SELECT COUNT(DISTINCT proName) FROM Product;'),
 				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product;'),
-				total_categories: await scalar('SELECT COUNT(DISTINCT catName) FROM Category;')
+				total_categories: await scalar('SELECT COUNT(DISTINCT catName) FROM Category;'),
+				total_reviews: await scalar('SELECT SUM(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" GROUP BY proName);'),
+				total_pages: await scalar('SELECT SUM(proPages) FROM (SELECT proName, proPages AS proPages FROM Product WHERE proPages IS NOT NULL AND proPages != "N/A" GROUP BY proName);'),
+				avg_price: await scalar('SELECT ROUND(AVG(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
+				max_price: await scalar('SELECT ROUND(MAX(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
+				min_price: await scalar('SELECT ROUND(MIN(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName) WHERE proPrice  >= 0;'),
+				avg_stars: await scalar('SELECT ROUND(AVG(proStar), 2) FROM (SELECT proName, proStar FROM Product WHERE proStar != "N/A" AND proStar IS NOT NULL GROUP BY proName);'),
+				max_reviews_perbook: await scalar('SELECT MAX(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
+				avg_reviews_perbook: await scalar('SELECT CAST(ROUND(AVG(proReview)) AS INTEGER) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
 			}
 		);
 	}
@@ -130,7 +140,7 @@ class IndexRoute {
 		limit 1;`);
 		minMaxDate["min"] = { name: rows[0].catName, data: rows[0].dataMin}
 
-		/* GRAF*/
+		/* TOP */
 		/* Categoria preço soma de preços registrados */
 		rows = await executar(`SELECT round(sum(a.proPrice), 2) as totalPrice, c.catName
 		FROM Product a
@@ -147,7 +157,7 @@ class IndexRoute {
 			sumPriCat.push({name: r.catName, data: r.totalPrice }) 
 		})
 
-		/* GRAF @FShinoda */
+		/* TOP */
 		rows = await executar(`SELECT count(DISTINCT proName) as freq, c.catName from Product p
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
@@ -155,6 +165,19 @@ class IndexRoute {
 		rows.forEach((r)=>{
 			freqProCat.push({name: r.catName, data: r.freq})
 		})
+
+		/* TOP */
+		/* type & Freq /categoria */
+		rows = await executar(`SELECT proType, count(proType) as freq
+		FROM Product
+		WHERE proType != "Not Exists" and proType != "Not exists"
+		GROUP BY proType
+		ORDER BY freq DESC`);
+		rows.forEach((r)=>{
+			catTyp.data.push(r.freq);
+			categoriesTyp.push(r.proType);
+		});
+		seriesTyp.push(catTyp);
 
 		/* DSP */
 		/* review x pages /categoria */
@@ -237,18 +260,6 @@ class IndexRoute {
 			pp.data.push([r.proPrice, r.proPages]);
 		});
 
-		/* BARRAS */
-		/* type & Freq /categoria */
-		rows = await executar(`SELECT proType, count(proType) as freq
-		FROM Product
-		WHERE proType != "Not Exists" and proType != "Not exists"
-		GROUP BY proType
-		ORDER BY freq DESC`);
-		rows.forEach((r)=>{
-			catTyp.data.push(r.freq);
-			categoriesTyp.push(r.proType);
-		});
-		seriesTyp.push(catTyp);
 		
 		res.render("index/general", 
 		{

@@ -11,11 +11,21 @@ class IndexRoute {
     /* DIAGNÓSTICO */
     async diagnostico(req, res) {
         res.render('index/report', {
+            earliest_date: await (0, amazonbooks_1.scalar)('SELECT MIN(proScrapDate) FROM Product;'),
+            latest_date: await (0, amazonbooks_1.scalar)('SELECT MAX(proScrapDate) FROM Product;'),
             total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product;'),
             total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT autCode) FROM Author;'),
             total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product;'),
             total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product;'),
-            total_categories: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT catName) FROM Category;')
+            total_categories: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT catName) FROM Category;'),
+            total_reviews: await (0, amazonbooks_1.scalar)('SELECT SUM(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" GROUP BY proName);'),
+            total_pages: await (0, amazonbooks_1.scalar)('SELECT SUM(proPages) FROM (SELECT proName, proPages AS proPages FROM Product WHERE proPages IS NOT NULL AND proPages != "N/A" GROUP BY proName);'),
+            avg_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(AVG(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
+            max_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(MAX(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
+            min_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(MIN(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName) WHERE proPrice  >= 0;'),
+            avg_stars: await (0, amazonbooks_1.scalar)('SELECT ROUND(AVG(proStar), 2) FROM (SELECT proName, proStar FROM Product WHERE proStar != "N/A" AND proStar IS NOT NULL GROUP BY proName);'),
+            max_reviews_perbook: await (0, amazonbooks_1.scalar)('SELECT MAX(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
+            avg_reviews_perbook: await (0, amazonbooks_1.scalar)('SELECT CAST(ROUND(AVG(proReview)) AS INTEGER) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
         });
     }
     /* VISÃO GERAL */
