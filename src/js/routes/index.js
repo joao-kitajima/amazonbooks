@@ -20,6 +20,7 @@ class IndexRoute {
     }
     /* VISÃO GERAL */
     async visao_geral(req, res) {
+        let rows;
         // Cards
         let sumRevCat = {}, sumAutCatMax = {}, sumAutCatMin = {}, avgPagCat = {};
         /// Graficos
@@ -40,16 +41,15 @@ class IndexRoute {
             sumRevCat["data"] = row.somaReview;
             sumRevCat["name"] = row.catName;
         });
-        await amazonbooks_1.db.all(`SELECT count(DISTINCT autCode) as somaAutor, c.catName FROM Product p
+        rows = await (0, amazonbooks_1.executar)(`SELECT count(DISTINCT autCode) as somaAutor, c.catName FROM Product p
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
-		ORDER BY somaAutor DESC;`, async (err, rows) => {
-            sumAutCatMax["name"] = rows[0].catName;
-            sumAutCatMax["data"] = rows[0].somaAutor;
-            sumAutCatMin["name"] = rows[rows.length - 1].catName;
-            sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
-        });
-        await amazonbooks_1.db.all(`SELECT round(avg(a.proPages),0) as avgPages, c.catName
+		ORDER BY somaAutor DESC;`);
+        sumAutCatMax["name"] = rows[0].catName;
+        sumAutCatMax["data"] = rows[0].somaAutor;
+        sumAutCatMin["name"] = rows[rows.length - 1].catName;
+        sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
+        rows = await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),0) as avgPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
 					MAX(proCode) as proCode
@@ -59,13 +59,12 @@ class IndexRoute {
 		INNER JOIN Category c ON c.catCode = a.catCode
 		WHERE a.proPages != "N/A"
 		GROUP BY a.catCode
-		ORDER BY avgPages DESC;`, async (err, rows) => {
-            sumAutCatMax["name"] = rows[0].catName;
-            sumAutCatMax["data"] = rows[0].somaAutor;
-            sumAutCatMin["name"] = rows[rows.length - 1].catName;
-            sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
-        });
-        await amazonbooks_1.db.all(`SELECT a.proReview, a.proPages, c.catName
+		ORDER BY avgPages DESC;`);
+        sumAutCatMax["name"] = rows[0].catName;
+        sumAutCatMax["data"] = rows[0].somaAutor;
+        sumAutCatMin["name"] = rows[rows.length - 1].catName;
+        sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proReview, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
 					MAX(proCode) as proCode
@@ -74,24 +73,20 @@ class IndexRoute {
 		ON a.proName = b.proName and a.proCode = b.proCode
 		INNER JOIN Category c ON c.catCode = a.catCode
 		WHERE a.proReview != "N/A" and a.proPages != "N/A"
-		ORDER BY a.catCode`, async (err, rows) => {
-            if (err) {
-                throw err;
+		ORDER BY a.catCode`);
+        rows.forEach((r) => {
+            var c = catRevPag[r.catName];
+            if (!c) {
+                c = {
+                    name: r.catName,
+                    data: []
+                };
+                catRevPag[r.catName] = c;
+                seriesRevPag.push(c);
             }
-            await rows.forEach((r) => {
-                var c = catRevPag[r.catName];
-                if (!c) {
-                    c = {
-                        name: r.catName,
-                        data: []
-                    };
-                    catRevPag[r.catName] = c;
-                    seriesRevPag.push(c);
-                }
-                c.data.push([r.proReview, r.proPages]);
-            });
+            c.data.push([r.proReview, r.proPages]);
         });
-        await amazonbooks_1.db.all(`SELECT a.proStar, a.proPages, c.catName
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proStar, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
 					MAX(proCode) as proCode
@@ -100,24 +95,20 @@ class IndexRoute {
 		ON a.proName = b.proName and a.proCode = b.proCode
 		INNER JOIN Category c ON c.catCode = a.catCode
 		WHERE a.proStar != "N/A" and a.proPages != "N/A"
-		ORDER BY a.catCode`, async (err, rows) => {
-            if (err) {
-                throw err;
+		ORDER BY a.catCode`);
+        rows.forEach((r) => {
+            var sp = catStrPag[r.catName];
+            if (!sp) {
+                sp = {
+                    name: r.catName,
+                    data: []
+                };
+                catStrPag[r.catName] = sp;
+                seriesStrPag.push(sp);
             }
-            await rows.forEach((r) => {
-                var sp = catStrPag[r.catName];
-                if (!sp) {
-                    sp = {
-                        name: r.catName,
-                        data: []
-                    };
-                    catStrPag[r.catName] = sp;
-                    seriesStrPag.push(sp);
-                }
-                sp.data.push([r.proStar, r.proPages]);
-            });
+            sp.data.push([r.proStar, r.proPages]);
         });
-        await amazonbooks_1.db.all(`SELECT a.proPrice, a.proPages, c.catName
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proPrice, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
 					MAX(proCode) as proCode
@@ -126,38 +117,30 @@ class IndexRoute {
 		ON a.proName = b.proName and a.proCode = b.proCode
 		INNER JOIN Category c ON c.catCode = a.catCode
 		WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A"
-		ORDER BY a.catCode`, async (err, rows) => {
-            if (err) {
-                throw err;
+		ORDER BY a.catCode`);
+        rows.forEach((r) => {
+            var pp = catPriPag[r.catName];
+            if (!pp) {
+                pp = {
+                    name: r.catName,
+                    data: []
+                };
+                catPriPag[r.catName] = pp;
+                seriesPriPag.push(pp);
             }
-            await rows.forEach((r) => {
-                var pp = catPriPag[r.catName];
-                if (!pp) {
-                    pp = {
-                        name: r.catName,
-                        data: []
-                    };
-                    catPriPag[r.catName] = pp;
-                    seriesPriPag.push(pp);
-                }
-                pp.data.push([r.proPrice, r.proPages]);
-            });
+            pp.data.push([r.proPrice, r.proPages]);
         });
-        await amazonbooks_1.db.all(`SELECT proType, count(proType) as freq
+        rows = await (0, amazonbooks_1.executar)(`SELECT proType, count(proType) as freq
 		FROM Product
 		WHERE proType != "Not Exists" and proType != "Not exists"
 		GROUP BY proType
-		ORDER BY freq DESC`, async (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            await rows.forEach((r) => {
-                catTyp.data.push(r.freq);
-                categoriesTyp.push(r.proType);
-            });
-            seriesTyp.push(catTyp);
-            res.render("index/general", { sumAutCatMax: sumAutCatMax, sumAutCatMin: sumAutCatMin, sumRevCat: sumRevCat, seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp) });
+		ORDER BY freq DESC`);
+        rows.forEach((r) => {
+            catTyp.data.push(r.freq);
+            categoriesTyp.push(r.proType);
         });
+        seriesTyp.push(catTyp);
+        res.render("index/general", { sumAutCatMax: sumAutCatMax, sumAutCatMin: sumAutCatMin, sumRevCat: sumRevCat, seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp) });
     }
     /* AUTOAJUDA */
     async autoajuda(req, res) {

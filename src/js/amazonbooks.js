@@ -8,7 +8,7 @@ exports.sqlite3 = sqlite3;
 const path = require("path");
 const dbPath = path.join(__dirname, '../../db/conn.db');
 console.log(dbPath);
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         return console.log(err.message);
     }
