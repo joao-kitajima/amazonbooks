@@ -170,6 +170,7 @@ class IndexRoute {
 				categoriesTyp.push(r.proType);
 			})
 			seriesTyp.push(catTyp);
+			
 			res.render("index/general", {seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp)});
 		})
 	}
