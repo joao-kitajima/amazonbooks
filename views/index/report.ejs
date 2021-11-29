@@ -1,4 +1,17 @@
 <!-- TOTAL PERIOD -->
+<%
+  earliest_date = earliest_date.slice(0,11).replace(/-/g, '/');
+  var ed_day = earliest_date.slice(8);
+  var ed_month = earliest_date.slice(4, 8);
+  var ed_year = earliest_date.slice(0, 4);
+  earliest_date = (ed_day + ed_month + ed_year).replace(' ', '');
+
+  latest_date = latest_date.slice(0,11).replace(/-/g, '/');
+  var ed_day = latest_date.slice(8);
+  var ed_month = latest_date.slice(4, 8);
+  var ed_year = latest_date.slice(0, 4);
+  latest_date = (ed_day + ed_month + ed_year).replace(' ', '');
+%>
 <p> DADOS COLETADOS ENTRE <%= earliest_date %> E <%= latest_date %> </p>
 
 <!-- TOTAL RECORDS -->
@@ -23,16 +36,20 @@
 <p> NÚMERO TOTAL DE PÁGINAS: <%= total_pages %> </p>
 
 <!-- AVERAGE PRODUCT PRICE -->
+<% avg_price = avg_price.toString().replace('.', ',') %>
 <p> PREÇO MÉDIO DOS PRODUTOS: R$<%= avg_price %> </p>
 
 <!-- MAX PRODUCT PRICE -->
+<% max_price = max_price.toString().replace('.', ',') %>
 <p> PREÇO MÁXIMO ENCONTRADO: R$<%= max_price %> </p>
 
 <!-- MIN PRODUCT PRICE -->
+<% min_price = min_price.toString().replace('.', ',') %>
 <p> PREÇO MÍNIMO ENCONTRADO: R$<%= min_price %> </p>
 
 <!-- AVG STARS -->
-<p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %> </p>
+<% avg_stars = avg_stars.toString().replace('.', ',') %>
+<p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %>/5 </p>
 
 <!-- MAX REVIEWS PER PRODUCT -->
 <p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook %> </p>
