@@ -9,25 +9,28 @@
     var seriesRevPag = `<%- seriesRevPag %>`
 
     var optionsRevPag = {
-    series: JSON.parse(seriesRevPag),
+        series: JSON.parse(seriesRevPag),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy'
-        }
-    },
-    xaxis: {
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy'
+            }
+        },
+        xaxis: {
             tickAmount: 10,
             labels: {
-            formatter: function(val) {
-                return parseFloat(val).toFixed(1)
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
             }
-        }
-    },
-    yaxis: {
-        tickAmount: 7
+        },
+        yaxis: {
+            tickAmount: 7
+        },
+        theme: {
+            palette: 'palette7'
         }
     };
 
@@ -40,25 +43,25 @@
     var seriesStrPag = `<%- seriesStrPag %>`
 
     var optionsStrPag = {
-    series: JSON.parse(seriesStrPag),
+        series: JSON.parse(seriesStrPag),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy'
-        }
-    },
-    xaxis: {
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy'
+            }
+        },
+        xaxis: {
             tickAmount: 10,
             labels: {
-            formatter: function(val) {
-                return parseFloat(val).toFixed(1)
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
             }
-        }
-    },
-    yaxis: {
-        tickAmount: 7
+        },
+        yaxis: {
+            tickAmount: 7
         }
     };
 
