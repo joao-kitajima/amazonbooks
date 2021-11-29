@@ -15,24 +15,31 @@
 <p> DADOS COLETADOS ENTRE <%= earliest_date %> E <%= latest_date %> </p>
 
 <!-- TOTAL RECORDS -->
+<% total_records = new Intl.NumberFormat().format(total_records); %>
 <p> NÚMERO DE REGISTROS COLETADOS: <%= total_records %> </p>
 
 <!-- TOTAL AUTHORS -->
+<% total_authors = new Intl.NumberFormat().format(total_authors); %>
 <p> TOTAL DE AUTORES: <%= total_authors %> </p>
 
 <!-- TOTAL BOOKS -->
+<% total_books = new Intl.NumberFormat().format(total_books); %>
 <p> TOTAL DE LIVROS ANALISADOS: <%= total_books %> </p>
 
 <!-- TOTAL PUBLISHERS -->
+<% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
 <p> TOTAL DE EDITORAS: <%= total_publishers %> </p>
 
 <!-- TOTAL CATEGORIES -->
+<% total_categories = new Intl.NumberFormat().format(total_categories); %>
 <p> TOTAL DE CATEGORIAS: <%= total_categories %> </p>
 
 <!-- TOTAL REVIEWS -->
+<% total_reviews = new Intl.NumberFormat().format(total_reviews); %>
 <p> NÚMERO TOTAL DE REVIEWS: <%= total_reviews %> </p>
 
 <!-- TOTAL PAGES -->
+<% total_pages = new Intl.NumberFormat().format(total_pages); %>
 <p> NÚMERO TOTAL DE PÁGINAS: <%= total_pages %> </p>
 
 <!-- AVERAGE PRODUCT PRICE -->
@@ -52,9 +59,11 @@
 <p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %>/5 </p>
 
 <!-- MAX REVIEWS PER PRODUCT -->
+<% max_reviews_perbook = new Intl.NumberFormat().format(max_reviews_perbook); %>
 <p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook %> </p>
 
 <!-- AVG REVIEWS PER PRODUCT -->
+<% avg_reviews_perbook = new Intl.NumberFormat().format(avg_reviews_perbook); %>
 <p> MÉDIA DE REVIEWS POR PRODUTO: <%= avg_reviews_perbook %> </p>
 
 
