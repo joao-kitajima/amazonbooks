@@ -86,10 +86,56 @@ class IndexRoute {
 
 	/* VISÃO GERAL */
 	public async visao_geral(req: amazonbooks.Request, res: amazonbooks.Response){
+		// Cards
+		let sumRevCat = {}, sumAutCatMax = {}, sumAutCatMin = {}, avgPagCat = {}
+
+		/// Graficos
 		let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = []
 		let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: []}
-		let categorias = {}
 		let categoriesTyp = []
+
+		
+		await db.get(`SELECT sum(a.proReview) as somaReview, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proReview != "N/A"
+		GROUP BY a.catCode
+		ORDER BY somaReview DESC;`, async(err, row)=>{
+				sumRevCat["data"] = row.somaReview;
+				sumRevCat["name"] = row.catName;
+		})
+
+		await db.all(`SELECT count(DISTINCT autCode) as somaAutor, c.catName FROM Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		GROUP BY p.catCode
+		ORDER BY somaAutor DESC;`, async(err, rows)=>{
+				sumAutCatMax["name"] = rows[0].catName
+				sumAutCatMax["data"] = rows[0].somaAutor
+				sumAutCatMin["name"] = rows[rows.length - 1].catName
+				sumAutCatMin["data"] = rows[rows.length - 1].somaAutor
+		})
+
+		await db.all(`SELECT round(avg(a.proPages),0) as avgPages, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPages != "N/A"
+		GROUP BY a.catCode
+		ORDER BY avgPages DESC;`, async(err, rows)=>{
+				sumAutCatMax["name"] = rows[0].catName
+				sumAutCatMax["data"] = rows[0].somaAutor
+				sumAutCatMin["name"] = rows[rows.length - 1].catName
+				sumAutCatMin["data"] = rows[rows.length - 1].somaAutor
+		})
 
 		await db.all(`SELECT a.proReview, a.proPages, c.catName
 		FROM Product a
@@ -194,7 +240,7 @@ class IndexRoute {
 			})
 			seriesTyp.push(catTyp);
 			
-			res.render("index/general", {seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp)});
+			res.render("index/general", {sumAutCatMax: sumAutCatMax, sumAutCatMin: sumAutCatMin, sumRevCat: sumRevCat, seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp)});
 		})
 	}
 
