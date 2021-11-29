@@ -1,8 +1,15 @@
 
-
+<h4>Reviews x Páginas</h4>
 <div id="chartRevPag"></div>
 ---
+<h4>Estrelas x Páginas</h4>
 <div id="chartStrPag"></div>
+---
+<h4>Preço x Páginas</h4>
+<div id="chartPriPag"></div>
+--- 
+<h4>Tipo x Estrelas</h4>
+<div id="chartTypRev"></div>
 
 <!-- Review x Pages -->
 <script>
@@ -16,8 +23,13 @@
         zoom: {
         enabled: true,
         type: 'xy'
-        }
-    },
+        },
+        animations: {
+            enabled: false,
+            speed: 175
+            }
+        },
+
     xaxis: {
             tickAmount: 10,
             labels: {
@@ -37,18 +49,22 @@
 
 <!-- Stars x Pages -->
 <script>
-    var seriesStrPag = `<%- seriesStrPag %>`
+    var series = `<%- seriesStrPag %>`
 
-    var optionsStrPag = {
-    series: JSON.parse(seriesStrPag),
+    var options = {
+    series: JSON.parse(series),
         chart: {
         height: 350,
         type: 'scatter',
         zoom: {
         enabled: true,
         type: 'xy'
-        }
-    },
+        },
+        animations: {
+            enabled: false,
+            speed: 175
+            }
+        },
     xaxis: {
             tickAmount: 10,
             labels: {
@@ -62,6 +78,75 @@
         }
     };
 
-    var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), optionsStrPag);
+    var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
     chartStrPag.render();
+</script>
+
+<!-- Price x Pages -->
+<script>
+    var series = `<%- seriesPriPag %>`
+
+    var options = {
+    series: JSON.parse(series),
+        chart: {
+        height: 350,
+        type: 'scatter',
+        zoom: {
+        enabled: true,
+        type: 'xy',
+        },
+        animations: {
+            enabled: false,
+            speed: 175
+            }
+        },
+    xaxis: {
+            tickAmount: 10,
+            labels: {
+            formatter: function(val) {
+                return parseFloat(val).toFixed(1)
+            }
+        }
+    },
+    yaxis: {
+        tickAmount: 7
+        }
+    };
+
+    var chartPriPag = new ApexCharts(document.querySelector("#chartPriPag"), options);
+    chartPriPag.render();
+</script>
+
+<!-- Count type -->
+<script>
+    var series = JSON.parse(`<%- seriesTyp %>`)
+    var categories = JSON.parse(`<%- categoriesTyp %>`)
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartTypRev = new ApexCharts(document.querySelector("#chartTypRev"), options);
+    chartTypRev.render();
 </script>

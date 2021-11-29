@@ -50,8 +50,10 @@ class IndexRoute {
     }
     /* VISÃO GERAL */
     async visao_geral(req, res) {
-        let seriesRevPag = [], seriesStrPag = [];
-        let catRevPag = {}, catStrPag = {};
+        let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = [];
+        let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: [] };
+        let categorias = {};
+        let categoriesTyp = [];
         await amazonbooks_1.db.all(`SELECT a.proReview, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -103,12 +105,53 @@ class IndexRoute {
                 }
                 sp.data.push([r.proStar, r.proPages]);
             });
-            res.render("index/general", { seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag) });
+        });
+        await amazonbooks_1.db.all(`SELECT a.proPrice, a.proPages, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A"
+		ORDER BY a.catCode`, async (err, rows) => {
+            if (err) {
+                throw err;
+            }
+            await rows.forEach((r) => {
+                var pp = catPriPag[r.catName];
+                if (!pp) {
+                    pp = {
+                        name: r.catName,
+                        data: []
+                    };
+                    catPriPag[r.catName] = pp;
+                    seriesPriPag.push(pp);
+                }
+                pp.data.push([r.proPrice, r.proPages]);
+            });
+        });
+        await amazonbooks_1.db.all(`SELECT proType, count(proType) as freq
+		FROM Product
+		WHERE proType != "Not Exists" and proType != "Not exists"
+		GROUP BY proType
+		ORDER BY freq DESC`, async (err, rows) => {
+            if (err) {
+                throw err;
+            }
+            await rows.forEach((r) => {
+                catTyp.data.push(r.freq);
+                categoriesTyp.push(r.proType);
+            });
+            seriesTyp.push(catTyp);
+            res.render("index/general", { seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp) });
         });
     }
     /* AUTOAJUDA */
     async autoajuda(req, res) {
         let ajuList = [];
+        res.render("index/selfHelp");
     }
     /* INFANTIL */
     async infantil(req, res) {
