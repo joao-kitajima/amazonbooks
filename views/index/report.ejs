@@ -1,29 +1,21 @@
 <!-- TOTAL RECORDS -->
-<%
-  total_records = JSON.parse(total_records);
-  total_records = total_records['COUNT(proCode)'];
-%>
-
 <p> NÚMERO DE REGISTROS COLETADOS: <%= total_records %> </p>
 
 
 <!-- TOTAL AUTHORS -->
-<%
-  total_authors = JSON.parse(total_authors);
-  total_authors = total_authors['COUNT(autCode)'];
-%>
-
 <p> NÚMERO DE AUTORES: <%= total_authors %> </p>
 
 
 <!-- TOTAL BOOKS -->
-<%
-  total_books = JSON.parse(total_books);
-  total_books = total_books['COUNT(DISTINCT proName)'];
-%>
-
 <p> TOTAL DE LIVROS ANALISADOS: <%= total_books %> </p>
 
+
+<!-- TOTAL PUBLISHERS -->
+<p> TOTAL DE EDITORAS: <%= total_publishers %> </p>
+
+
+<!-- TOTAL CATEGORIES -->
+<p> TOTAL DE CATEGORIAS: <%= total_categories %> </p>
 
 <style type="text/css">
     #chart_01, #chart_02 {
@@ -46,7 +38,6 @@
 
 <%- contentFor("scripts") %>
 <script type="text/javascript">
- 
   var options = {
       chart: {
         type: 'line',
