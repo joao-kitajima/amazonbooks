@@ -16,30 +16,33 @@
     var seriesRevPag = `<%- seriesRevPag %>`
 
     var optionsRevPag = {
-    series: JSON.parse(seriesRevPag),
+        series: JSON.parse(seriesRevPag),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy'
-        },
-        animations: {
-            enabled: false,
-            speed: 175
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy'
+            },
+            animations: {
+                enabled: false,
+                speed: 175
             }
         },
 
-    xaxis: {
+        xaxis: {
             tickAmount: 10,
             labels: {
-            formatter: function(val) {
-                return parseFloat(val).toFixed(1)
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
             }
-        }
-    },
-    yaxis: {
-        tickAmount: 7
+        },
+        yaxis: {
+            tickAmount: 7
+        },
+        theme: {
+            palette: 'palette7'
         }
     };
 
@@ -54,19 +57,19 @@
     var options = {
     series: JSON.parse(series),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy'
-        },
-        animations: {
-            enabled: false,
-            speed: 175
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy'
+            },
+            animations: {
+                enabled: false,
+                speed: 175
             }
         },
     xaxis: {
-            tickAmount: 10,
+        tickAmount: 10,
             labels: {
             formatter: function(val) {
                 return parseFloat(val).toFixed(1)
@@ -75,7 +78,7 @@
     },
     yaxis: {
         tickAmount: 7
-        }
+    }
     };
 
     var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
@@ -103,13 +106,13 @@
     xaxis: {
             tickAmount: 10,
             labels: {
-            formatter: function(val) {
-                return parseFloat(val).toFixed(1)
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
             }
-        }
-    },
-    yaxis: {
-        tickAmount: 7
+        },
+        yaxis: {
+            tickAmount: 7
         }
     };
 

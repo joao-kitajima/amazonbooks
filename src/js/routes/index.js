@@ -8,44 +8,41 @@ class IndexRoute {
         };
         res.render("index/index", pageSettings);
     }
-    /*
-    public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
-
-
-
-
-        res.render("index/report", {catList: JSON.stringify(await Category.listCategories()), autList: JSON.stringify(await Author.listAuthors()), proList: JSON.stringify(await Product.listProducts())});
-    }
-    */
     /* DIAGNÓSTICO */
     async diagnostico(req, res) {
-        let catList = [];
-        let proList = [];
-        let autList = [];
-        await amazonbooks_1.db.all('SELECT * from Category', async (err, rows) => {
+        let total_records = {};
+        let total_authors = {};
+        let total_books = {};
+        await amazonbooks_1.db.all('SELECT COUNT(proCode) FROM Product;', async (err, rows) => {
             if (err) {
                 throw err;
             }
-            await rows.forEach((cat) => {
-                catList.push(cat);
+            await rows.forEach((record_line) => {
+                total_records = record_line;
             });
+            // res.render('index/report',  { total_records: JSON.stringify(total_records) });
         });
-        await amazonbooks_1.db.all('SELECT * from Product', async (err, rows) => {
+        await amazonbooks_1.db.all('SELECT COUNT(DISTINCT proName) FROM Product;', async (err, rows) => {
             if (err) {
                 throw err;
             }
-            await rows.forEach((p) => {
-                proList.push(p);
+            await rows.forEach((books_line) => {
+                total_books = books_line;
             });
+            // res.render('index/report', { total_books: JSON.stringify(total_books) });
         });
-        await amazonbooks_1.db.all('SELECT * from Author', async (err, rows) => {
+        await amazonbooks_1.db.all('SELECT COUNT(autCode) FROM Author;', async (err, rows) => {
             if (err) {
                 throw err;
             }
-            await rows.forEach((aut) => {
-                autList.push(aut);
+            await rows.forEach((author_line) => {
+                total_authors = author_line;
             });
-            res.render("index/report", { autList: JSON.stringify(autList), catList: JSON.stringify(catList), proList: JSON.stringify(proList) });
+            res.render('index/report', {
+                total_records: JSON.stringify(total_records),
+                total_books: JSON.stringify(total_books),
+                total_authors: JSON.stringify(total_authors)
+            });
         });
     }
     /* VISÃO GERAL */
