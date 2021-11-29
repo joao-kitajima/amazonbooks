@@ -1,21 +1,45 @@
+<!-- TOTAL PERIOD -->
+<p> DADOS COLETADOS ENTRE <%= earliest_date %> E <%= latest_date %> </p>
+
 <!-- TOTAL RECORDS -->
 <p> NÚMERO DE REGISTROS COLETADOS: <%= total_records %> </p>
 
-
 <!-- TOTAL AUTHORS -->
-<p> NÚMERO DE AUTORES: <%= total_authors %> </p>
-
+<p> TOTAL DE AUTORES: <%= total_authors %> </p>
 
 <!-- TOTAL BOOKS -->
 <p> TOTAL DE LIVROS ANALISADOS: <%= total_books %> </p>
 
-
 <!-- TOTAL PUBLISHERS -->
 <p> TOTAL DE EDITORAS: <%= total_publishers %> </p>
 
-
 <!-- TOTAL CATEGORIES -->
 <p> TOTAL DE CATEGORIAS: <%= total_categories %> </p>
+
+<!-- TOTAL REVIEWS -->
+<p> NÚMERO TOTAL DE REVIEWS: <%= total_reviews %> </p>
+
+<!-- TOTAL PAGES -->
+<p> NÚMERO TOTAL DE PÁGINAS: <%= total_pages %> </p>
+
+<!-- AVERAGE PRODUCT PRICE -->
+<p> PREÇO MÉDIO DOS PRODUTOS: R$<%= avg_price %> </p>
+
+<!-- MAX PRODUCT PRICE -->
+<p> PREÇO MÁXIMO ENCONTRADO: R$<%= max_price %> </p>
+
+<!-- MIN PRODUCT PRICE -->
+<p> PREÇO MÍNIMO ENCONTRADO: R$<%= min_price %> </p>
+
+<!-- AVG STARS -->
+<p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %> </p>
+
+<!-- MAX REVIEWS PER PRODUCT -->
+<p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook %> </p>
+
+<!-- AVG REVIEWS PER PRODUCT -->
+<p> MÉDIA DE REVIEWS POR PRODUTO: <%= avg_reviews_perbook %> </p>
+
 
 <style type="text/css">
     #chart_01, #chart_02 {
@@ -32,8 +56,8 @@
     }
 </style>
 
-<div id="chart_01"></div>
-<div id="chart_02"></div>
+<!-- <div id="chart_01"></div> -->
+<!-- <div id="chart_02"></div> -->
 
 
 <%- contentFor("scripts") %>
