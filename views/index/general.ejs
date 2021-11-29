@@ -1,14 +1,17 @@
-<h6>Soma de reviews: <%= sumRevCat.data %> (<%= sumRevCat.name %>)</h6>
-<h6>Categoria com maior quantidade de autores: <%= sumAutCat[0].data %> (<%= sumAutCat[0].name %>)</h6>
-<h6>Categoria com maior quantidade de autores: <%= sumAutCat[sumAutCat.length - 1].data %> (<%= sumAutCat[sumAutCat.length - 1].name %>)</h6>
-<h6>Categoria com maior qtd média de paginas: <%= avgPagCat[0].data %> (<%= avgPagCat[0].name %>)</h6>
-<h6>Categoria com maior qtd média de paginas: <%= avgPagCat[avgPagCat.length - 1 ].data %> (<%= avgPagCat[avgPagCat.length - 1 ].name %>)</h6>
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat[0].data %> (<%= avgPriCat[0].name %>)</h6>
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat[avgPriCat.length - 1 ].data %> (<%= avgPriCat[avgPriCat.length - 1 ].name %>)</h6>
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat[0].data %> (<%= avgPriCat[0].name %>)</h6>
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat[avgPriCat.length - 1 ].data %> (<%= avgPriCat[avgPriCat.length - 1 ].name %>)</h6>
+<h6>Categoria com maior soma de reviews: <%= sumRevCat.max.data %> (<%= sumRevCat.max.name %>)</h6>
+<h6>Categoria com menor soma de reviews: <%= sumRevCat.min.data %> (<%= sumRevCat.min.name %>)</h6>
+
+<h6>Categoria com maior quantidade de autores: <%= sumAutCat.max.data %> (<%= sumAutCat.max.name %>)</h6>
+<h6>Categoria com menor quantidade de autores: <%= sumAutCat.min.data %> (<%= sumAutCat.min.name %>)</h6>
+
+<h6>Categoria com maior qtd média de paginas: <%= avgPagCat.max.data %> (<%= avgPagCat.max.name %>)</h6>
+<h6>Categoria com menor qtd média de paginas: <%= avgPagCat.min.data %> (<%= avgPagCat.min.name %>)</h6>
+
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat.max.data %> (<%= avgPriCat.max.name %>)</h6>
+<h6>Categoria com menor qtd média de preço: <%= avgPriCat.min.data %> (<%= avgPriCat.min.name %>)</h6>
+
 <h6>Categoria com maior data de publi regist: <%= minMaxDate.max.data%> (<%= minMaxDate.max.name%>)</h6>
-<h6>Categoria com maior data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
+<h6>Categoria com menor data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
 
 
 <br>
@@ -23,13 +26,16 @@
 ---
 <h4>Preço x Páginas</h4>
 <div id="chartPriPag"></div>
+---
+<h4>Preço x Estrelas</h4>
+<div id="chartPriStr"></div>
 --- 
 <h4>Tipo frequencia</h4>
 <div id="chartTypRev"></div>
-
+---
 <h4>Soma preço por categoria</h4>
 <div id="chartPriCat"></div>
-
+---
 <h4>Contagem produto distinto por categoria</h4>
 <div id="chartProCat"></div>
 
@@ -140,6 +146,41 @@
 
     var chartPriPag = new ApexCharts(document.querySelector("#chartPriPag"), options);
     chartPriPag.render();
+</script>
+
+<!-- Price x Stars -->
+<script>
+    var series = `<%- seriesPriStr %>`
+
+    var options = {
+    series: JSON.parse(series),
+        chart: {
+        height: 350,
+        type: 'scatter',
+        zoom: {
+        enabled: true,
+        type: 'xy',
+        },
+        animations: {
+            enabled: false,
+            speed: 175
+            }
+        },
+    xaxis: {
+            tickAmount: 10,
+            labels: {
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
+            }
+        },
+        yaxis: {
+            tickAmount: 7
+        }
+    };
+
+    var chartPriStr = new ApexCharts(document.querySelector("#chartPriStr"), options);
+    chartPriStr.render();
 </script>
 
 <!-- Freq produto / categoria -->

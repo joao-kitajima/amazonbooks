@@ -46,13 +46,13 @@ class IndexRoute {
 		minMaxDate = {}, sumPriCat = [], freqProCat = []
 
 		/// Graficos
-		let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = []
-		let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: []}
+		let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = [], seriesPriStr = []
+		let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: []}, catPriStr = {}
 		let categoriesTyp = []
 
 
 		/* CARD */
-		/* Categoria com maior numero de reviews */
+		/* Categoria com maior e menur numero de reviews */
 		rows = await executar(`SELECT sum(a.proReview) as somaReview, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -64,8 +64,8 @@ class IndexRoute {
 		WHERE a.proReview != "N/A"
 		GROUP BY a.catCode
 		ORDER BY somaReview DESC;`);
-		sumRevCat["data"] = rows[0].somaReview;
-		sumRevCat["name"] = rows[0].catName;
+		sumRevCat["max"] = {name: rows[0].catName, data: rows[0].somaReview};
+		sumRevCat["min"] = {name: rows[rows.length - 1].catName, data: rows[rows.length - 1].somaReview};
 		
 		/* CARD */
 		/* Categorias com maior e menor numero de autores registrados */
@@ -73,9 +73,8 @@ class IndexRoute {
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
 		ORDER BY somaAutor DESC;`);
-		rows.forEach((r)=>{
-			sumAutCat.push({name: r.catName , data: r.somaAutor })
-		})
+		sumAutCat["max"] = {name: rows[0].catName, data: rows[0].somaAutor};
+		sumAutCat["min"] = {name: rows[rows.length - 1].catName, data: rows[rows.length - 1].somaAutor};
 
 		/* CARD */
 		/* Categorias com maior e menor numero de pag medias registrados */
@@ -90,9 +89,8 @@ class IndexRoute {
 		WHERE a.proPages != "N/A"
 		GROUP BY a.catCode
 		ORDER BY avgPages DESC;`);
-		rows.forEach((r)=>{
-			avgPagCat.push({name: r.catName , data: r.avgPages })
-		})
+		avgPagCat["max"] = {name: rows[0].catName, data: rows[0].avgPages};
+		avgPagCat["min"] = {name: rows[rows.length - 1].catName, data: rows[rows.length - 1].avgPages};
 
 		/* CARD */
 		/* Categorias com maior média de preço dos livros */
@@ -110,6 +108,8 @@ class IndexRoute {
 		rows.forEach((r)=>{
 			avgPriCat.push({name: r.catName , data: r.avgPrice })
 		})
+		avgPriCat["max"] = {name: rows[0].catName, data: rows[0].avgPrice};
+		avgPriCat["min"] = {name: rows[rows.length - 1].catName, data: rows[rows.length - 1].avgPrice};
 
 		/* CARD */
 		/* Categoria livro mais novos e mais velhos registrados */
@@ -260,6 +260,33 @@ class IndexRoute {
 			pp.data.push([r.proPrice, r.proPages]);
 		});
 
+		/* DSP */
+		/* price x stars /categoria */
+		rows = await executar(`SELECT a.proPrice, a.proStar, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A"
+		ORDER BY a.catCode`);
+		rows.forEach((r)=>{
+			var pp = catPriStr[r.catName]
+
+			if(!pp){
+				pp = {
+					name: r.catName,
+					data: []
+				}
+				catPriStr[r.catName] = pp;
+				seriesPriStr.push(pp);
+			}
+
+			pp.data.push([r.proPrice, r.proStar]);
+		});
+
 		
 		res.render("index/general", 
 		{
@@ -269,6 +296,7 @@ class IndexRoute {
 		 	avgPriCat: avgPriCat, 
 			sumAutCat: sumAutCat,
 			sumRevCat: sumRevCat,
+			seriesPriStr: JSON.stringify(seriesPriStr),
 			sumPriCat: JSON.stringify(sumPriCat),
 			freqProCat: JSON.stringify(freqProCat),
 			seriesRevPag: JSON.stringify(seriesRevPag),
