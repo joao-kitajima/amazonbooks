@@ -1,5 +1,5 @@
 ﻿import amazonbooks = require("teem");
-import { db } from '../amazonbooks';
+import { db, executar, scalar } from '../amazonbooks';
 import Category from '../models/Category';
 import Author from '../models/Author';
 import Product from '../models/Product';
@@ -17,68 +17,14 @@ class IndexRoute {
 
 	/* DIAGNÓSTICO */
 	public async diagnostico(req: amazonbooks.Request, res: amazonbooks.Response) {
-		let total_records = {};
-		let total_authors = {};
-		let total_books = {};
-
-
-		await db.all(
-			'SELECT COUNT(proCode) FROM Product;',
-			async(err, rows) => {
-				if(err) {
-					throw err;
-				}
-
-				await rows.forEach(
-					(record_line) => {
-						total_records = record_line;
-					}
-				)
-
-				// res.render('index/report',  { total_records: JSON.stringify(total_records) });
-			}
-		);
-
-
-		await db.all(
-			'SELECT COUNT(DISTINCT proName) FROM Product;',
-			async(err, rows) => {
-				if(err) {
-					throw err;
-				}
-
-				await rows.forEach(
-					(books_line) => {
-						total_books = books_line;
-					}
-				)
-
-				// res.render('index/report', { total_books: JSON.stringify(total_books) });
-			}
-		);
-
-
-		await db.all(
-			'SELECT COUNT(autCode) FROM Author;',
-			async(err, rows) => {
-				if(err) {
-					throw err;
-				}
-
-				await rows.forEach(
-					(author_line) => {
-						total_authors = author_line;
-					}
-				)
-
-				res.render(
-					'index/report',
-					{
-						total_records: JSON.stringify(total_records),
-						total_books: JSON.stringify(total_books),
-						total_authors: JSON.stringify(total_authors)
-					}
-				);
+		res.render(
+			'index/report',
+			{
+				total_records: await scalar('SELECT COUNT(proCode) FROM Product;'),
+				total_books: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author;'),
+				total_authors: await scalar('SELECT COUNT(DISTINCT proName) FROM Product;'),
+				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product;'),
+				total_categories: await scalar('SELECT COUNT(DISTINCT catName) FROM Category;')
 			}
 		);
 	}

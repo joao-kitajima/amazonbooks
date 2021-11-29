@@ -10,39 +10,12 @@ class IndexRoute {
     }
     /* DIAGNÓSTICO */
     async diagnostico(req, res) {
-        let total_records = {};
-        let total_authors = {};
-        let total_books = {};
-        await amazonbooks_1.db.all('SELECT COUNT(proCode) FROM Product;', async (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            await rows.forEach((record_line) => {
-                total_records = record_line;
-            });
-            // res.render('index/report',  { total_records: JSON.stringify(total_records) });
-        });
-        await amazonbooks_1.db.all('SELECT COUNT(DISTINCT proName) FROM Product;', async (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            await rows.forEach((books_line) => {
-                total_books = books_line;
-            });
-            // res.render('index/report', { total_books: JSON.stringify(total_books) });
-        });
-        await amazonbooks_1.db.all('SELECT COUNT(autCode) FROM Author;', async (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            await rows.forEach((author_line) => {
-                total_authors = author_line;
-            });
-            res.render('index/report', {
-                total_records: JSON.stringify(total_records),
-                total_books: JSON.stringify(total_books),
-                total_authors: JSON.stringify(total_authors)
-            });
+        res.render('index/report', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT autCode) FROM Author;'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product;'),
+            total_categories: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT catName) FROM Category;')
         });
     }
     /* VISÃO GERAL */
