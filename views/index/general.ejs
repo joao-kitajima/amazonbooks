@@ -1,7 +1,19 @@
 <h6>Soma de reviews: <%= sumRevCat.data %> (<%= sumRevCat.name %>)</h6>
-<h6>Categoria com maior quantidade de autores: <%= sumAutCatMax.data %> (<%= sumAutCatMax.name %>)</h6>
-<h6>Categoria com maior quantidade de autores: <%= sumAutCatMin.data %> (<%= sumAutCatMin.name %>)</h6>
+<h6>Categoria com maior quantidade de autores: <%= sumAutCat[0].data %> (<%= sumAutCat[0].name %>)</h6>
+<h6>Categoria com maior quantidade de autores: <%= sumAutCat[sumAutCat.length - 1].data %> (<%= sumAutCat[sumAutCat.length - 1].name %>)</h6>
+<h6>Categoria com maior qtd média de paginas: <%= avgPagCat[0].data %> (<%= avgPagCat[0].name %>)</h6>
+<h6>Categoria com maior qtd média de paginas: <%= avgPagCat[avgPagCat.length - 1 ].data %> (<%= avgPagCat[avgPagCat.length - 1 ].name %>)</h6>
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat[0].data %> (<%= avgPriCat[0].name %>)</h6>
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat[avgPriCat.length - 1 ].data %> (<%= avgPriCat[avgPriCat.length - 1 ].name %>)</h6>
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat[0].data %> (<%= avgPriCat[0].name %>)</h6>
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat[avgPriCat.length - 1 ].data %> (<%= avgPriCat[avgPriCat.length - 1 ].name %>)</h6>
+<h6>Categoria com maior data de publi regist: <%= minMaxDate.max.data%> (<%= minMaxDate.max.name%>)</h6>
+<h6>Categoria com maior data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
 
+
+<br>
+<br>
+<br>
 
 <h4>Reviews x Páginas</h4>
 <div id="chartRevPag"></div>
@@ -12,8 +24,14 @@
 <h4>Preço x Páginas</h4>
 <div id="chartPriPag"></div>
 --- 
-<h4>Tipo x Estrelas</h4>
+<h4>Tipo frequencia</h4>
 <div id="chartTypRev"></div>
+
+<h4>Soma preço por categoria</h4>
+<div id="chartPriCat"></div>
+
+<h4>Contagem produto distinto por categoria</h4>
+<div id="chartProCat"></div>
 
 <!-- Review x Pages -->
 <script>
@@ -124,7 +142,85 @@
     chartPriPag.render();
 </script>
 
-<!-- Count type -->
+<!-- Freq produto / categoria -->
+<script>
+    var aux = JSON.parse(`<%- freqProCat %>`)
+    var series = [{data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartProCat = new ApexCharts(document.querySelector("#chartProCat"), options);
+    chartProCat.render();
+</script>
+
+<!-- Soma preço / categoria -->
+<script>
+    var aux = JSON.parse(`<%- sumPriCat %>`)
+    var series = [{data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
+    chartPriCat.render();
+</script>
+
+<!-- Freq type -->
 <script>
     var series = JSON.parse(`<%- seriesTyp %>`)
     var categories = JSON.parse(`<%- categoriesTyp %>`)

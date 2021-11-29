@@ -31,17 +31,19 @@ class IndexRoute {
 	/* VISÃO GERAL */
 	public async visao_geral(req: amazonbooks.Request, res: amazonbooks.Response){
 		let rows: any[];
-
 		// Cards
-		let sumRevCat = {}, sumAutCatMax = {}, sumAutCatMin = {}, avgPagCat = {}
+		let sumRevCat = {}, sumAutCat = [], avgPagCat = [], avgPriCat = [], dateCat = [],
+		minMaxDate = {}, sumPriCat = [], freqProCat = []
 
 		/// Graficos
 		let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = []
 		let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: []}
 		let categoriesTyp = []
 
-		
-		await db.get(`SELECT sum(a.proReview) as somaReview, c.catName
+
+		/* CARD */
+		/* Categoria com maior numero de reviews */
+		rows = await executar(`SELECT sum(a.proReview) as somaReview, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
 					MAX(proCode) as proCode
@@ -51,20 +53,22 @@ class IndexRoute {
 		INNER JOIN Category c ON c.catCode = a.catCode
 		WHERE a.proReview != "N/A"
 		GROUP BY a.catCode
-		ORDER BY somaReview DESC;`, async(err, row)=>{
-				sumRevCat["data"] = row.somaReview;
-				sumRevCat["name"] = row.catName;
-		})
-
+		ORDER BY somaReview DESC;`);
+		sumRevCat["data"] = rows[0].somaReview;
+		sumRevCat["name"] = rows[0].catName;
+		
+		/* CARD */
+		/* Categorias com maior e menor numero de autores registrados */
 		rows = await executar(`SELECT count(DISTINCT autCode) as somaAutor, c.catName FROM Product p
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
 		ORDER BY somaAutor DESC;`);
-		sumAutCatMax["name"] = rows[0].catName;
-		sumAutCatMax["data"] = rows[0].somaAutor;
-		sumAutCatMin["name"] = rows[rows.length - 1].catName;
-		sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
+		rows.forEach((r)=>{
+			sumAutCat.push({name: r.catName , data: r.somaAutor })
+		})
 
+		/* CARD */
+		/* Categorias com maior e menor numero de pag medias registrados */
 		rows = await executar(`SELECT round(avg(a.proPages),0) as avgPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -76,11 +80,84 @@ class IndexRoute {
 		WHERE a.proPages != "N/A"
 		GROUP BY a.catCode
 		ORDER BY avgPages DESC;`);
-		sumAutCatMax["name"] = rows[0].catName;
-		sumAutCatMax["data"] = rows[0].somaAutor;
-		sumAutCatMin["name"] = rows[rows.length - 1].catName;
-		sumAutCatMin["data"] = rows[rows.length - 1].somaAutor;
+		rows.forEach((r)=>{
+			avgPagCat.push({name: r.catName , data: r.avgPages })
+		})
 
+		/* CARD */
+		/* Categorias com maior média de preço dos livros */
+		rows = await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPrice != -1 and a.proPrice != "N/A"
+		GROUP BY a.catCode
+		ORDER BY avgPrice DESC;`);
+		rows.forEach((r)=>{
+			avgPriCat.push({name: r.catName , data: r.avgPrice })
+		})
+
+		/* CARD */
+		/* Categoria livro mais novos e mais velhos registrados */
+		rows = await executar(`SELECT max(a.proPublishedDate) as dataMax, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPublishedDate != "N/A"
+		GROUP BY a.catCode
+		ORDER BY dataMax DESC
+		limit 1;`);
+		minMaxDate["max"] = { name: rows[0].catName, data: rows[0].dataMax}
+		rows = await executar(`SELECT min(a.proPublishedDate) as dataMin, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPublishedDate != "N/A"
+		GROUP BY a.catCode
+		ORDER BY dataMin 
+		limit 1;`);
+		minMaxDate["min"] = { name: rows[0].catName, data: rows[0].dataMin}
+
+		/* GRAF*/
+		/* Categoria preço soma de preços registrados */
+		rows = await executar(`SELECT round(sum(a.proPrice), 2) as totalPrice, c.catName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Category c ON c.catCode = a.catCode
+		WHERE a.proPrice != "N/A" and a.proPrice != -1
+		GROUP BY a.catCode
+		ORDER BY totalPrice DESC;`);
+		rows.forEach((r)=>{
+			sumPriCat.push({name: r.catName, data: r.totalPrice }) 
+		})
+
+		/* GRAF @FShinoda */
+		rows = await executar(`SELECT count(DISTINCT proName) as freq, c.catName from Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		GROUP BY p.catCode
+		ORDER BY freq DESC;`);
+		rows.forEach((r)=>{
+			freqProCat.push({name: r.catName, data: r.freq})
+		})
+
+		/* DSP */
+		/* review x pages /categoria */
 		rows = await executar(`SELECT a.proReview, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -106,6 +183,8 @@ class IndexRoute {
 			c.data.push([r.proReview, r.proPages]);
 		});
 
+		/* DSP */
+		/* star x pages /categoria */
 		rows = await executar(`SELECT a.proStar, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -131,6 +210,8 @@ class IndexRoute {
 			sp.data.push([r.proStar, r.proPages]);
 		});
 
+		/* DSP */
+		/* price x pages /categoria */
 		rows = await executar(`SELECT a.proPrice, a.proPages, c.catName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -156,6 +237,8 @@ class IndexRoute {
 			pp.data.push([r.proPrice, r.proPages]);
 		});
 
+		/* BARRAS */
+		/* type & Freq /categoria */
 		rows = await executar(`SELECT proType, count(proType) as freq
 		FROM Product
 		WHERE proType != "Not Exists" and proType != "Not exists"
@@ -167,7 +250,22 @@ class IndexRoute {
 		});
 		seriesTyp.push(catTyp);
 		
-		res.render("index/general", {sumAutCatMax: sumAutCatMax, sumAutCatMin: sumAutCatMin, sumRevCat: sumRevCat, seriesRevPag: JSON.stringify(seriesRevPag), seriesStrPag: JSON.stringify(seriesStrPag), seriesPriPag: JSON.stringify(seriesPriPag), seriesTyp: JSON.stringify(seriesTyp), categoriesTyp: JSON.stringify(categoriesTyp)});
+		res.render("index/general", 
+		{
+			dateCat: dateCat,
+			minMaxDate: minMaxDate,
+		 	avgPagCat: avgPagCat, 
+		 	avgPriCat: avgPriCat, 
+			sumAutCat: sumAutCat,
+			sumRevCat: sumRevCat,
+			sumPriCat: JSON.stringify(sumPriCat),
+			freqProCat: JSON.stringify(freqProCat),
+			seriesRevPag: JSON.stringify(seriesRevPag),
+			seriesStrPag: JSON.stringify(seriesStrPag),
+			seriesPriPag: JSON.stringify(seriesPriPag),
+			seriesTyp: JSON.stringify(seriesTyp),
+			categoriesTyp: JSON.stringify(categoriesTyp)
+		});
 	}
 
 
