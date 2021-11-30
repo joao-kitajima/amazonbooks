@@ -186,7 +186,7 @@
 <!-- Freq produto / categoria -->
 <script>
     var aux = JSON.parse(`<%- freqProCat %>`)
-    var series = [{data: []}]
+    var series = [{name: "Total de registros", data: []}]
     var categories = []
     aux.forEach((r)=>{
         series[0].data.push(r.data)
@@ -225,7 +225,7 @@
 <!-- Soma preço / categoria -->
 <script>
     var aux = JSON.parse(`<%- sumPriCat %>`)
-    var series = [{data: []}]
+    var series = [{name: "Preço total", data: []}]
     var categories = []
     aux.forEach((r)=>{
         series[0].data.push(r.data)
@@ -263,8 +263,9 @@
 
 <!-- Freq type -->
 <script>
-    var series = JSON.parse(`<%- seriesTyp %>`)
+    var aux = JSON.parse(`<%- seriesTyp %>`)
     var categories = JSON.parse(`<%- categoriesTyp %>`)
+    series = [{name: "Total de registros", data: aux[0].data}]
 
     var options = {
           series: series,

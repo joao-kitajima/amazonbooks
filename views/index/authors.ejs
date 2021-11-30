@@ -1,5 +1,210 @@
-<ul>
-    <% autList.forEach((aut) => { %>
-        <li><%= aut.autName %> </li>
-    <% }) %>
-</ul>
+<p><b>Autor mais consistente de todos:</b> <%= mostConsistent[0].autName %> com <%= mostConsistent[0].freq %> registros</p>
+
+<p><b>Autor mais avaliado de todos:</b> <%= mostReviewed[0].autName %> com <%= mostReviewed[0].reviews %> avaliações</p>
+
+<p><b>Dos Top 10 autores mais avaliados, o com maior média de estrelas é:</b> <%= mostAvgStar.name %> com <%= mostAvgStar.data %> estrelas</p>
+
+<p><b>Autor com preço médio mais caro:</b> <%= mostExpensive[0].autName %> com <%= mostExpensive[0].avgPrice %> reais</p>
+
+<p><b>Autor com mais quantidade média de páginas:</b> <%= mostPages[0].autName %> com <%= mostPages[0].avgPages %> páginas</p>
+<p><b>Autor com mais quantidade média de páginas:</b> <%= leastPages[0].autName %> com <%= leastPages[0].avgPages %> páginas</p>
+
+
+<br>
+<br>
+<br>
+
+<h4>Top 10 autores com maior preço médio</h4>
+<div id="chartPriAut"></div>
+<h4>Top 10 autores com Média de pag maiores</h4>
+<div id="chartPagAut"></div>
+<h4>Top 10 autores mais consistentes</h4>
+<div id="chartFreqAut"></div>
+<h4>Top 10 autores com mais reviews</h4>
+<div id="chartAutRev"></div>
+
+<!-- pages avg x autor  -->
+<script>
+    var aux = JSON.parse(`<%- avgPagAut %>`)
+    var series = [{name: "Média de páginas", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories
+          
+        }
+    };
+
+    var chartPagAut = new ApexCharts(document.querySelector("#chartPagAut"), options);
+    chartPagAut.render();
+</script>
+
+<!-- price avg x autor  -->
+<script>
+    var aux = JSON.parse(`<%- avgPriAut %>`)
+    var series = [{name: "Média de preço", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartPriAut = new ApexCharts(document.querySelector("#chartPriAut"), options);
+    chartPriAut.render();
+</script>
+
+<!-- freq x autor  -->
+<script>
+    var aux = JSON.parse(`<%- freqAut %>`)
+    var series = [{name: "Total de registros", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartFreqAut = new ApexCharts(document.querySelector("#chartFreqAut"), options);
+    chartFreqAut.render();
+</script>
+
+
+<!-- reviews x autor  -->
+<script>
+    var aux = JSON.parse(`<%- autRev %>`)
+    var series = [{name: "Qtde reviews", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartAutRev = new ApexCharts(document.querySelector("#chartAutRev"), options);
+    chartAutRev.render();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

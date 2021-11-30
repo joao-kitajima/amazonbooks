@@ -28,6 +28,153 @@ class IndexRoute {
             avg_reviews_perbook: await (0, amazonbooks_1.scalar)('SELECT CAST(ROUND(AVG(proReview)) AS INTEGER) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
         });
     }
+    /* AUTORES */
+    async autores(req, res) {
+        let rows;
+        let mostAvgStar = { data: 0, name: "" };
+        let avgPriAut = [], freqAut = [], avgPagAut = [], autRev = [];
+        /* CARD */
+        /* maior estrela entre os top 10 consistentes */
+        rows = await (0, amazonbooks_1.executar)(`SELECT autName, sum(a.proReview) as reviews, round(avg(a.proStar),2) as avgStars
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Author at ON at.autCode = a.autCode
+		WHERE a.proReview != "N/A" and a.proStar != "N/A"
+		GROUP by a.autCode
+		ORDER BY reviews DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            if (r.avgStars > mostAvgStar.data) {
+                mostAvgStar.data = r.avgStars;
+                mostAvgStar.name = r.autName;
+            }
+        });
+        /* TOP */
+        /* Autor preço médio de preços registrados */
+        rows = await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice), 2) as avgPrice, at.autName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Author at ON at.autCode = a.autCode
+		WHERE a.proPrice != "N/A" and a.proPrice != -1
+		GROUP BY a.autCode
+		ORDER BY avgPrice DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            avgPriAut.push({ name: r.autName, data: r.avgPrice });
+        });
+        /* TOP */
+        /* Autor preço soma de preços registrados */
+        rows = await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),2) as avgPages, at.autName
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Author at ON at.autCode = a.autCode
+		WHERE  a.proPages != "N/A"
+		GROUP BY a.autCode
+		ORDER BY avgPages DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            avgPagAut.push({ name: r.autName, data: r.avgPages });
+        });
+        /* TOP */
+        /* autor x review */
+        rows = await (0, amazonbooks_1.executar)(`SELECT autName, sum(a.proReview) as reviews
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		INNER JOIN Author at ON at.autCode = a.autCode
+		WHERE a.proReview != "N/A"
+		GROUP by a.autCode
+		ORDER BY reviews DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            autRev.push({ name: r.autName, data: r.reviews });
+        });
+        /* TOP */
+        /* Freq autor pos */
+        rows = await (0, amazonbooks_1.executar)(`Select a.autName, count(p.autCode) as freq FROM Product p
+		INNER JOIN Author a ON a.autCode = p.autCode
+		GROUP BY p.autCode
+		ORDER by freq DESC
+		LIMIT 10`);
+        rows.forEach((r) => {
+            freqAut.push({ name: r.autName, data: r.freq });
+        });
+        res.render('index/authors', {
+            mostConsistent: await (0, amazonbooks_1.executar)(`Select a.autName, count(p.autCode) as freq FROM Product p
+			INNER JOIN Author a ON a.autCode = p.autCode
+			GROUP BY p.autCode
+			ORDER by freq DESC
+			LIMIT 1`),
+            mostReviewed: await (0, amazonbooks_1.executar)(`SELECT autName, sum(a.proReview) as reviews
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			INNER JOIN Author at ON at.autCode = a.autCode
+			WHERE a.proReview != "N/A"
+			GROUP by a.autCode
+			ORDER BY reviews DESC
+			LIMIT 1;`),
+            mostAvgStar: mostAvgStar,
+            mostExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			INNER JOIN Author at ON at.autCode = a.autCode
+			WHERE a.proPrice != -1 and a.proPrice != "N/A"
+			GROUP BY a.autCode
+			ORDER BY avgPrice DESC
+			LIMIT 1;`),
+            mostPages: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),0) as avgPages, at.autName
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			INNER JOIN Author at ON at.autCode = a.autCode
+			WHERE  a.proPages != "N/A"
+			GROUP BY a.autCode
+			ORDER BY avgPages DESC
+			LIMIT 1;`),
+            leastPages: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),0) as avgPages, at.autName
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			INNER JOIN Author at ON at.autCode = a.autCode
+			WHERE  a.proPages != "N/A"
+			GROUP BY a.autCode
+			ORDER BY avgPages 
+			LIMIT 1;`),
+            avgPriAut: JSON.stringify(avgPriAut),
+            freqAut: JSON.stringify(freqAut),
+            avgPagAut: JSON.stringify(avgPagAut),
+            autRev: JSON.stringify(autRev)
+        });
+    }
     /* VISÃO GERAL */
     async visao_geral(req, res) {
         let rows;
@@ -138,6 +285,7 @@ class IndexRoute {
             sumPriCat.push({ name: r.catName, data: r.totalPrice });
         });
         /* TOP */
+        /* Freq livros distintos categoria */
         rows = await (0, amazonbooks_1.executar)(`SELECT count(DISTINCT proName) as freq, c.catName from Product p
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
@@ -331,26 +479,6 @@ class IndexRoute {
                         acaList.push(a);
                     });
                     res.render("index/hqs_mangas", { acaList: acaList });
-                });
-            }
-            catch (error) {
-                throw error;
-            }
-        })();
-    }
-    /* AUTORES */
-    async autores(req, res) {
-        let autList = [];
-        (async () => {
-            try {
-                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        autList.push(a);
-                    });
-                    res.render("index/authors", { autList: autList });
                 });
             }
             catch (error) {
