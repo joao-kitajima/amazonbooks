@@ -47,24 +47,57 @@
 <p> PREÇO MÉDIO DOS PRODUTOS: R$<%= avg_price %> </p>
 
 <!-- MAX PRODUCT PRICE -->
-<% max_price = max_price.toString().replace('.', ',') %>
-<p> PREÇO MÁXIMO ENCONTRADO: R$<%= max_price %> </p>
+<% max_price[0].proPrice = new Intl.NumberFormat().format(max_price[0].proPrice); %>
+<p> O MAIS CARO: <%= max_price[0].proName %> | <%= max_price[0].autName %> | R$<%= max_price[0].proPrice %> </p>
 
 <!-- MIN PRODUCT PRICE -->
-<% min_price = min_price.toString().replace('.', ',') %>
-<p> PREÇO MÍNIMO ENCONTRADO: R$<%= min_price %> </p>
+<% min_price[0].proPrice = new Intl.NumberFormat().format(min_price[0].proPrice); %>
+<p> O MAIS BARATO: <%= min_price[0].proName %> | <%= min_price[0].autName %> | R$<%= min_price[0].proPrice %> </p>
 
 <!-- AVG STARS -->
 <% avg_stars = avg_stars.toString().replace('.', ',') %>
 <p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %>/5 </p>
 
 <!-- MAX REVIEWS PER PRODUCT -->
-<% max_reviews_perbook = new Intl.NumberFormat().format(max_reviews_perbook); %>
-<p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook %> </p>
+<% max_reviews_perbook[0].proReview = new Intl.NumberFormat().format(max_reviews_perbook[0].proReview); %>
+<p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook[0].proName %> | <%= max_reviews_perbook[0].autName %> | <%= max_reviews_perbook[0].proReview %> reviews </p>
 
 <!-- AVG REVIEWS PER PRODUCT -->
 <% avg_reviews_perbook = new Intl.NumberFormat().format(avg_reviews_perbook); %>
 <p> MÉDIA DE REVIEWS POR PRODUTO: <%= avg_reviews_perbook %> </p>
+
+<!-- LONGEST BOOK -->
+<% longest_book[0].proPages = new Intl.NumberFormat().format(longest_book[0].proPages); %>
+<p> LIVRO COM MAIOR NÚMERO DE PÁGINAS: <%= longest_book[0].proName %> | <%= longest_book[0].proPages %> páginas </p>
+
+<!-- SHORTEST BOOK -->
+<% shortest_book[0].proPages = new Intl.NumberFormat().format(shortest_book[0].proPages); %>
+<p> LIVRO COM MENOR NÚMERO DE PÁGINAS: <%= shortest_book[0].proName %> | <%= shortest_book[0].proPages %> páginas </p>
+
+<!-- MOST CONSISTENT AUTHOR -->
+<% most_consistent_author[0].autCode = new Intl.NumberFormat().format(most_consistent_author[0].autCode); %>
+<p> AUTOR MAIS CONSISTENTE NO TOP 10: <%= most_consistent_author[0].autName %> | <%= most_consistent_author[0].autCode %> registros </p>
+
+<!-- OLDEST BOOK -->
+<%
+  oldest_book[0].proPublishedDate = oldest_book[0].proPublishedDate.slice(0,11).replace(/-/g, '/');
+  var ob_day = oldest_book[0].proPublishedDate.slice(8);
+  var ob_month = oldest_book[0].proPublishedDate.slice(4, 8);
+  var ob_year = oldest_book[0].proPublishedDate.slice(0, 4);
+  oldest_book[0].proPublishedDate = (ob_day + ob_month + ob_year).replace(' ', '');
+%>
+<p> PUBLICAÇÃO MAIS ANTIGA: <%= oldest_book[0].autName %> | <%= oldest_book[0].proName %> | <%= oldest_book[0].proPublishedDate %> </p>
+
+<!-- AVG PUBLISHING DATE -->
+<p> ANO DE PUBLICAÇÃO MÉDIO: <%= avg_publishing_date %> </p>
+
+<!-- MOST CONSISTENT BOOK -->
+<% most_consistent_book[0].proCode = new Intl.NumberFormat().format(most_consistent_book[0].proCode); %>
+<p> LIVRO MAIS CONSISTENTE NO TOP10: <%= most_consistent_book[0].proName %> | <%= most_consistent_book[0].autName %> | <%= most_consistent_book[0].proCode %> registros </p>
+
+<!-- MOST CONSISTENT PUBLISHER -->
+<% most_consistent_publisher[0].proPublisherCount = new Intl.NumberFormat().format(most_consistent_publisher[0].proPublisherCount); %>
+<p> EDITORA MAIS CONSISTENTE NO TOP10: <%= most_consistent_publisher[0].proPublisher %> | <%= most_consistent_publisher[0].proPublisherCount %> registros </p>
 
 
 <style type="text/css">

@@ -13,19 +13,26 @@ class IndexRoute {
         res.render('index/report', {
             earliest_date: await (0, amazonbooks_1.scalar)('SELECT MIN(proScrapDate) FROM Product;'),
             latest_date: await (0, amazonbooks_1.scalar)('SELECT MAX(proScrapDate) FROM Product;'),
-            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product;'),
-            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT autCode) FROM Author;'),
-            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product;'),
-            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product;'),
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;'),
             total_categories: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT catName) FROM Category;'),
             total_reviews: await (0, amazonbooks_1.scalar)('SELECT SUM(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" GROUP BY proName);'),
             total_pages: await (0, amazonbooks_1.scalar)('SELECT SUM(proPages) FROM (SELECT proName, proPages AS proPages FROM Product WHERE proPages IS NOT NULL AND proPages != "N/A" GROUP BY proName);'),
             avg_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(AVG(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
-            max_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(MAX(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName);'),
-            min_price: await (0, amazonbooks_1.scalar)('SELECT ROUND(MIN(proPrice), 2) FROM (SELECT proName, proPrice FROM Product GROUP BY proName) WHERE proPrice  >= 0;'),
+            max_price: await (0, amazonbooks_1.executar)('SELECT p.proName, a.autName, MAX(p.proPrice) AS proPrice FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.proPrice != "N/A" AND p.proPrice IS NOT NULL;'),
+            min_price: await (0, amazonbooks_1.executar)('SELECT p.proName, a.autName, MIN(p.proPrice) AS proPrice FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.proPrice != "N/A" AND p.proPrice IS NOT NULL AND p.proPrice > 0;'),
             avg_stars: await (0, amazonbooks_1.scalar)('SELECT ROUND(AVG(proStar), 2) FROM (SELECT proName, proStar FROM Product WHERE proStar != "N/A" AND proStar IS NOT NULL GROUP BY proName);'),
-            max_reviews_perbook: await (0, amazonbooks_1.scalar)('SELECT MAX(proReview) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
+            max_reviews_perbook: await (0, amazonbooks_1.executar)('SELECT p.proName, a.autName, MAX(p.proReview) AS proReview FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.proReview != "N/A" AND p.proReview IS NOT NULL;'),
             avg_reviews_perbook: await (0, amazonbooks_1.scalar)('SELECT CAST(ROUND(AVG(proReview)) AS INTEGER) FROM (SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proName);'),
+            longest_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proPages) AS proPages FROM (SELECT proName, proPages	FROM Product WHERE proPages IS NOT NULL AND proPages != "N/A" GROUP BY proName);'),
+            shortest_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proPages) AS proPages FROM (SELECT proName, proPages	FROM Product WHERE proPages IS NOT NULL AND proPages != "N/A" AND proPages > 1 GROUP BY proName);'),
+            most_consistent_author: await (0, amazonbooks_1.executar)('SELECT a.autName, COUNT(p.autCode) AS autCode FROM Author a INNER JOIN Product p ON a.autCode = p.autCode GROUP BY a.autName ORDER BY COUNT(p.autCode) DESC LIMIT 1;'),
+            oldest_book: await (0, amazonbooks_1.executar)('SELECT a.autName, p.proName, MIN(p.proPublishedDate) AS proPublishedDate FROM Author a INNER join Product P ON a.autCode = p.autCode;'),
+            avg_publishing_date: await (0, amazonbooks_1.scalar)('SELECT CAST(ROUND(AVG(proPublishedDate), 1) AS INTEGER) FROM Product;'),
+            most_consistent_book: await (0, amazonbooks_1.executar)('SELECT p.proName, a.autName, COUNT(p.proCode) AS proCode FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY proName ORDER BY proCode DESC LIMIT 1;'),
+            most_consistent_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, COUNT(proPublisher) AS proPublisherCount FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL GROUP BY proPublisher ORDER BY COUNT(proPublisher) DESC LIMIT 1;')
         });
     }
     /* AUTORES */
@@ -377,6 +384,7 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proPages]);
         });
+<<<<<<< Updated upstream
         /* DSP */
         /* price x stars /categoria */
         rows = await (0, amazonbooks_1.executar)(`SELECT a.proPrice, a.proStar, c.catName
@@ -401,6 +409,8 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proStar]);
         });
+=======
+>>>>>>> Stashed changes
         res.render("index/general", {
             dateCat: dateCat,
             minMaxDate: minMaxDate,
