@@ -33,6 +33,7 @@ class IndexRoute {
             avg_publishing_date: await (0, amazonbooks_1.scalar)('SELECT CAST(ROUND(AVG(proPublishedDate), 1) AS INTEGER) FROM Product;'),
             most_consistent_book: await (0, amazonbooks_1.executar)('SELECT p.proName, a.autName, COUNT(p.proCode) AS proCode FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY proName ORDER BY proCode DESC LIMIT 1;'),
             most_consistent_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, COUNT(proPublisher) AS proPublisherCount FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL GROUP BY proPublisher ORDER BY COUNT(proPublisher) DESC LIMIT 1;')
+<<<<<<< Updated upstream
         });
     }
     /* AUTORES */
@@ -180,6 +181,8 @@ class IndexRoute {
             freqAut: JSON.stringify(freqAut),
             avgPagAut: JSON.stringify(avgPagAut),
             autRev: JSON.stringify(autRev)
+=======
+>>>>>>> Stashed changes
         });
     }
     /* VISÃO GERAL */
@@ -292,7 +295,10 @@ class IndexRoute {
             sumPriCat.push({ name: r.catName, data: r.totalPrice });
         });
         /* TOP */
+<<<<<<< Updated upstream
         /* Freq livros distintos categoria */
+=======
+>>>>>>> Stashed changes
         rows = await (0, amazonbooks_1.executar)(`SELECT count(DISTINCT proName) as freq, c.catName from Product p
 		INNER JOIN Category c ON c.catCode = p.catCode
 		GROUP BY p.catCode
@@ -384,6 +390,7 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proPages]);
         });
+<<<<<<< Updated upstream
         /* DSP */
         /* price x stars /categoria */
         rows = await (0, amazonbooks_1.executar)(`SELECT a.proPrice, a.proStar, c.catName
@@ -408,6 +415,8 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proStar]);
         });
+=======
+>>>>>>> Stashed changes
         res.render("index/general", {
             dateCat: dateCat,
             minMaxDate: minMaxDate,
