@@ -384,7 +384,6 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proPages]);
         });
-<<<<<<< Updated upstream
         /* DSP */
         /* price x stars /categoria */
         rows = await (0, amazonbooks_1.executar)(`SELECT a.proPrice, a.proStar, c.catName
@@ -409,8 +408,6 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proStar]);
         });
-=======
->>>>>>> Stashed changes
         res.render("index/general", {
             dateCat: dateCat,
             minMaxDate: minMaxDate,
