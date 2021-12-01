@@ -1,84 +1,21 @@
-<!-- TOTAL PERIOD -->
+<%- include("../partials/dashboard/styles/reportStyle.ejs") %>
+
+
+<!-- DATE FORMAT -->
 <%
   earliest_date = earliest_date.slice(0,11).replace(/-/g, '/');
   var ed_day = earliest_date.slice(8);
   var ed_month = earliest_date.slice(4, 8);
   var ed_year = earliest_date.slice(0, 4);
   earliest_date = (ed_day + ed_month + ed_year).replace(' ', '');
-
+  
   latest_date = latest_date.slice(0,11).replace(/-/g, '/');
   var ed_day = latest_date.slice(8);
   var ed_month = latest_date.slice(4, 8);
   var ed_year = latest_date.slice(0, 4);
   latest_date = (ed_day + ed_month + ed_year).replace(' ', '');
 %>
-<p> DADOS COLETADOS ENTRE <%= earliest_date %> E <%= latest_date %> </p>
 
-<!-- TOTAL RECORDS -->
-<% total_records = new Intl.NumberFormat().format(total_records); %>
-<p> NÚMERO DE REGISTROS COLETADOS: <%= total_records %> </p>
-
-<!-- TOTAL AUTHORS -->
-<% total_authors = new Intl.NumberFormat().format(total_authors); %>
-<p> TOTAL DE AUTORES: <%= total_authors %> </p>
-
-<!-- TOTAL BOOKS -->
-<% total_books = new Intl.NumberFormat().format(total_books); %>
-<p> TOTAL DE LIVROS ANALISADOS: <%= total_books %> </p>
-
-<!-- TOTAL PUBLISHERS -->
-<% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
-<p> TOTAL DE EDITORAS: <%= total_publishers %> </p>
-
-<!-- TOTAL CATEGORIES -->
-<% total_categories = new Intl.NumberFormat().format(total_categories); %>
-<p> TOTAL DE CATEGORIAS: <%= total_categories %> </p>
-
-<!-- TOTAL REVIEWS -->
-<% total_reviews = new Intl.NumberFormat().format(total_reviews); %>
-<p> NÚMERO TOTAL DE REVIEWS: <%= total_reviews %> </p>
-
-<!-- TOTAL PAGES -->
-<% total_pages = new Intl.NumberFormat().format(total_pages); %>
-<p> NÚMERO TOTAL DE PÁGINAS: <%= total_pages %> </p>
-
-<!-- AVERAGE PRODUCT PRICE -->
-<% avg_price = avg_price.toString().replace('.', ',') %>
-<p> PREÇO MÉDIO DOS PRODUTOS: R$<%= avg_price %> </p>
-
-<!-- MAX PRODUCT PRICE -->
-<% max_price[0].proPrice = new Intl.NumberFormat().format(max_price[0].proPrice); %>
-<p> O MAIS CARO: <%= max_price[0].proName %> | <%= max_price[0].autName %> | R$<%= max_price[0].proPrice %> </p>
-
-<!-- MIN PRODUCT PRICE -->
-<% min_price[0].proPrice = new Intl.NumberFormat().format(min_price[0].proPrice); %>
-<p> O MAIS BARATO: <%= min_price[0].proName %> | <%= min_price[0].autName %> | R$<%= min_price[0].proPrice %> </p>
-
-<!-- AVG STARS -->
-<% avg_stars = avg_stars.toString().replace('.', ',') %>
-<p> MÉDIA DE ESTRELAS NAS AVALIAÇÕES: <%= avg_stars %>/5 </p>
-
-<!-- MAX REVIEWS PER PRODUCT -->
-<% max_reviews_perbook[0].proReview = new Intl.NumberFormat().format(max_reviews_perbook[0].proReview); %>
-<p> MÁXIMO DE REVIEWS EM UM ÚNICO PRODUTO: <%= max_reviews_perbook[0].proName %> | <%= max_reviews_perbook[0].autName %> | <%= max_reviews_perbook[0].proReview %> reviews </p>
-
-<!-- AVG REVIEWS PER PRODUCT -->
-<% avg_reviews_perbook = new Intl.NumberFormat().format(avg_reviews_perbook); %>
-<p> MÉDIA DE REVIEWS POR PRODUTO: <%= avg_reviews_perbook %> </p>
-
-<!-- LONGEST BOOK -->
-<% longest_book[0].proPages = new Intl.NumberFormat().format(longest_book[0].proPages); %>
-<p> LIVRO COM MAIOR NÚMERO DE PÁGINAS: <%= longest_book[0].proName %> | <%= longest_book[0].proPages %> páginas </p>
-
-<!-- SHORTEST BOOK -->
-<% shortest_book[0].proPages = new Intl.NumberFormat().format(shortest_book[0].proPages); %>
-<p> LIVRO COM MENOR NÚMERO DE PÁGINAS: <%= shortest_book[0].proName %> | <%= shortest_book[0].proPages %> páginas </p>
-
-<!-- MOST CONSISTENT AUTHOR -->
-<% most_consistent_author[0].autCode = new Intl.NumberFormat().format(most_consistent_author[0].autCode); %>
-<p> AUTOR MAIS CONSISTENTE NO TOP 10: <%= most_consistent_author[0].autName %> | <%= most_consistent_author[0].autCode %> registros </p>
-
-<!-- OLDEST BOOK -->
 <%
   oldest_book[0].proPublishedDate = oldest_book[0].proPublishedDate.slice(0,11).replace(/-/g, '/');
   var ob_day = oldest_book[0].proPublishedDate.slice(8);
@@ -86,61 +23,228 @@
   var ob_year = oldest_book[0].proPublishedDate.slice(0, 4);
   oldest_book[0].proPublishedDate = (ob_day + ob_month + ob_year).replace(' ', '');
 %>
-<p> PUBLICAÇÃO MAIS ANTIGA: <%= oldest_book[0].autName %> | <%= oldest_book[0].proName %> | <%= oldest_book[0].proPublishedDate %> </p>
 
-<!-- AVG PUBLISHING DATE -->
-<p> ANO DE PUBLICAÇÃO MÉDIO: <%= avg_publishing_date %> </p>
-
-<!-- MOST CONSISTENT BOOK -->
+    
+<!-- NUMBER FORMAT -->
+<% total_records = new Intl.NumberFormat().format(total_records); %>
+<% total_authors = new Intl.NumberFormat().format(total_authors); %>
+<% total_books = new Intl.NumberFormat().format(total_books); %>
+<% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
+<% total_categories = new Intl.NumberFormat().format(total_categories); %>
+<% total_reviews = new Intl.NumberFormat().format(total_reviews); %>
+<% max_reviews_perbook[0].proReview = new Intl.NumberFormat().format(max_reviews_perbook[0].proReview); %>
+<% avg_reviews_perbook = new Intl.NumberFormat().format(avg_reviews_perbook); %>
+<% total_pages = new Intl.NumberFormat().format(total_pages); %>
+<% longest_book[0].proPages = new Intl.NumberFormat().format(longest_book[0].proPages); %>
+<% shortest_book[0].proPages = new Intl.NumberFormat().format(shortest_book[0].proPages); %>
+<% max_price[0].proPrice = new Intl.NumberFormat().format(max_price[0].proPrice); %>
+<% min_price[0].proPrice = new Intl.NumberFormat().format(min_price[0].proPrice); %>
 <% most_consistent_book[0].proCode = new Intl.NumberFormat().format(most_consistent_book[0].proCode); %>
-<p> LIVRO MAIS CONSISTENTE NO TOP10: <%= most_consistent_book[0].proName %> | <%= most_consistent_book[0].autName %> | <%= most_consistent_book[0].proCode %> registros </p>
-
-<!-- MOST CONSISTENT PUBLISHER -->
+<% most_consistent_author[0].autCode = new Intl.NumberFormat().format(most_consistent_author[0].autCode); %>
+<% avg_price = new Intl.NumberFormat().format(avg_price); %>
+<% avg_stars = new Intl.NumberFormat().format(avg_stars); %>
 <% most_consistent_publisher[0].proPublisherCount = new Intl.NumberFormat().format(most_consistent_publisher[0].proPublisherCount); %>
-<p> EDITORA MAIS CONSISTENTE NO TOP10: <%= most_consistent_publisher[0].proPublisher %> | <%= most_consistent_publisher[0].proPublisherCount %> registros </p>
 
 
-<style type="text/css">
-    #chart_01, #chart_02 {
-        width: 480px;
-        height: 480px;
-    }
+<div class="reportTitle">
+  <h2>DADOS E CONCLUSÕES GERAIS</h2>
+</div>
 
-    .apexcharts-canvas {
-        background-color: #fff;
-        border-radius: 4px;
-        -webkit-box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
-        -moz-box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
-        box-shadow: 0px 0px 5px 5px rgba(221,221,221,1);
-    }
-</style>
+<div class="super-infog">
+  <div class="infog">
+    <div class="infog-l1">
+      <div class="infog-l1-ttl_records bd-pd">
+        <div class="infog-l1-ttl_records-left">
+          <span>Registros Coletados</span>
+          
+          <p class="it_num"><%= total_records %></p>
+        </div>
+  
+        <div class="infog-l1-ttl_records-right">
+          <span class="iconify ttl_records-icon" data-icon="ant-design:rise-outlined"></span>
+        </div>
+      </div>
+      
+      <div class="infog-l1-date_period bd-pd">
+        <div class="infog-l1-date_period-left">
+          <span>Período de Coleta de Dados</span>
 
-<!-- <div id="chart_01"></div> -->
-<!-- <div id="chart_02"></div> -->
+          <p class="it_num"><%= earliest_date %> ~ <%= latest_date %></p>
+        </div>
 
+        <div class="infog-l1-date_period-right">
+          <span class="iconify date_period-icon" data-icon="vs:calendar-alt" data-flip="horizontal"></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="infog-l2">
+      <div class="infog-l2-card bd-pd">
+        <span>Total de Autores</span>
 
-<%- contentFor("scripts") %>
-<script type="text/javascript">
-  var options = {
-      chart: {
-        type: 'line',
-        toolbar: {
-            show: false
-        }
-      },
-      series: [{
-        name: 'sales',
-        data: [30,40,35,50,49,60,70,91,125]
-      }],
-      xaxis: {
-        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-      }
-  }
+        <p class="it_num"><%= total_authors %></p>
+      </div>
 
+      <div class="infog-l2-card bd-pd">
+        <span>Total de Livros</span>
 
-  var chart = new ApexCharts(document.querySelector("#chart_01"), options);
-  var chart2 = new ApexCharts(document.querySelector("#chart_02"), options);
+        <p class="it_num"><%= total_books %></p>
+      </div>
 
-  chart.render();
-  chart2.render();
-</script>
+      <div class="infog-l2-card bd-pd">
+        <span>Total de Editoras</span>
+
+        <p class="it_num"><%= total_publishers %></p>
+
+      </div>
+
+      <div class="infog-l2-card bd-pd">
+        <span>Total de Categorias</span>
+
+        <p class="it_num"><%= total_categories %></p>
+      </div>
+    </div>
+    
+    <div class="infog-l3 bd-pd">
+      <p> <span class="it_num"><%= total_reviews %></span> reviews feitas pelos usuários </p>
+    </div>
+    
+    <div class="infog-l4">
+      <div class="infog-l4-book bd-pd">
+        <div class="infog-l4-book-left">
+          <span>Livro com o maior número de reviews</span>
+
+          <p class="infog-l4-book-left-book"><%= max_reviews_perbook[0].proName %></p>
+          <p class="infog-l4-book-left-author"><%= max_reviews_perbook[0].autName %></p>
+          <p class="infog-l4-book-left-revnum"><span class="it_num"><%= max_reviews_perbook[0].proReview %></span> reviews</p>
+        </div>
+        
+        <div class="infog-l4-book-right">
+          <span class="iconify review_book-icon" data-icon="bx:bxs-book-bookmark"></span>
+        </div>
+      </div>
+
+      <div class="infog-l4-midrev bd-pd">
+        <span>Número médio de reviews<br />por produto</span>
+
+        <p class="it_num"><%= avg_reviews_perbook %></p>
+      </div>
+    </div>
+    
+    <div class="infog-l5 bd-pd">
+      <p> Somando todos os livros, temos um total de <span class="it_num"><%= total_pages %></span> páginas </p>
+    </div>
+    
+    <div class="infog-l6">
+      <div class="infog-l6-left">
+        <div class="infog-l6-card bd-pd">
+          <span>Livro com mais páginas</span>
+
+          <p class="infog-l6-card-proName"><%= longest_book[0].proName %></p>
+          <p class="infog-l6-card-autName"><%= longest_book[0].autName %></p>
+          <p class="infog-l6-card-proInfo it_num"><%= longest_book[0].proPages %> <span>páginas</span></p>
+        </div>
+
+        <div class="infog-l6-card bd-pd">
+          <span>Livro com menos páginas</span>
+
+          <p class="infog-l6-card-proName"><%= shortest_book[0].proName %></p>
+          <p class="infog-l6-card-autName"><%= shortest_book[0].autName %></p>
+          <p class="infog-l6-card-proInfo it_num"><%= shortest_book[0].proPages %> <span>páginas</span></p>
+        </div>
+      </div>
+      
+      <div class="infog-l6-mid">
+        <div class="infog-l6-mid-top bd-pd">
+          <div class="infog-l6-mid-left">
+            <span>Livro que mais permaneceu nas melhores posições</span>
+
+            <p class="infog-l6-mid-left-proName"><%= most_consistent_book[0].proName %></p>
+            <p class="infog-l6-mid-left-autName"><%= most_consistent_book[0].autName %></p>
+            <p class="infog-l6-card-proInfo it_num"><%= most_consistent_book[0].proCode %> <span>vezes</span></p>
+          </div>
+
+          <div class="infog-l6-mid-right">
+            <span class="iconify cons_card-icon" data-icon="bx:bxs-book-heart"></span>
+          </div>
+        </div>
+
+        <div class="infog-l6-mid-bot bd-pd">
+          <div class="infog-l6-mid-left">
+            <span>Autor que mais permaneceu nas melhores posições</span>
+
+            <p class="infog-l6-mid-left-proName"><%= most_consistent_author[0].autName %></p>
+            <p class="infog-l6-card-proInfo it_num"><%= most_consistent_author[0].autCode %> <span>vezes</span></p>
+          </div>
+          
+          <div class="infog-l6-mid-right">
+            <span class="iconify cons_card-icon" data-icon="carbon:user-favorite-alt-filled"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="infog-l6-right">
+        <div class="infog-l6-card bd-pd">
+          <span>Livro mais caro</span>
+
+          <p class="infog-l6-card-proName"><%= max_price[0].proName %></p>
+          <p class="infog-l6-card-autName"><%= max_price[0].autName %></p>
+          <p class="infog-l6-card-proInfo it_num">R$<%= max_price[0].proPrice %></p>
+        </div>
+
+        <div class="infog-l6-card bd-pd">
+          <span>Livro mais barato</span>
+
+          <p class="infog-l6-card-proName"><%= min_price[0].proName %></p>
+          <p class="infog-l6-card-autName"><%= min_price[0].autName %></p>
+          <p class="infog-l6-card-proInfo it_num">R$<%= min_price[0].proPrice %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="infog-l7 bd-pd">
+      <p><span class="it_num"><%= avg_publishing_date %></span> foi o ano de publicação média de todos os livros</p>
+    </div>
+    
+    <div class="infog-l8">
+      <div class="infog-l8-minor bd-pd">
+        <div class="infog-l8-minor-top">
+          <span>Preço médio</span>
+
+          <p class="it_num">R$<%= avg_price %></p>
+        </div>
+
+        <div class="infog-l8-minor-bot">
+          <span class="iconify fl-icon" data-icon="si-glyph:tag-price"></span>
+        </div>
+      </div>
+      
+      <div class="infog-l8-major bd-pd">
+        <span>Publicação mais antiga</span>
+
+        <p class="infog-l8-major-proName"><%= oldest_book[0].proName %></p>
+        <p class="infog-l8-major-autName"><%= oldest_book[0].autName %></p>
+        <p class="infog-l8-major-date it_num"><%= oldest_book[0].proPublishedDate %></p>
+      </div>
+      
+      <div class="infog-l8-major bd-pd">
+        <span>Editora mais popular</span>
+
+        <p class="infog-l8-major-pub"><%= most_consistent_publisher[0].proPublisher %></p>
+        <p class="infog-l8-major-recnum it_num"><%= most_consistent_publisher[0].proPublisherCount %> <span>registros</span></p>
+      </div>
+      
+      <div class="infog-l8-minor bd-pd">
+        <div class="infog-l8-minor-top">
+          <span>Avaliação média</span>
+
+          <p class="it_num"><%= avg_stars %> <span>/5</span></p>
+        </div>
+
+        <div class="infog-l8-minor-bot">
+          <span class="iconify fl-icon" data-icon="fluent:star-emphasis-32-filled"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
