@@ -1,0 +1,559 @@
+<style type="text/css">
+    /* FONTS */
+    @font-face {
+        font-family: 'Bookerly';
+        src: url(/public/fonts/Bookerly-Regular.ttf) format("truetype");
+    }
+
+    @font-face {
+        font-family: 'Bookerly-Italic';
+        src: url(/public/fonts/Bookerly-Italic.ttf) format("truetype");
+    }
+
+    @font-face {
+        font-family: 'Bookerly-Bold';
+        src: url(/public/fonts/Bookerly-Bold.ttf) format("truetype");
+    }
+
+    @font-face {
+        font-family: 'Bookerly-BoldItalic';
+        src: url(/public/fonts/Bookerly-BoldItalic.ttf) format("truetype");
+    }
+
+
+    :root {
+        --font-norm: 'Bookerly';
+        --font-numb: 'Bookerly-Italic';
+        --std-color: #FF7A5D;
+        --std-color-title: #F46036;
+        --std-color2: #0a99af;
+        --std-color2-title: #057586;
+    }
+
+
+    /* CUSTOM */
+    .csd {
+        /* -webkit-box-shadow: 0px 0px 0.05em 0.05em rgba(228,228,228,1); */
+        /* -moz-box-shadow: 0px 0px 0.05em 0.05em rgba(228,228,228,1); */
+        box-shadow: 0px 0px 0.05em 0.05em rgba(028,028,228,1);
+    }
+
+    .it_num {
+        font-family: var(--font-numb);
+        font-weight: bold;
+    }
+
+    .bd-pd {
+        border-radius: 4px;
+        padding: 12px;
+    }
+
+    
+    /* HEADERS */
+    .reportTitle {
+        text-align: center;
+        margin-top: 1em;
+        font-family: var(--font-bold);
+        margin-bottom: .75em;
+        text-decoration: underline;
+    }
+
+
+    /* INFOG */
+    .super-infog {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5em;
+    }
+
+    .infog {
+        width: 100%;
+        font-family: 'Bookerly';
+        color: #fff;
+        font-size: .8em;
+    }
+
+
+    /* FIRST LINE */
+    .infog-l1 {
+        width: 100%;
+        height: 7.5em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .infog-l1-ttl_records {
+        width: 26.75%;
+        height: 100%;
+        background-color: var(--std-color);
+        font-size: .9em;
+    }
+
+
+    .infog-l1-date_period {
+        width: 72.75%;
+        height: 100%;
+        background-color: var(--std-color);
+    }
+
+    .infog-l1-ttl_records {
+        display: flex;
+    }
+
+    .infog-l1-ttl_records-left {
+        width: 60%;
+        display: grid;
+        place-items: center;
+    }
+
+    .infog-l1-ttl_records-left span {
+        position: static;
+        font-size: 1.15em;
+    }
+
+    .infog-l1-ttl_records-left p {
+        font-size: 2em;
+    }
+
+    .infog-l1-ttl_records-right {
+        width: 40%;
+        height: 100%;
+    }
+
+    .ttl_records-icon {
+        width: 120px;
+        height: 120px;
+        margin-left: -1.5em;
+        margin-top: -1em;
+    }
+
+    .infog-l1-date_period {
+        display: flex;
+    }
+
+    .infog-l1-date_period-left {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .infog-l1-date_period-left span {
+        margin-left: 1.5em;
+    }
+
+    .infog-l1-date_period-left p {
+        align-self: center;
+        font-size: 2.25em;
+        margin-top: .5em;
+    }
+
+    .infog-l1-date_period-right {
+        width: 20%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+    }
+
+    .date_period-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+
+    /* SECOND LINE */
+    .infog-l2 {
+        width: 100%;
+        height: 7.5em;
+        margin-top: .25em;
+        margin-bottom: .25em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .infog-l2-card {
+        width: 24.5%;
+        background-color: var(--std-color);
+        display: grid;
+        place-items: center;
+    }
+
+    .infog-l2-card p {
+        font-size: 2.25em;
+    }
+
+
+    /* THIRD LINE */
+    .infog-l3 {
+        width: 100%;
+        height: 2.5em;
+        background-color: var(--std-color2-title);
+        display: grid;
+        place-items: center;
+    }
+
+    .infog-l3 p span {
+        font-size: 1.25em;
+    }
+
+
+    /* FOURTH LINE */
+    .infog-l4 {
+        width: 100%;
+        height: 10em;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.075em;
+    }
+
+    .infog-l4-book {
+        width: 64.75%;
+        height: 100%;
+        background-color: var(--std-color2);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .infog-l4-midrev {
+        width: 34.75%;
+        height: 100%;
+        background-color: var(--std-color2);
+        display: grid;
+        place-items: center;
+    }
+
+    .infog-l4-book-left-book {
+        margin-top: .25em;
+        font-weight: bold;
+        font-size: 2.25em;
+    }
+
+    .infog-l4-book-left-book::before {
+        content: '\201C';
+    }
+
+    .infog-l4-book-left-book::after {
+        content: '\201D';
+    }
+
+    .infog-l4-book-left-author {
+        font-weight: bold;
+    }
+
+    .infog-l4-book-left-author::before {
+        content: '- ';
+    }
+
+    .infog-l4-book-left-revnum {
+        font-family: var(--font-numb);
+    }
+
+    .infog-l4-book-left-revnum span {
+        font-size: 1.5em;
+    }
+
+    .review_book-icon {
+        width: 140px;
+        height: 140px;
+    }
+
+    .infog-l4-midrev p {
+        font-size: 2.75em;
+    }
+
+
+    /* FIFTH LINE */
+    .infog-l5 {
+        width: 100%;
+        height: 2.5em;
+        background-color: var(--std-color-title);
+        margin-top: .25em;
+        margin-bottom: 0.125rem;
+        display: grid;
+        place-items: center;
+    }
+
+    .infog-l5 p span {
+        font-size: 1.25em;
+    }
+
+
+    /* SIXTH LINE */
+    .infog-l6 {
+        width: 100%;
+        height: 25em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .infog-l6-left {
+        width: 24.875%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .infog-l6-mid {
+        width: 49.5%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .infog-l6-mid-top {
+        width: 100%;
+        height: 49.5%;
+        background-color: var(--std-color);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .infog-l6-mid-bot {
+        width: 100%;
+        height: 49.5%;
+        background-color: var(--std-color);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .infog-l6-right {
+        width: 24.875%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .infog-l6-card {
+        background-color: var(--std-color);
+        height: 49.5%;
+    }
+
+    .infog-l6-card-proName {
+        margin-top: .5em;
+        font-weight: bold;
+    }
+
+    .infog-l6-card-proName::before {
+        content: '\201C';
+    }
+
+    .infog-l6-card-proName::after {
+        content: '\201D';
+    }
+
+    .infog-l6-card-autName {
+        font-weight: bold;
+        font-size: .75em;
+    }
+
+    .infog-l6-card-autName::before {
+        content: '- ';
+    }
+
+    .infog-l6-card-proInfo {
+        margin-top: .75em;
+        font-size: 1.25em;
+    }
+
+    .infog-l6-card-proInfo span {
+        font-weight: normal;
+        font-family: var(--font-numb);
+        font-size: .75em;
+    }
+
+    .infog-l6-mid-left-proName {
+        margin-top: .75em;
+        font-weight: bold;
+    }
+
+    .infog-l6-mid-left-proName::before {
+        content: '\201C';
+    }
+
+    .infog-l6-mid-left-proName::after {
+        content: '\201D';
+    }
+
+    .infog-l6-mid-left-autName {
+        font-weight: bold;
+        font-size: .75em;
+    }
+
+    .infog-l6-mid-left-autName::before {
+        content: '- ';
+    }
+
+    .cons_card-icon {
+        width: 150px;
+        height: 150px;
+    }
+
+
+    /* SEVENTH LINE */
+    .infog-l7 {
+        width: 100%;
+        height: 2.5em;
+        background-color: var(--std-color2-title);
+        text-align: center;
+        margin-top: 0.25em;
+        margin-bottom: 0.15em;
+    }
+
+    .infog-l7 p span {
+        font-size: 1.25em;
+    }
+
+
+    /* EIGHTH LINE */
+    .infog-l8 {
+        width: 100%;
+        height: 10em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .infog-l8-minor {
+        width: 17%;
+        height: 100%;
+        background-color: var(--std-color2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .infog-l8-minor-top {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .infog-l8-minor-top span {
+        font-size: .85em;
+        text-align: center;
+    }
+
+    .infog-l8-minor-top p {
+        font-size: 2em;
+        text-align: center;
+    }
+
+    .infog-l8-major {
+        width: 32%;
+        height: 100%;
+        background-color: var(--std-color2);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .fl-icon {
+        width: 65px;
+        height: 65px;
+    }
+
+    .infog-l8-major-proName {
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.15em;
+    }
+
+    .infog-l8-major-proName::before {
+        content: '\201C';
+    }
+
+    .infog-l8-major-proName::after {
+        content: '\201D';
+    }
+
+    .infog-l8-major-autName {
+        font-weight: bold;
+        font-size: .75em;
+        text-align: center;
+    }
+
+    .infog-l8-major-autName::before {
+        content: '- ';
+    }
+
+    .infog-l8-major-date {
+        font-size: 1.75em;
+    }
+
+    .infog-l8-major-pub {
+        font-weight: bold;
+        font-size: 1.75em;
+    }
+
+    .infog-l8-major-recnum {
+        font-size: 1.75em;
+    }
+
+    .infog-l8-major-recnum span {
+        font-size: .5em;
+        font-weight: normal;
+    }
+    
+
+    /* ADAPTATIVE SETTINGS */
+    @media only screen and (min-width: 1280px) {
+        .infog {
+            width: 90%;
+            font-size: .9em;
+        }
+
+        .ttl_records-icon {
+            width: 135px;
+            height: 135px;
+        }
+
+        .date_period-icon {
+            width: 115px;
+            height: 115px;
+        }
+
+        .infog-l8-minor-top span {
+            font-size: 1em;
+        }
+
+        .fl-icon {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    @media only screen and (min-width: 1440px) {}
+
+    @media only screen and (min-width: 1600px) {
+        .infog {
+            width: 75%;
+        }
+    }
+
+    @media only screen and (min-width: 1920px) {
+        .infog {
+            width: 65%;
+            font-size: 1em;
+        }
+
+        .ttl_records-icon {
+            width: 150px;
+            height: 150px;
+        }
+
+        .date_period-icon {
+            width: 130px;
+            height: 130px;
+        }
+    }
+</style>
