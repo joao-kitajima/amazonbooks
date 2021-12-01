@@ -551,7 +551,34 @@ class IndexRoute {
     /* AUTOAJUDA */
     async autoajuda(req, res) {
         let ajuList = [];
-        res.render("index/selfHelp");
+        const rows = await (0, amazonbooks_1.executar)(`SELECT proScrapDate as date, proPosition, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+        let livros = {}, series = [], datas = {}, categories = [];
+        for (let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            let l = livros[row.proName];
+            if (!l) {
+                l = {
+                    name: row.proName,
+                    data: []
+                };
+                livros[row.proName] = l;
+                series.push(l);
+            }
+            let d = datas[row.date];
+            if (!d) {
+                datas[row.date] = row.date;
+                categories.push(row.date);
+            }
+            l.data.push(row.proPosition);
+        }
+        res.render("index/selfHelp", { series: JSON.stringify(series), categories: JSON.stringify(categories) });
     }
     /* INFANTIL */
     async infantil(req, res) {
