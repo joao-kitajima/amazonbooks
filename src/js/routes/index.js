@@ -78,7 +78,7 @@ class IndexRoute {
             avgPriAut.push({ name: r.autName, data: r.avgPrice });
         });
         /* TOP */
-        /* Autor preço soma de preços registrados */
+        /* Autor media pag registrados */
         rows = await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),2) as avgPages, at.autName
 		FROM Product a
 		INNER JOIN (SELECT proName,
@@ -152,6 +152,18 @@ class IndexRoute {
 			GROUP BY a.autCode
 			ORDER BY avgPrice DESC
 			LIMIT 1;`),
+            leastExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			INNER JOIN Author at ON at.autCode = a.autCode
+			WHERE a.proPrice != -1 and a.proPrice != "N/A"
+			GROUP BY a.autCode
+			ORDER BY avgPrice
+			LIMIT 1;`),
             mostPages: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPages),0) as avgPages, at.autName
 			FROM Product a
 			INNER JOIN (SELECT proName,
@@ -180,6 +192,117 @@ class IndexRoute {
             freqAut: JSON.stringify(freqAut),
             avgPagAut: JSON.stringify(avgPagAut),
             autRev: JSON.stringify(autRev)
+        });
+    }
+    /* EDITORAS */
+    async editoras(req, res) {
+        let rows;
+        let mostAvgStar = { data: 0, name: "" };
+        let pubPri = [], pubFreq = [], pubRev = [];
+        /* CARD */
+        /* maior estrela entre os top 10 consistentes */
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proPublisher, sum(a.proReview) as reviews, round(avg(a.proStar),2) as avgStars
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		WHERE a.proReview != "N/A" and a.proStar != "N/A" and a.proPublisher != "N/A"
+		GROUP by a.proPublisher
+		ORDER BY reviews DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            if (r.avgStars > mostAvgStar.data) {
+                mostAvgStar.data = r.avgStars;
+                mostAvgStar.name = r.proPublisher;
+            }
+        });
+        /* TOP */
+        /* pri x pub */
+        rows = await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A"
+		GROUP BY a.proPublisher
+		ORDER BY avgPrice DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            pubPri.push({ name: r.proPublisher, data: r.avgPrice });
+        });
+        /* TOP */
+        /* pub x freq */
+        rows = await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product p
+		WHERE proPublisher != "N/A"
+		GROUP BY proPublisher
+		ORDER by freq DESC
+		LIMIT 10`);
+        rows.forEach((r) => {
+            pubFreq.push({ name: r.proPublisher, data: r.freq });
+        });
+        /* TOP */
+        /* pub x review */
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proPublisher, sum(a.proReview) as reviews
+		FROM Product a
+		INNER JOIN (SELECT proName,
+					MAX(proCode) as proCode
+					FROM Product 
+					GROUP BY proName) AS b
+		ON a.proName = b.proName and a.proCode = b.proCode
+		WHERE a.proReview != "N/A" and a.proPublisher != "N/A"
+		GROUP by a.proPublisher
+		ORDER BY reviews DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            pubRev.push({ name: r.proPublisher, data: r.reviews });
+        });
+        res.render("index/publishers", {
+            mostConsistent: await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product
+			WHERE proPublisher != "N/A"
+			GROUP BY proPublisher
+			ORDER by freq DESC
+			LIMIT 1;`),
+            mostReviewed: await (0, amazonbooks_1.executar)(`SELECT proPublisher, sum(a.proReview) as reviews
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			WHERE a.proReview != "N/A" and a.proPublisher != "N/A"
+			GROUP by proPublisher
+			ORDER BY reviews DESC
+			LIMIT 1;`),
+            mostExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice),2) as avgPrice, a.proPublisher
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			WHERE a.proPrice != -1 and a.proPrice != "N/A" and a.proPublisher != "N/A"
+			GROUP BY a.proPublisher
+			ORDER BY avgPrice DESC
+			LIMIT 1;`),
+            leastExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher
+			FROM Product a
+			INNER JOIN (SELECT proName,
+						MAX(proCode) as proCode
+						FROM Product 
+						GROUP BY proName) AS b
+			ON a.proName = b.proName and a.proCode = b.proCode
+			WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A"
+			GROUP BY a.proPublisher
+			ORDER BY avgPrice 
+			LIMIT 1;	`),
+            mostAvgStar: mostAvgStar,
+            pubPri: JSON.stringify(pubPri),
+            pubFreq: JSON.stringify(pubFreq),
+            pubRev: JSON.stringify(pubRev)
         });
     }
     /* VISÃO GERAL */
@@ -428,7 +551,34 @@ class IndexRoute {
     /* AUTOAJUDA */
     async autoajuda(req, res) {
         let ajuList = [];
-        res.render("index/selfHelp");
+        const rows = await (0, amazonbooks_1.executar)(`SELECT proScrapDate as date, proPosition, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+        let livros = {}, series = [], datas = {}, categories = [];
+        for (let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            let l = livros[row.proName];
+            if (!l) {
+                l = {
+                    name: row.proName,
+                    data: []
+                };
+                livros[row.proName] = l;
+                series.push(l);
+            }
+            let d = datas[row.date];
+            if (!d) {
+                datas[row.date] = row.date;
+                categories.push(row.date);
+            }
+            l.data.push(row.proPosition);
+        }
+        res.render("index/selfHelp", { series: JSON.stringify(series), categories: JSON.stringify(categories) });
     }
     /* INFANTIL */
     async infantil(req, res) {
@@ -486,43 +636,6 @@ class IndexRoute {
                         acaList.push(a);
                     });
                     res.render("index/hqs_mangas", { acaList: acaList });
-                });
-            }
-            catch (error) {
-                throw error;
-            }
-        })();
-    }
-    /* EDITORAS */
-    async editoras(req, res) {
-        let pubList = [];
-        (async () => {
-            try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                // await db.all(`
-                //   SELECT proName, proPrice, proPublisher, c.catName 
-                // 	FROM Product p 
-                // 	INNER JOIN Category c 
-                // 	INNER JOIN Product_Category pc 
-                // 	WHERE proPublisher = "Todolivro" and p.proCode = pc.proCode and c.catCode = pc.catCode ;`, 
-                //   async (err, rows) =>{
-                // 	if(err){
-                // 		throw err;
-                // 	}
-                // 	await rows.forEach((a)=>{
-                // 		pubList.push(a)
-                // 	})
-                // 	res.render("index/publishers", {pubList: pubList});
-                // })
-                await amazonbooks_1.db.all(`
-				  SELECT * from Category;`, async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        pubList.push(a);
-                    });
-                    res.render("index/publishers", { pubList: pubList });
                 });
             }
             catch (error) {

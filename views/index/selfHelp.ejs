@@ -1,1 +1,30 @@
 autoajuda
+<div id="chart"></div>
+
+<script>
+    var series = JSON.parse(`<%- series %>`)
+    var categories = JSON.parse(`<%- categories %>`)
+
+    var options = {
+			chart: {
+				height: 380,
+				width: "100%",
+				type: "line"
+			},
+			series: series,
+			
+			
+			xaxis: {
+				categories: categories
+				
+			},
+
+            yaxis: {
+                reversed: true
+            }
+		};
+
+	var chart = new ApexCharts(document.querySelector("#chart"), options);
+		
+	chart.render();
+</script>

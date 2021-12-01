@@ -1,14 +1,146 @@
 editoras
 
-<h5><%= pubList[0].proPublisher %></h5>
-<% pubList.forEach((p) =>{ %>
-    <p>
-        <hr>
-        <%= p.proName %> 
-        <br>   
-        <%= p.proPrice %> 
-        <br>  
-        <%= p.catName %>   
-        <hr> 
-    </p>
-<% }) %>
+<p><b>Editora mais consistente de todas:</b> <%= mostConsistent[0].proPublisher %> com <%= mostConsistent[0].freq %> registros</p>
+
+<p><b>Editora mais avaliada de todas:</b> <%= mostReviewed[0].proPublisher %> com <%= mostReviewed[0].reviews %> avaliações</p>
+
+<p><b>Editora com preço médio maior:</b> <%= mostExpensive[0].proPublisher %> com <%= mostExpensive[0].avgPrice %> reais</p>
+<p><b>Editora com preço médio menor:</b> <%= leastExpensive[0].proPublisher %> com <%= leastExpensive[0].avgPrice %> reais</p>
+
+<p><b>Das top 10 editoras mais avaliadas, a com maior média de estrelas é:</b> <%= mostAvgStar.name %> com <%= mostAvgStar.data %> estrelas</p>
+
+
+<br>
+<br>
+<br>
+<br>
+
+<h4>Top 10 editoras com maior preço médio</h4>
+<div id="chartPubPri"></div>
+<h4>Top 10 editoras mais consistentes</h4>
+<div id="chartPubFreq"></div>
+<h4>Top 10 editoras com mais reviews</h4>
+<div id="chartPubRev"></div>
+
+
+
+<!-- price avg x pub  -->
+<script>
+    var aux = JSON.parse(`<%- pubPri %>`)
+    var series = [{name: "Média de preço", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartPubPri = new ApexCharts(document.querySelector("#chartPubPri"), options);
+    chartPubPri.render();
+</script>
+
+<!-- freq x pub  -->
+<script>
+    var aux = JSON.parse(`<%- pubFreq %>`)
+    var series = [{name: "Total de registros", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartPubFreq = new ApexCharts(document.querySelector("#chartPubFreq"), options);
+    chartPubFreq.render();
+</script>
+
+
+<!-- reviews x pub  -->
+<script>
+    var aux = JSON.parse(`<%- pubRev %>`)
+    var series = [{name: "Qtde reviews", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+        }
+    };
+
+    var chartPubRev = new ApexCharts(document.querySelector("#chartPubRev"), options);
+    chartPubRev.render();
+</script>
+
+
+

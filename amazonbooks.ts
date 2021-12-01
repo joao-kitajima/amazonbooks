@@ -56,4 +56,6 @@ function scalar(sql: string): Promise<any> {
 }
 
 
+
+
 export {sqlite3, db, executar, scalar}
