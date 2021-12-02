@@ -1,11 +1,45 @@
-<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+
 
 <!-- BIG NUMBER FORMAT -->
+<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
 <% total_sum = new Intl.NumberFormat().format(total_sum); %>
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
 <% total_books = new Intl.NumberFormat().format(total_books); %>
 <% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
+
+
+<!-- NUMBER FORMAT -->
+<% sumRevCat.max.data = new Intl.NumberFormat().format(sumRevCat.max.data); %>
+<% sumRevCat.min.data = new Intl.NumberFormat().format(sumRevCat.min.data); %>
+<% sumAutCat.max.data = new Intl.NumberFormat().format(sumAutCat.max.data); %>
+<% sumAutCat.min.data = new Intl.NumberFormat().format(sumAutCat.min.data); %>
+<% avgPagCat.max.data = new Intl.NumberFormat().format(avgPagCat.max.data); %>
+<% avgPagCat.min.data = new Intl.NumberFormat().format(avgPagCat.min.data); %>
+<% avgPriCat.max.data = new Intl.NumberFormat().format(avgPriCat.max.data); %>
+<% avgPriCat.min.data = new Intl.NumberFormat().format(avgPriCat.min.data); %>
+
+
+<!-- DATE FORMAT -->
+<%
+  minMaxDate.max.data = minMaxDate.max.data.slice(0,11).replace(/-/g, '/');
+  var ob_day = minMaxDate.max.data.slice(8);
+  var ob_month = minMaxDate.max.data.slice(4, 8);
+  var ob_year = minMaxDate.max.data.slice(0, 4);
+  minMaxDate.max.data = (ob_day + ob_month + ob_year).replace(' ', '');
+%>
+
+<%
+  minMaxDate.min.data = minMaxDate.min.data.slice(0,11).replace(/-/g, '/');
+  var ob_day = minMaxDate.min.data.slice(8);
+  var ob_month = minMaxDate.min.data.slice(4, 8);
+  var ob_year = minMaxDate.min.data.slice(0, 4);
+  minMaxDate.min.data = (ob_day + ob_month + ob_year).replace(' ', '');
+%>
 
 
 <div class="bigNumbers">
@@ -91,37 +125,126 @@
 </div>
 
 
-<!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
-
-
 <!-- REVIEWS x PÁGINAS -->
-<div class="equal-charts">
-    <div id="chartRevPag" class="equal-chart"></div>
+<div class="left-sided-chart">
+    <div id="chartRevPag" class="left-chart-class"></div>
 
-    <div id="chartStrPag" class="equal-chart"></div>
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>CATEGORIA COM MAIS REVIEWS</span>
+
+            <p class="cnt-card-p1"><%= sumRevCat.max.name %></p>
+            <p class="cnt-card-p2"><span><%= sumRevCat.max.data %></span> reviews</p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>CATEGORIA COM MENOS REVIEWS</span>
+
+            <p class="cnt-card-p1"><%= sumRevCat.min.name %></p>
+            <p class="cnt-card-p2"><span><%= sumRevCat.min.data %></span> reviews</p>
+        </div>
+    </div>
 </div>
 
----
-<h4>Estrelas x Páginas</h4>
 
----
-<h4>Preço x Páginas</h4>
-<div id="chartPriPag"></div>
----
-<h4>Preço x Estrelas</h4>
-<div id="chartPriStr"></div>
---- 
-<h4>Tipo frequencia</h4>
-<div id="chartTypRev"></div>
----
-<h4>Soma preço por categoria</h4>
-<div id="chartPriCat"></div>
----
-<h4>Contagem produto distinto por categoria</h4>
-<div id="chartProCat"></div>
+<!-- ESTRELAS x PÁGINAS -->
+<div class="left-sided-chart">
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>CATEGORIA COM MAIS AUTORES</span>
+
+            <p class="cnt-card-p1"><%= sumAutCat.max.name %></p>
+            <p class="cnt-card-p2"><span><%= sumAutCat.max.data %></span> autores</p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>CATEGORIA COM MENOS AUTORES</span>
+
+            <p class="cnt-card-p1"><%= sumAutCat.min.name %></p>
+            <p class="cnt-card-p2"><span><%= sumAutCat.min.data %></span> autores</p>
+        </div>
+    </div>
+    
+    <div id="chartStrPag" class="left-chart-class"></div>
+</div>
+
+
+<!-- TIPO x FREQUÊNCIA -->
+<div class="left-sided-chart">
+    <div id="chartTypRev" class="left-chart-class"></div>
+
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>CATEGORIA COM MAIOR MÉDIA PÁGINAS</span>
+
+            <p class="cnt-card-p1"><%= avgPagCat.max.name %></p>
+            <p class="cnt-card-p2"><span><%= avgPagCat.max.data %></span> páginas</p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>CATEGORIA COM MENOR MÉDIA PÁGINAS</span>
+
+            <p class="cnt-card-p1"><%= avgPagCat.min.name %></p>
+            <p class="cnt-card-p2"><span><%= avgPagCat.min.data %></span> páginas</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- PREÇO x PÁGINAS -->
+<div class="left-sided-chart">
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>CATEGORIA COM PREÇO MÉDIO MAIOR</span>
+
+            <p class="cnt-card-p1"><%= avgPriCat.max.name %></p>
+            <p class="cnt-card-p2"><span>R$<%= avgPriCat.max.data %></span></p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>CATEGORIA COM PREÇO MÉDIO MENOR</span>
+
+            <p class="cnt-card-p1"><%= avgPriCat.min.name %></p>
+            <p class="cnt-card-p2"><span>R$<%= avgPriCat.min.data %></span></p>
+        </div>
+    </div>
+    
+    <div id="chartPriPag" class="left-chart-class"></div>
+</div>
+
+
+<!-- PREÇO x ESTRELAS -->
+<div class="left-sided-chart">
+    <div id="chartPriStr" class="left-chart-class"></div>
+
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>PUBLICAÇÃO MAIS RECENTE</span>
+
+            <p class="cnt-card-p1"><%= minMaxDate.max.name%></p>
+            <p class="cnt-card-p2"><span><%= minMaxDate.max.data%></span></p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>PUBLICAÇÃO MAIS ANTIGA</span>
+
+            <p class="cnt-card-p1"><%= minMaxDate.min.name%></p>
+            <p class="cnt-card-p2"><span><%= minMaxDate.min.data%></span></p>
+        </div>
+    </div>
+</div>
+
+
+<div class="equal-charts">
+    <!-- PREÇO x CATEGORIA -->
+    <div id="chartPriCat" class="equal-chart"></div>
+
+    <!-- PRODUTO x CATEGORIA -->
+    <div id="chartProCat" class="equal-chart"></div>
+</div>
+
+
+
 
 <!-- Review x Pages -->
 <script>
@@ -236,10 +359,19 @@
                 formatter: function(val) {
                     return parseFloat(val).toFixed(1)
                 }
+            },
+            title: {
+                text: 'Preço'
             }
         },
         yaxis: {
-            tickAmount: 7
+            tickAmount: 7,
+            title: {
+                text: 'Número de Páginas'
+            }
+        },
+        title: {
+            text: 'Correlação entre Preço e o Número de Páginas'
         }
     };
 
@@ -271,10 +403,19 @@
                 formatter: function(val) {
                     return parseFloat(val).toFixed(1)
                 }
+            },
+            title: {
+                text: 'Preço'
             }
         },
         yaxis: {
-            tickAmount: 7
+            tickAmount: 7,
+            title: {
+                text: 'Estrelas de Avaliação'
+            }
+        },
+        title: {
+            text: 'Correlação entre o Preço e Avaliação'
         }
     };
 
@@ -314,6 +455,17 @@
         },
         xaxis: {
           categories: categories,
+          title: {
+              text: 'Total de Registros'
+          }
+        },
+        yaxis: {
+            title: {
+                text: 'Categoria de Livros'
+            }
+        },
+        title: {
+            text: 'Número Total de Registros por Categoria'
         }
     };
 
@@ -353,6 +505,17 @@
         },
         xaxis: {
           categories: categories,
+          title: {
+              text: 'Preço Total'
+          }
+        },
+        yaxis: {
+            title: {
+                text: 'Categoria de Livros'
+            }
+        },
+        title: {
+            text: 'Preço Total dos Livros por Categoria'
         }
     };
 
@@ -388,6 +551,17 @@
         },
         xaxis: {
           categories: categories,
+          title: {
+              text: 'Número Total de Registros'
+          }
+        },
+        yaxis: {
+            title: {
+                text: 'Tipo de Acabamento'
+            }
+        },
+        title: {
+            text: 'Frequência de cada Tipo de Acabamento do Livro'
         }
     };
 
@@ -395,27 +569,4 @@
     chartTypRev.render();
 </script>
 
-
-<br>
-<br>
-<br>
-
-<h6>Categoria com maior soma de reviews: <%= sumRevCat.max.data %> (<%= sumRevCat.max.name %>)</h6>
-<h6>Categoria com menor soma de reviews: <%= sumRevCat.min.data %> (<%= sumRevCat.min.name %>)</h6>
-
-<h6>Categoria com maior quantidade de autores: <%= sumAutCat.max.data %> (<%= sumAutCat.max.name %>)</h6>
-<h6>Categoria com menor quantidade de autores: <%= sumAutCat.min.data %> (<%= sumAutCat.min.name %>)</h6>
-
-<h6>Categoria com maior qtd média de paginas: <%= avgPagCat.max.data %> (<%= avgPagCat.max.name %>)</h6>
-<h6>Categoria com menor qtd média de paginas: <%= avgPagCat.min.data %> (<%= avgPagCat.min.name %>)</h6>
-
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat.max.data %> (<%= avgPriCat.max.name %>)</h6>
-<h6>Categoria com menor qtd média de preço: <%= avgPriCat.min.data %> (<%= avgPriCat.min.name %>)</h6>
-
-<h6>Categoria com maior data de publi regist: <%= minMaxDate.max.data%> (<%= minMaxDate.max.name%>)</h6>
-<h6>Categoria com menor data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
-
-
-<br>
-<br>
-<br>
+<br />

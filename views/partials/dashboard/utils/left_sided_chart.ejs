@@ -1,13 +1,101 @@
 <style type="text/css">
+    @font-face {
+      font-family: 'Bookerly';
+      src: url(/public/fonts/Bookerly-Regular.ttf) format("truetype");
+    }
+
+    @font-face {
+      font-family: 'Bookerly-Italic';
+      src: url(/public/fonts/Bookerly-Italic.ttf) format("truetype");
+    }
+
+    :root {
+        --color-org: #f90;
+        --color-dbl: #131921;
+        --font-bk-itl: 'Bookerly-Italic';
+    }
+
     .left-sided-chart {
         width: 100%;
+        display: flex;
     }
 
     .left-chart-class {
-        width: 80%;
+        width: 70%;
     }
 
     .content-card {
-        width: 20%;
+        height: 350px;
+        width: 30%;
+        margin-top: 0.5em;
+        margin-bottom: 1.25em;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: space-between;
+    }
+
+    .cnt-card {
+        font-size: .75em;
+        height: 45%;
+        width: 85%;
+        align-self: center;
+        display: grid;
+        place-items: center;
+        border-radius: 4px;
+        padding: 12px;
+        -webkit-box-shadow: 2px 2px 4px 0px rgba(15,17,17,0.25);
+        -moz-box-shadow: 2px 2px 4px 0px rgba(15,17,17,0.25);
+        box-shadow: 2px 2px 4px 0px rgba(15,17,17,0.25);
+    }
+
+    .cnt-card span {
+        font-size: .75em;
+        margin-bottom: .25em;
+        text-align: center;
+    }
+
+    .cnt-card p {
+        /* overflow-wrap: break-word; */
+        word-break: break-word;
+    }
+
+    .cnt-card-p1 {
+        font-weight: bold;
+        font-size: 1.5em;
+        text-align: center;
+    }
+
+    .cnt-card-p2 {
+        margin-top: .75em;
+        text-align: center;
+        font-family: var(--font-bk-itl);
+    }
+
+    .cnt-card-p2 span {
+        font-weight: bold;
+        font-size: 1.25em;
+    }
+
+    .cnt-c1 {
+        background-color: var(--color-org);
+        color: var(--color-dbl)
+    }
+
+    .cnt-c2 {
+        background-color: var(--color-dbl);
+        color: #fff;
+    }
+
+    @media only screen and (min-width: 1600px) {
+        .cnt-card {
+            font-size: .85em;
+        }
+    }
+
+    @media only screen and (min-width: 1920px) {
+        .cnt-card {
+            font-size: 1em;
+        }
     }
 </style>
