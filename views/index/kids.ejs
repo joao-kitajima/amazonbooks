@@ -1,1 +1,138 @@
-ficção
+
+<div id="chartPieRev"></div>
+<div id="chartPiePri"></div>
+<div id="chartTreeType"></div>
+
+<!--PIE rev x cat -->
+<script>
+    var series = JSON.parse(`<%- pieAvgReview %>`)
+    var labels = JSON.parse(`<%- pieRevCategories %>`)
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'donut',
+        },
+        labels: labels,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+              height: 600
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+    var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
+    chartPieRev.render();
+      
+      
+</script>
+
+<!-- PIE pri x cat -->
+<script>
+
+    var series = JSON.parse(`<%- pieAvgPrice %>`)
+    var labels = JSON.parse(`<%- piePriCategories %>`)
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'donut',
+        },
+        labels: labels,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+              height: 600
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+    var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
+    chartPiePri.render();
+      
+      
+</script>
+
+<!-- TreeMap type x freq -->
+<script>
+    var series = JSON.parse(`<%- treeType %>`)
+
+    var options = {
+    series: series,
+    legend: {
+    show: false
+    },
+    chart: {
+        height: 900,
+        type: 'treemap'
+    },
+    title: {
+        text: 'Mapa de árvore - Tipo de livro e frequência'
+    },
+    dataLabels: {
+        enabled: true,
+        style: {
+        fontSize: '16px',
+        },
+        formatter: function(text, op) {
+        return [text, op.value]
+        },
+        offsetY: -4
+    },
+    plotOptions: {
+        treemap: {
+        enableShades: true,
+        shadeIntensity: 0.5,
+        reverseNegativeShade: true,
+        colorScale: {
+            ranges: [
+            {
+                from: -6,
+                to: 0,
+                color: '#CD363A'
+            },
+            {
+                from: 0.001,
+                to: 6,
+                color: '#52B12C'
+            }
+            ]
+        }
+        }
+    }
+    };
+
+    var chartTreeType = new ApexCharts(document.querySelector("#chartTreeType"), options);
+    chartTreeType.render();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
