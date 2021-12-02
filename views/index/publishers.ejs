@@ -62,7 +62,25 @@
 </div>
 
 
-<div id="chartPubRev"></div>
+<div class="left-sided-chart">
+  <div id="chartPubRev" class="left-chart-class"></div>
+
+  <div class="content-card">
+      <div class="cnt-card cnt-c1">
+          <span>EDITORA MAIS CONSISTENTE</span>
+
+          <p class="cnt-card-p1"><%= mostConsistent[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span><%= mostConsistent[0].freq %></span> registros</p>
+      </div>
+
+      <div class="cnt-card cnt-c2">
+          <span>EDITORA COM MAIS AVALIAÇÕES</span>
+
+          <p class="cnt-card-p1"><%= mostReviewed[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span><%= mostReviewed[0].reviews %></span> avaliações</p>
+      </div>
+  </div>
+</div>
 
 
 <!-- price avg x pub  -->
