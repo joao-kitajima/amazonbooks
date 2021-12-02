@@ -327,8 +327,9 @@ class IndexRoute {
 			mostAvgStar: mostAvgStar,
 			pubPri: JSON.stringify(pubPri),
 			pubFreq: JSON.stringify(pubFreq),
-			pubRev: JSON.stringify(pubRev)
-
+			pubRev: JSON.stringify(pubRev),
+			most_reviewed_publisher: await executar('SELECT proPublisher, MAX(proReview) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL	GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
+			highest_avg_reviews_publisher: await executar('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;')
 		});
 	}
 
