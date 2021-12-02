@@ -1,5 +1,5 @@
 ﻿import amazonbooks = require("teem");
-import { db, executar, scalar } from '../amazonbooks';
+import { db, executar, executarParam, scalar } from '../amazonbooks';
 
 
 class IndexRoute {
@@ -344,9 +344,6 @@ class IndexRoute {
 		let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = [], seriesPriStr = []
 		let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: []}, catPriStr = {}
 		let categoriesTyp = []
-
-		let total_records = {};
-
 
 
 		/* CARD */
@@ -718,24 +715,38 @@ class IndexRoute {
 
 
 	/* DIREITO */
-	public async direito(req: amazonbooks.Request, res: amazonbooks.Response){
-		let dirList = [];
+	public async direito(req: amazonbooks.Request, res: amazonbooks.Response) {
+		// console.log(req.get('teste'));
+		
+		// req.get('omega3');
+		// console.log(req.get('omega3'));
+		
+		console.log(req.params)
 
-		(async () => {
-			try {
-			  	// Creating the Books table (Book_ID, Title, Author, Comments)
-			  	await db.all('SELECT autName from Author', async (err, rows) =>{
-					if(err){
-						throw err;
-					}
-					await rows.forEach((a)=>{
-						dirList.push(a)
-					})
-					res.render("index/laws", {dirList: dirList});
-				})	
+
+
+		res.render(
+			'index/laws',
+			{
+
 			}
-			catch (error) { throw error; }
-		  })();
+		);
+	}
+
+	/* asdasd */
+	@amazonbooks.http.post()
+	// @amazonbooks.route.formData()
+	public async rotaTeste(req: amazonbooks.Request, res:amazonbooks.Response) {
+		
+
+		let sql = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
+
+		let response = await executarParam(sql, [req.body.query])
+
+		res.json(response)
+
+
+		
 	}
 
 

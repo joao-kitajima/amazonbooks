@@ -33,6 +33,22 @@ function executar(sql: string): Promise<any[]> {
     });
 }
 
+function executarParam(sql: string, p: any[]): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+        db.all(
+			sql,
+            p,
+			(err, rows) => {
+				if(err) {
+					reject(err);
+				} else {
+                    resolve(rows);
+                }
+			}
+		);
+    });
+}
+
 function scalar(sql: string): Promise<any> {
     return new Promise((resolve, reject) => {
         db.get(
@@ -58,4 +74,4 @@ function scalar(sql: string): Promise<any> {
 
 
 
-export {sqlite3, db, executar, scalar}
+export {sqlite3, db, executar, executarParam, scalar}
