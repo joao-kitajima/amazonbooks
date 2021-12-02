@@ -1,4 +1,11 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+const amazonbooks = require("teem");
 const amazonbooks_1 = require("../amazonbooks");
 class IndexRoute {
     /* PÁGINA INICIAL */
@@ -314,7 +321,6 @@ class IndexRoute {
         let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = [], seriesPriStr = [];
         let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: [] }, catPriStr = {};
         let categoriesTyp = [];
-        let total_records = {};
         /* CARD */
         /* Categoria com maior e menur numero de reviews */
         rows = await (0, amazonbooks_1.executar)(`SELECT sum(a.proReview) as somaReview, c.catName
@@ -609,24 +615,17 @@ class IndexRoute {
     }
     /* DIREITO */
     async direito(req, res) {
-        let dirList = [];
-        (async () => {
-            try {
-                // Creating the Books table (Book_ID, Title, Author, Comments)
-                await amazonbooks_1.db.all('SELECT autName from Author', async (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    await rows.forEach((a) => {
-                        dirList.push(a);
-                    });
-                    res.render("index/laws", { dirList: dirList });
-                });
-            }
-            catch (error) {
-                throw error;
-            }
-        })();
+        // console.log(req.get('teste'));
+        // req.get('omega3');
+        // console.log(req.get('omega3'));
+        console.log(req.params);
+        res.render('index/laws', {});
+    }
+    /* asdasd */
+    async rotaTeste(req, res) {
+        let sql = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
+        let response = await (0, amazonbooks_1.executarParam)(sql, [req.body.query]);
+        res.json(response);
     }
     /* HQs e MANGÁS */
     async hqs_mangas(req, res) {
@@ -650,5 +649,8 @@ class IndexRoute {
         })();
     }
 }
+__decorate([
+    amazonbooks.http.post()
+], IndexRoute.prototype, "rotaTeste", null);
 module.exports = IndexRoute;
 //# sourceMappingURL=index.js.map

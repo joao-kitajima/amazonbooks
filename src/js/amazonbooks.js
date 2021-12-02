@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scalar = exports.executar = exports.db = exports.sqlite3 = void 0;
+exports.scalar = exports.executarParam = exports.executar = exports.db = exports.sqlite3 = void 0;
 const amazonbooks = require("teem");
 const sqlite3v = require("sqlite3");
 const sqlite3 = sqlite3v.verbose();
@@ -31,6 +31,19 @@ function executar(sql) {
     });
 }
 exports.executar = executar;
+function executarParam(sql, p) {
+    return new Promise((resolve, reject) => {
+        db.all(sql, p, (err, rows) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(rows);
+            }
+        });
+    });
+}
+exports.executarParam = executarParam;
 function scalar(sql) {
     return new Promise((resolve, reject) => {
         db.get(sql, (err, row) => {

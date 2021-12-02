@@ -1,1 +1,34 @@
-politica
+<!-- <form id="searchBarForm"> -->
+    <input id="search-bar-input" name="query" type="search" placeholder="BUSCAR" />
+
+    <div>
+		<button onclick="searchBoxInput()">CLICA BUSCA</button>
+	</div>
+<!-- </form> -->
+
+<!-- <h1 id="omega3">TINTA PRONTA</h1> -->
+
+<%#
+    const searchInput = document.getElementById("search-bar-input");
+
+
+%>
+
+<script type="text/javascript">
+    const searchInput = document.getElementById("search-bar-input");
+
+    
+    function searchBoxInput() {
+        axios.post('/rotaTeste', {
+            query: searchInput.value
+        })
+        .then(function (response) {
+          console.log(response.data[0].proPrice, response.data[0].proReview);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
+</script>

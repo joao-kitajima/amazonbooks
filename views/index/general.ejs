@@ -264,7 +264,6 @@
                 speed: 175
             }
         },
-
         xaxis: {
             tickAmount: 10,
             labels: {
@@ -309,26 +308,26 @@
                     speed: 175
                 }
             },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
+            xaxis: {
+                tickAmount: 10,
+                labels: {
+                    formatter: function(val) {
+                        return parseFloat(val).toFixed(1)
+                    }
+                },
+                title: {
+                    text: 'Estrelas de Avaliações'
+                }
+            },
+            yaxis: {
+                tickAmount: 7,
+                title: {
+                    text: 'Número de Páginas'
                 }
             },
             title: {
-                text: 'Estrelas de Avaliações'
+                text: 'Correlação entre Estrelas de Avaliações e o Número de Páginas'
             }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Número de Páginas'
-            }
-        },
-        title: {
-            text: 'Correlação entre Estrelas de Avaliações e o Número de Páginas'
-        }
     };
 
     var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
@@ -342,18 +341,18 @@
     var options = {
     series: JSON.parse(series),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy',
-        },
-        animations: {
-            enabled: false,
-            speed: 175
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy',
+            },
+            animations: {
+                enabled: false,
+                speed: 175
             }
         },
-    xaxis: {
+        xaxis: {
             tickAmount: 10,
             labels: {
                 formatter: function(val) {
@@ -386,18 +385,18 @@
     var options = {
     series: JSON.parse(series),
         chart: {
-        height: 350,
-        type: 'scatter',
-        zoom: {
-        enabled: true,
-        type: 'xy',
-        },
-        animations: {
-            enabled: false,
-            speed: 175
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy',
+            },
+            animations: {
+                enabled: false,
+                speed: 175
             }
         },
-    xaxis: {
+        xaxis: {
             tickAmount: 10,
             labels: {
                 formatter: function(val) {
@@ -434,30 +433,29 @@
     })
 
     var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
         },
         animations: {
             enabled: true,
             speed: 175
         },
-    
         plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
+            bar: {
+              borderRadius: 4,
+              horizontal: true,
+            }
         },
         dataLabels: {
-          enabled: false
+            enabled: false
         },
         xaxis: {
-          categories: categories,
-          title: {
-              text: 'Total de Registros'
-          }
+            categories: categories,
+            title: {
+                text: 'Total de Registros'
+            }
         },
         yaxis: {
             title: {
@@ -484,30 +482,29 @@
     })
 
     var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
         },
         animations: {
             enabled: true,
             speed: 175
         },
-    
         plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
+            bar: {
+              borderRadius: 4,
+              horizontal: true,
+            }
         },
         dataLabels: {
-          enabled: false
+            enabled: false
         },
         xaxis: {
-          categories: categories,
-          title: {
-              text: 'Preço Total'
-          }
+            categories: categories,
+            title: {
+                text: 'Preço Total'
+            }
         },
         yaxis: {
             title: {
