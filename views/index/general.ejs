@@ -1,28 +1,112 @@
-<h6>Categoria com maior soma de reviews: <%= sumRevCat.max.data %> (<%= sumRevCat.max.name %>)</h6>
-<h6>Categoria com menor soma de reviews: <%= sumRevCat.min.data %> (<%= sumRevCat.min.name %>)</h6>
+<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
 
-<h6>Categoria com maior quantidade de autores: <%= sumAutCat.max.data %> (<%= sumAutCat.max.name %>)</h6>
-<h6>Categoria com menor quantidade de autores: <%= sumAutCat.min.data %> (<%= sumAutCat.min.name %>)</h6>
-
-<h6>Categoria com maior qtd média de paginas: <%= avgPagCat.max.data %> (<%= avgPagCat.max.name %>)</h6>
-<h6>Categoria com menor qtd média de paginas: <%= avgPagCat.min.data %> (<%= avgPagCat.min.name %>)</h6>
-
-<h6>Categoria com maior qtd média de preço: <%= avgPriCat.max.data %> (<%= avgPriCat.max.name %>)</h6>
-<h6>Categoria com menor qtd média de preço: <%= avgPriCat.min.data %> (<%= avgPriCat.min.name %>)</h6>
-
-<h6>Categoria com maior data de publi regist: <%= minMaxDate.max.data%> (<%= minMaxDate.max.name%>)</h6>
-<h6>Categoria com menor data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
+<!-- BIG NUMBER FORMAT -->
+<% total_records = new Intl.NumberFormat().format(total_records); %>
+<% total_sum = new Intl.NumberFormat().format(total_sum); %>
+<% total_authors = new Intl.NumberFormat().format(total_authors); %>
+<% total_books = new Intl.NumberFormat().format(total_books); %>
+<% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
 
 
-<br>
-<br>
-<br>
+<div class="bigNumbers">
+    <div class="bn-card bn-c-1">
+        <div class="bn-card-header">
+            <p>Registros Coletados</p>
+        </div>
 
-<h4>Reviews x Páginas</h4>
-<div id="chartRevPag"></div>
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_records %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-2">
+        <div class="bn-card-header">
+            <p>Valor Total</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right bn-c-2p">
+                <p>R$<%= total_sum %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-3">
+        <div class="bn-card-header">
+            <p>Total de Autores</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_authors %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-4">
+        <div class="bn-card-header">
+            <p>Total de Livros</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_books %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-5">
+        <div class="bn-card-header">
+            <p>Total de Editoras</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_publishers %></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+
+
+<!-- REVIEWS x PÁGINAS -->
+<div class="equal-charts">
+    <div id="chartRevPag" class="equal-chart"></div>
+
+    <div id="chartStrPag" class="equal-chart"></div>
+</div>
+
 ---
 <h4>Estrelas x Páginas</h4>
-<div id="chartStrPag"></div>
+
 ---
 <h4>Preço x Páginas</h4>
 <div id="chartPriPag"></div>
@@ -64,13 +148,19 @@
                 formatter: function(val) {
                     return parseFloat(val).toFixed(1)
                 }
+            },
+            title: {
+                text: 'Quantidade de Reviews'
             }
         },
         yaxis: {
-            tickAmount: 7
+            tickAmount: 7,
+            title: {
+                text: 'Número de Páginas'
+            }
         },
-        theme: {
-            palette: 'palette7'
+        title: {
+            text: 'Correlação entre a Quantidade de Reviews e o Número de Páginas'
         }
     };
 
@@ -83,30 +173,39 @@
     var series = `<%- seriesStrPag %>`
 
     var options = {
-    series: JSON.parse(series),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy'
+        series: JSON.parse(series),
+            chart: {
+                height: 350,
+                type: 'scatter',
+                zoom: {
+                    enabled: true,
+                    type: 'xy'
+                },
+                animations: {
+                    enabled: false,
+                    speed: 175
+                }
             },
-            animations: {
-                enabled: false,
-                speed: 175
+        xaxis: {
+            tickAmount: 10,
+            labels: {
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
+            },
+            title: {
+                text: 'Estrelas de Avaliações'
             }
         },
-    xaxis: {
-        tickAmount: 10,
-            labels: {
-            formatter: function(val) {
-                return parseFloat(val).toFixed(1)
+        yaxis: {
+            tickAmount: 7,
+            title: {
+                text: 'Número de Páginas'
             }
+        },
+        title: {
+            text: 'Correlação entre Estrelas de Avaliações e o Número de Páginas'
         }
-    },
-    yaxis: {
-        tickAmount: 7
-    }
     };
 
     var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
@@ -295,3 +394,28 @@
     var chartTypRev = new ApexCharts(document.querySelector("#chartTypRev"), options);
     chartTypRev.render();
 </script>
+
+
+<br>
+<br>
+<br>
+
+<h6>Categoria com maior soma de reviews: <%= sumRevCat.max.data %> (<%= sumRevCat.max.name %>)</h6>
+<h6>Categoria com menor soma de reviews: <%= sumRevCat.min.data %> (<%= sumRevCat.min.name %>)</h6>
+
+<h6>Categoria com maior quantidade de autores: <%= sumAutCat.max.data %> (<%= sumAutCat.max.name %>)</h6>
+<h6>Categoria com menor quantidade de autores: <%= sumAutCat.min.data %> (<%= sumAutCat.min.name %>)</h6>
+
+<h6>Categoria com maior qtd média de paginas: <%= avgPagCat.max.data %> (<%= avgPagCat.max.name %>)</h6>
+<h6>Categoria com menor qtd média de paginas: <%= avgPagCat.min.data %> (<%= avgPagCat.min.name %>)</h6>
+
+<h6>Categoria com maior qtd média de preço: <%= avgPriCat.max.data %> (<%= avgPriCat.max.name %>)</h6>
+<h6>Categoria com menor qtd média de preço: <%= avgPriCat.min.data %> (<%= avgPriCat.min.name %>)</h6>
+
+<h6>Categoria com maior data de publi regist: <%= minMaxDate.max.data%> (<%= minMaxDate.max.name%>)</h6>
+<h6>Categoria com menor data de publi regist: <%= minMaxDate.min.data%> (<%= minMaxDate.min.name%>)</h6>
+
+
+<br>
+<br>
+<br>
