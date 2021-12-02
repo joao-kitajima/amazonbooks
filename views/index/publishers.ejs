@@ -1,27 +1,68 @@
-editoras
-
-<p><b>Editora mais consistente de todas:</b> <%= mostConsistent[0].proPublisher %> com <%= mostConsistent[0].freq %> registros</p>
-
-<p><b>Editora mais avaliada de todas:</b> <%= mostReviewed[0].proPublisher %> com <%= mostReviewed[0].reviews %> avaliações</p>
-
-<p><b>Editora com preço médio maior:</b> <%= mostExpensive[0].proPublisher %> com <%= mostExpensive[0].avgPrice %> reais</p>
-<p><b>Editora com preço médio menor:</b> <%= leastExpensive[0].proPublisher %> com <%= leastExpensive[0].avgPrice %> reais</p>
-
-<p><b>Das top 10 editoras mais avaliadas, a com maior média de estrelas é:</b> <%= mostAvgStar.name %> com <%= mostAvgStar.data %> estrelas</p>
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
-<br>
-<br>
-<br>
-<br>
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/styles/authorsStyle.ejs") %>
 
-<h4>Top 10 editoras com maior preço médio</h4>
-<div id="chartPubPri"></div>
-<h4>Top 10 editoras mais consistentes</h4>
-<div id="chartPubFreq"></div>
-<h4>Top 10 editoras com mais reviews</h4>
+
+<!-- NUMBER FORMAT -->
+<% mostConsistent[0].freq = new Intl.NumberFormat().format(mostConsistent[0].freq); %>
+<% mostReviewed[0].reviews = new Intl.NumberFormat().format(mostReviewed[0].reviews); %>
+<% mostExpensive[0].avgPrice = new Intl.NumberFormat().format(mostExpensive[0].avgPrice); %>
+<% leastExpensive[0].avgPrice = new Intl.NumberFormat().format(leastExpensive[0].avgPrice); %>
+
+
+<div class="best_rated_author">
+  <p> Com uma média final de <span class="sp_stars"><%= mostAvgStar.data %></span> estrelas, <span class="sp_autName"><%= mostAvgStar.name %></span> obteve a melhor média de avaliações </p>
+</div>
+
+
+<div class="left-sided-chart">
+  <div id="chartPubPri" class="left-chart-class"></div>
+
+  <div class="content-card">
+      <div class="cnt-card cnt-c1">
+          <span>EDITORA MAIS CONSISTENTE</span>
+
+          <p class="cnt-card-p1"><%= mostConsistent[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span><%= mostConsistent[0].freq %></span> registros</p>
+      </div>
+
+      <div class="cnt-card cnt-c2">
+          <span>EDITORA COM MAIS AVALIAÇÕES</span>
+
+          <p class="cnt-card-p1"><%= mostReviewed[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span><%= mostReviewed[0].reviews %></span> avaliações</p>
+      </div>
+  </div>
+</div>
+
+
+<div class="left-sided-chart">
+  <div class="content-card">
+      <div class="cnt-card cnt-c1">
+          <span>EDITORA COM MAIOR MÉDIA DE PREÇOS</span>
+
+          <p class="cnt-card-p1"><%= mostExpensive[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span>R$<%= mostExpensive[0].avgPrice %></span></p>
+      </div>
+
+      <div class="cnt-card cnt-c2">
+          <span>EDITORA COM MENOR MÉDIA DE PREÇOS</span>
+
+          <p class="cnt-card-p1"><%= leastExpensive[0].proPublisher %></p>
+          <p class="cnt-card-p2"><span>R$<%= leastExpensive[0].avgPrice %></span></p>
+      </div>
+  </div>
+  
+  <div id="chartPubFreq" class="left-chart-class"></div>
+</div>
+
+
 <div id="chartPubRev"></div>
-
 
 
 <!-- price avg x pub  -->
@@ -56,7 +97,10 @@ editoras
         },
         xaxis: {
           categories: categories,
-        }
+          title: { text: 'Média de Preço' },
+        },
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras com maior média de preço' }
     };
 
     var chartPubPri = new ApexCharts(document.querySelector("#chartPubPri"), options);
@@ -95,7 +139,10 @@ editoras
         },
         xaxis: {
           categories: categories,
-        }
+          title: { text: 'Total de Registros' }
+        },
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras mais consistentes' }
     };
 
     var chartPubFreq = new ApexCharts(document.querySelector("#chartPubFreq"), options);
@@ -135,7 +182,10 @@ editoras
         },
         xaxis: {
           categories: categories,
-        }
+          title: { text: 'Quantidade total de reviews' }
+        },
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras com maior quantidade de reviews' }
     };
 
     var chartPubRev = new ApexCharts(document.querySelector("#chartPubRev"), options);
