@@ -657,23 +657,63 @@ class IndexRoute {
 
 	/* INFANTIL */
 	public async infantil(req: amazonbooks.Request, res: amazonbooks.Response){
-		let kidList = [];
+		let rows: any[];
+		let pieAvgReview = [], pieAvgPrice = []
+		let pieRevCategories = [], piePriCategories = []
+		let treeType = [{data: []}]
+		
 
-		(async () => {
-			try {
-			  	// Creating the Books table (Book_ID, Title, Author, Comments)
-			  	await db.all('SELECT autName from Author', async (err, rows) =>{
-					if(err){
-						throw err;
-					}
-					await rows.forEach((a)=>{
-						kidList.push(a)
-					})
-					res.render("index/kids", {kidList: kidList});
-				})	
-			}
-			catch (error) { throw error; }
-		  })();
+		//-- ROSCA - categoria x media de preço
+		rows = await executar(`SELECT c.catName, round(avg(proPrice), 2) as avgPrice
+		FROM Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		WHERE proPrice != -1 and proPrice != "N/A"
+		GROUP BY c.catName
+		ORDER BY avgPrice DESC
+		LIMIT 5`)
+		rows.forEach((r)=>{
+			pieAvgPrice.push(r.avgPrice)
+			piePriCategories.push(r.catName)
+		})
+
+		// -- ROSCA - categoria x media de reviews
+		rows = await executar(`SELECT c.catName, round(avg(proReview), 2) as avgReview
+		FROM Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		WHERE proReview != "N/A"
+		GROUP BY c.catName
+		ORDER BY avgReview DESC
+		LIMIT 5
+		`)
+		rows.forEach((r)=>{
+			pieAvgReview.push(r.avgReview)
+			pieRevCategories.push(r.catName)
+		})
+
+		// -- TREEMAP - tipo, freq, preço medio na cor
+		rows = await executar(`SELECT proType, count(proType) as freq, round(avg(proPrice), 2) as avgPrice
+		FROM Product
+		WHERE proType != "not exists" and proType != "Not exists"
+		GROUP BY proType
+		ORDER BY freq DESC`)
+		rows.forEach((r)=>{
+			treeType[0].data.push({
+				x: r.proType,
+				y: r.freq
+			})
+		})
+
+		
+		
+		
+		res.render("index/kids", {
+			pieAvgReview: JSON.stringify(pieAvgReview),
+			pieRevCategories: JSON.stringify(pieRevCategories),
+			pieAvgPrice: JSON.stringify(pieAvgPrice),
+			piePriCategories: JSON.stringify(piePriCategories),
+			treeType: JSON.stringify(treeType)
+
+		});
 	}
 
 
