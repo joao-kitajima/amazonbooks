@@ -314,6 +314,7 @@ class IndexRoute {
         let seriesRevPag = [], seriesStrPag = [], seriesPriPag = [], seriesTyp = [], seriesPriStr = [];
         let catRevPag = {}, catStrPag = {}, catPriPag = {}, catTyp = { data: [] }, catPriStr = {};
         let categoriesTyp = [];
+        let total_records = {};
         /* CARD */
         /* Categoria com maior e menur numero de reviews */
         rows = await (0, amazonbooks_1.executar)(`SELECT sum(a.proReview) as somaReview, c.catName
@@ -545,7 +546,12 @@ class IndexRoute {
             seriesStrPag: JSON.stringify(seriesStrPag),
             seriesPriPag: JSON.stringify(seriesPriPag),
             seriesTyp: JSON.stringify(seriesTyp),
-            categoriesTyp: JSON.stringify(categoriesTyp)
+            categoriesTyp: JSON.stringify(categoriesTyp),
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;')
         });
     }
     /* AUTOAJUDA */
