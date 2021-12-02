@@ -1,6 +1,6 @@
 ﻿import amazonbooks = require("teem");
 import { db, executar, executarParam, scalar } from '../amazonbooks';
-
+import fixDate from '../utils/fixDate';
 
 class IndexRoute {
 	/* PÁGINA INICIAL */
@@ -622,34 +622,41 @@ class IndexRoute {
 				LIMIT 5)
 		ORDER by proName, proScrapDate `);
 
-		let livros = {}, series = [], datas = {}, categories = []
+		var livros = {}, series = [], datas = {}, categories = []
 
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datas[date]
+			if(!d){
+				datas[date] = date
+				categories.push(date)
+			}
+		})
 		
-		for(let i = 0; i < rows.length; i++){
-			let row = rows[i];
-
-			let l = livros[row.proName]
-
+		categories.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categories.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livros[r.proName]
 			if(!l){
 				l = {
-					name: row.proName,
-					data: []     
-				};
-				livros[row.proName] = l;
+					name: r.proName,
+					data: tempArray
+				}
+				livros[r.proName] = l;
 				series.push(l);
 			}
-
-			let d = datas[row.date]
-			if(!d){
-				datas[row.date] = row.date
-				categories.push(row.date)
+			for (let i = 0; i < categories.length; i++){
+				if(date == categories[i]){
+					l.data[i] = r.proPosition
+					break
+				}
 			}
-
-			l.data.push(row.proPosition);
-		}
-
-			res.render("index/selfHelp", {series: JSON.stringify(series), categories: JSON.stringify(categories)})
-		}
+		})
+		
+		res.render("index/selfHelp", {series: JSON.stringify(series), categories: JSON.stringify(categories)})
+		
+	}
 
 
 	/* INFANTIL */
