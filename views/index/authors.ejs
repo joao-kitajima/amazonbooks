@@ -1,28 +1,80 @@
-<p><b>Autor mais consistente de todos:</b> <%= mostConsistent[0].autName %> com <%= mostConsistent[0].freq %> registros</p>
-
-<p><b>Autor mais avaliado de todos:</b> <%= mostReviewed[0].autName %> com <%= mostReviewed[0].reviews %> avaliações</p>
-
-<p><b>Dos Top 10 autores mais avaliados, o com maior média de estrelas é:</b> <%= mostAvgStar.name %> com <%= mostAvgStar.data %> estrelas</p>
-
-<p><b>Autor com preço médio maior:</b> <%= mostExpensive[0].autName %> com <%= mostExpensive[0].avgPrice %> reais</p>
-<p><b>Autor com preço médio menor:</b> <%= leastExpensive[0].autName %> com <%= leastExpensive[0].avgPrice %> reais</p>
-
-<p><b>Autor com mais quantidade média de páginas:</b> <%= mostPages[0].autName %> com <%= mostPages[0].avgPages %> páginas</p>
-<p><b>Autor com mais quantidade média de páginas:</b> <%= leastPages[0].autName %> com <%= leastPages[0].avgPages %> páginas</p>
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
-<br>
-<br>
-<br>
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/styles/authorsStyle.ejs") %>
 
-<h4>Top 10 autores com maior preço médio</h4>
-<div id="chartPriAut"></div>
-<h4>Top 10 autores com Média de pag maiores</h4>
-<div id="chartPagAut"></div>
-<h4>Top 10 autores mais consistentes</h4>
-<div id="chartFreqAut"></div>
-<h4>Top 10 autores com mais reviews</h4>
-<div id="chartAutRev"></div>
+
+<!-- NUMBER FORMAT -->
+<% mostAvgStar.data = new Intl.NumberFormat().format(mostAvgStar.data); %>
+<% mostConsistent[0].freq = new Intl.NumberFormat().format(mostConsistent[0].freq); %>
+<% mostReviewed[0].reviews = new Intl.NumberFormat().format(mostReviewed[0].reviews); %>
+<% mostExpensive[0].avgPrice = new Intl.NumberFormat().format(mostExpensive[0].avgPrice); %>
+<% leastExpensive[0].avgPrice = new Intl.NumberFormat().format(leastExpensive[0].avgPrice); %>
+
+
+<div class="best_rated_author">
+  <p> Com uma média final de <span class="sp_stars"><%= mostAvgStar.data %></span> estrelas, <span class="sp_autName"><%= mostAvgStar.name %></span> obteve a melhor média de avaliações </p>
+</div>
+
+
+<!-- PREÇO x AUTOR -->
+<div class="left-sided-chart">
+  <div id="chartPriAut" class="left-chart-class"></div>
+
+  <div class="content-card">
+      <div class="cnt-card cnt-c1">
+          <span>AUTOR MAIS CONSISTENTE</span>
+
+          <p class="cnt-card-p1"><%= mostConsistent[0].autName %></p>
+          <p class="cnt-card-p2"><span><%= mostConsistent[0].freq %></span> registros</p>
+      </div>
+
+      <div class="cnt-card cnt-c2">
+          <span>AUTOR COM MAIS AVALIAÇÕES</span>
+
+          <p class="cnt-card-p1"><%= mostReviewed[0].autName %></p>
+          <p class="cnt-card-p2"><span><%= mostReviewed[0].reviews %></span> avaliações</p>
+      </div>
+  </div>
+</div>
+
+
+<!-- AUTORES MAIS CONSISTENTES -->
+<div class="left-sided-chart">
+  <div class="content-card">
+      <div class="cnt-card cnt-c1">
+          <span>AUTOR COM MAIOR MÉDIA DE PREÇOS</span>
+
+          <p class="cnt-card-p1"><%= mostExpensive[0].autName %></p>
+          <p class="cnt-card-p2"><span>R$<%= mostExpensive[0].avgPrice %></span></p>
+      </div>
+
+      <div class="cnt-card cnt-c2">
+          <span>AUTOR COM MENOR MÉDIA DE PREÇOS</span>
+
+          <p class="cnt-card-p1"><%= leastExpensive[0].autName %></p>
+          <p class="cnt-card-p2"><span>R$<%= leastExpensive[0].avgPrice %></span></p>
+      </div>
+  </div>
+  
+  <div id="chartFreqAut" class="left-chart-class"></div>
+</div>
+
+
+<div class="equal-charts">
+  <div id="chartPagAut" class="equal-chart"></div>
+
+  <div  id="chartAutRev"class="equal-chart"></div>
+</div>
+
+
+<!-- <p><b>Autor com mais quantidade média de páginas:</b> <%#= mostPages[0].autName %> com <%#= mostPages[0].avgPages %> páginas</p>
+<p><b>Autor com mais quantidade média de páginas:</b> <%#= leastPages[0].autName %> com <%#= leastPages[0].avgPages %> páginas</p> -->
+
 
 <!-- pages avg x autor  -->
 <script>
@@ -55,9 +107,11 @@
           enabled: false
         },
         xaxis: {
-          categories: categories
-          
-        }
+          categories: categories,
+          title: { text: 'Média de Páginas' }
+        },
+        yaxis: { title: { text: 'Autores' } },
+        title: { text: 'Autores com maior média de páginas' }
     };
 
     var chartPagAut = new ApexCharts(document.querySelector("#chartPagAut"), options);
@@ -96,7 +150,14 @@
         },
         xaxis: {
           categories: categories,
-        }
+          title: {
+            text: 'Média de Preço'
+          }
+        },
+        yaxis: {
+          title: { text: 'Autores' }
+        },
+        title: { text: 'Autores com maior média de preços' }
     };
 
     var chartPriAut = new ApexCharts(document.querySelector("#chartPriAut"), options);
@@ -135,7 +196,10 @@
         },
         xaxis: {
           categories: categories,
-        }
+          title: { text: 'Total de Registros' }
+        },
+        yaxis: { title: { text: 'Autores' } },
+        title: { text: 'Autores mais consistentes' }
     };
 
     var chartFreqAut = new ApexCharts(document.querySelector("#chartFreqAut"), options);
@@ -175,37 +239,14 @@
         },
         xaxis: {
           categories: categories,
-        }
+          title: { text: 'Quantidade de Reviews' }
+        },
+        yaxis: { title: { text: 'Autores' } },
+        title: { text: 'Autores com mais Reviews' }
     };
 
     var chartAutRev = new ApexCharts(document.querySelector("#chartAutRev"), options);
     chartAutRev.render();
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<br />
