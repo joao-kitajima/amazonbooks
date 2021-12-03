@@ -584,6 +584,131 @@ class IndexRoute {
 			pp.data.push([r.proPrice, r.proStar]);
 		});
 
+
+		rows = await executar(`SELECT proScrapDate as date, proPosition, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+		var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = []
+
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasPos[date]
+			if(!d){
+				datasPos[date] = date
+				categoriesPos.push(date)
+			}
+		})
+		categoriesPos.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesPos.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosPos[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosPos[r.proName] = l;
+				seriesPos.push(l);
+			}
+			for (let i = 0; i < categoriesPos.length; i++){
+				if(date == categoriesPos[i]){
+					l.data[i] = r.proPosition
+					break
+				}
+			}
+		})
+
+		rows = await executar(`SELECT proScrapDate as date, proReview, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
+			if(!d){
+				datasRev[date] = date
+				categoriesRev.push(date)
+			}
+		})
+		
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosRev[r.proName] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+
+
+		let pieAvgReview = [], pieAvgPrice = []
+		let pieRevCategories = [], piePriCategories = []
+		let treeType = [{data: []}]
+		
+
+		//-- ROSCA - categoria x media de preço
+		rows = await executar(`SELECT c.catName, round(avg(proPrice), 2) as avgPrice
+		FROM Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		WHERE proPrice != -1 and proPrice != "N/A"
+		GROUP BY c.catName
+		ORDER BY avgPrice DESC
+		LIMIT 5`)
+		rows.forEach((r)=>{
+			pieAvgPrice.push(r.avgPrice)
+			piePriCategories.push(r.catName)
+		})
+
+		// -- ROSCA - categoria x media de reviews
+		rows = await executar(`SELECT c.catName, round(avg(proReview), 2) as avgReview
+		FROM Product p
+		INNER JOIN Category c ON c.catCode = p.catCode
+		WHERE proReview != "N/A"
+		GROUP BY c.catName
+		ORDER BY avgReview DESC
+		LIMIT 5
+		`)
+		rows.forEach((r)=>{
+			pieAvgReview.push(r.avgReview)
+			pieRevCategories.push(r.catName)
+		})
+
+		// -- TREEMAP - tipo, freq, preço medio na cor
+		rows = await executar(`SELECT proType, count(proType) as freq, round(avg(proPrice), 2) as avgPrice
+		FROM Product
+		WHERE proType != "not exists" and proType != "Not exists" and proType != "Not Exists"
+		GROUP BY proType
+		ORDER BY freq DESC`)
+		rows.forEach((r)=>{
+			treeType[0].data.push({
+				x: r.proType,
+				y: r.freq
+			})
+		})
+
 		
 		res.render("index/general", 
 		{
@@ -605,7 +730,16 @@ class IndexRoute {
 			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
 			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
 			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
-			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;')
+			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;'),
+			seriesPos: JSON.stringify(seriesPos), 
+			categoriesPos: JSON.stringify(categoriesPos),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev),
+			pieAvgReview: JSON.stringify(pieAvgReview),
+			pieRevCategories: JSON.stringify(pieRevCategories),
+			pieAvgPrice: JSON.stringify(pieAvgPrice),
+			piePriCategories: JSON.stringify(piePriCategories),
+			treeType: JSON.stringify(treeType)
 		});
 	}
 
@@ -920,6 +1054,107 @@ class IndexRoute {
 		})
 
 
+		/* DATE GRAPHS */
+		rows = await executar('SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE catCode = 4 AND proPosition <= 5 AND proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND catCode = 4 GROUP BY proName ORDER by COUNT(proName) DESC LIMIT 5) ORDER BY proName, proScrapDate;');
+
+		var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = []
+
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasPos[date]
+			if(!d){
+				datasPos[date] = date
+				categoriesPos.push(date)
+			}
+		})
+
+		categoriesPos.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesPos.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosPos[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosPos[r.proName] = l;
+				seriesPos.push(l);
+			}
+			for (let i = 0; i < categoriesPos.length; i++){
+				if(date == categoriesPos[i]){
+					l.data[i] = r.proPosition
+					break
+				}
+			}
+		})
+
+		rows = await executar('SELECT proScrapDate AS date, proReview, proName FROM Product WHERE catCode = 4 AND proPosition <= 5 AND proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND catCode = 4 GROUP BY proName ORDER BY COUNT(proName) DESC LIMIT 5) ORDER BY proName, proScrapDate;');
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
+			if(!d){
+				datasRev[date] = date
+				categoriesRev.push(date)
+			}
+		})
+		
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosRev[r.proName] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+
+
+		let pieAvgReview = [], pieAvgPrice = []
+		let pieRevCategories = [], piePriCategories = []
+		let treeType = [{data: []}]
+		
+
+		/* PIE */
+		/* CATEGORY x AVG PRICE */
+		rows = await executar('SELECT proName, ROUND(AVG(proPrice), 2) AS avgPrice FROM Product WHERE proPrice > 0 AND proPrice != "N/A" AND catCode = 4 GROUP BY proName ORDER BY avgPrice DESC LIMIT 5;')
+		rows.forEach((r)=>{
+			pieAvgPrice.push(r.avgPrice)
+			piePriCategories.push(r.proName)
+		})
+
+
+		/* PIE */
+		/* CATEGORY x AVG REVIEW */
+		rows = await executar('SELECT proName, ROUND(AVG(proReview), 2) AS avgReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY avgReview DESC LIMIT 5;')
+		rows.forEach((r)=>{
+			pieAvgReview.push(r.avgReview)
+			pieRevCategories.push(r.proName)
+		})
+
+
+		/* TREEMAP */
+		rows = await executar('SELECT proType, count(proType) as freq, round(avg(proPrice), 2) as avgPrice FROM Product WHERE proType != "not exists" and proType != "Not exists" and proType != "Not Exists" AND catCode = 4 GROUP BY proType ORDER BY freq DESC;')
+		rows.forEach((r)=>{
+			treeType[0].data.push({
+				x: r.proType,
+				y: r.freq
+			})
+		})
+
+
 		/* RENDER */
 		res.render(
 			'index/hqs_mangas',
@@ -946,7 +1181,16 @@ class IndexRoute {
 				newest_book: await executar('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
 				oldest_book: await executar('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
 				hq_sumPriCat: JSON.stringify(hq_sumPriCat),
-				hq_most_book: JSON.stringify(hq_most_book)
+				hq_most_book: JSON.stringify(hq_most_book),
+				seriesPos: JSON.stringify(seriesPos), 
+				categoriesPos: JSON.stringify(categoriesPos),
+				seriesRev: JSON.stringify(seriesRev), 
+				categoriesRev: JSON.stringify(categoriesRev),
+				pieAvgReview: JSON.stringify(pieAvgReview),
+				pieRevCategories: JSON.stringify(pieRevCategories),
+				pieAvgPrice: JSON.stringify(pieAvgPrice),
+				piePriCategories: JSON.stringify(piePriCategories),
+				treeType: JSON.stringify(treeType)
 			}
 		);
 	}
