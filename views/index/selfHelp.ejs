@@ -1,9 +1,11 @@
 autoajuda
-<div id="chart"></div>
+<div id="chartLinPos"></div>
+<div id="chartLinRev"></div>
 
+<!-- date x Pos -->
 <script>
-    var series = JSON.parse(`<%- series %>`)
-    var categories = JSON.parse(`<%- categories %>`)
+    var series = JSON.parse(`<%- seriesPos %>`)
+    var categories = JSON.parse(`<%- categoriesPos %>`)
 
     var options = {
 			chart: {
@@ -24,7 +26,32 @@ autoajuda
             }
 		};
 
-	var chart = new ApexCharts(document.querySelector("#chart"), options);
+	var chartLinPos = new ApexCharts(document.querySelector("#chartLinPos"), options);
 		
-	chart.render();
+	chartLinPos.render();
+</script>
+
+<!-- Date x rev -->
+<script>
+    var series = JSON.parse(`<%- seriesRev %>`)
+    var categories = JSON.parse(`<%- categoriesRev %>`)
+
+    var options = {
+			chart: {
+				height: 380,
+				width: "100%",
+				type: "line"
+			},
+			series: series,
+			
+			
+			xaxis: {
+				categories: categories
+				
+			}
+		};
+
+	var chartLinRev = new ApexCharts(document.querySelector("#chartLinRev"), options);
+		
+	chartLinRev.render();
 </script>

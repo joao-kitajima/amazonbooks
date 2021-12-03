@@ -1,6 +1,6 @@
 ﻿import amazonbooks = require("teem");
 import { db, executar, executarParam, scalar } from '../amazonbooks';
-
+import fixDate from '../utils/fixDate';
 
 class IndexRoute {
 	/* PÁGINA INICIAL */
@@ -612,9 +612,9 @@ class IndexRoute {
 
 	/* AUTOAJUDA */
 	public async autoajuda(req: amazonbooks.Request, res: amazonbooks.Response){
-		let ajuList = [];
-
-		const rows = await executar(`SELECT proScrapDate as date, proPosition, proName
+		let rows: any[];
+		
+		rows = await executar(`SELECT proScrapDate as date, proPosition, proName
 		From Product
 		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
 				WHERE proPublisher != "N/A" and catCode = 1
@@ -622,35 +622,84 @@ class IndexRoute {
 				ORDER by count(proName) DESC
 				LIMIT 5)
 		ORDER by proName, proScrapDate `);
+		var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = []
 
-		let livros = {}, series = [], datas = {}, categories = []
-
-		
-		for(let i = 0; i < rows.length; i++){
-			let row = rows[i];
-
-			let l = livros[row.proName]
-
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasPos[date]
+			if(!d){
+				datasPos[date] = date
+				categoriesPos.push(date)
+			}
+		})
+		categoriesPos.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesPos.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosPos[r.proName]
 			if(!l){
 				l = {
-					name: row.proName,
-					data: []     
-				};
-				livros[row.proName] = l;
-				series.push(l);
+					name: r.proName,
+					data: tempArray
+				}
+				livrosPos[r.proName] = l;
+				seriesPos.push(l);
 			}
+			for (let i = 0; i < categoriesPos.length; i++){
+				if(date == categoriesPos[i]){
+					l.data[i] = r.proPosition
+					break
+				}
+			}
+		})
 
-			let d = datas[row.date]
+		rows = await executar(`SELECT proScrapDate as date, proReview, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
 			if(!d){
-				datas[row.date] = row.date
-				categories.push(row.date)
+				datasRev[date] = date
+				categoriesRev.push(date)
 			}
-
-			l.data.push(row.proPosition);
-		}
-
-			res.render("index/selfHelp", {series: JSON.stringify(series), categories: JSON.stringify(categories)})
-		}
+		})
+		
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosRev[r.proName] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+		
+		res.render("index/selfHelp", {
+			seriesPos: JSON.stringify(seriesPos), 
+			categoriesPos: JSON.stringify(categoriesPos),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev)
+		})
+		
+	}
 
 
 	/* INFANTIL */
