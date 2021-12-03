@@ -14,6 +14,8 @@ SGBD (JS) | SQLite3 | v^4.2.0
 SGBD (Python) | SQLAlchemy | v1.3.16
 Wrapper TypeScript contendo Express.js, EJS e MySQL para construção do site | Teem | v0.0.21
 
+#### Link para o [repositório de Web Scrapping com Python3](https://github.com/FShinoda/web-scraping-amazon-books.git)
+
 ## Criadores
 
 |                             <a href="https://github.com/FShinoda" target="_blank">**Fernanda Shinoda**</a>                              | <a href="https://github.com/joao-kitajima" target="_blank">**João Kitajima**</a> |
