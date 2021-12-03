@@ -612,9 +612,9 @@ class IndexRoute {
 
 	/* AUTOAJUDA */
 	public async autoajuda(req: amazonbooks.Request, res: amazonbooks.Response){
-		let ajuList = [];
-
-		const rows = await executar(`SELECT proScrapDate as date, proPosition, proName
+		let rows: any[];
+		
+		rows = await executar(`SELECT proScrapDate as date, proPosition, proName
 		From Product
 		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
 				WHERE proPublisher != "N/A" and catCode = 1
@@ -622,40 +622,82 @@ class IndexRoute {
 				ORDER by count(proName) DESC
 				LIMIT 5)
 		ORDER by proName, proScrapDate `);
-
-		var livros = {}, series = [], datas = {}, categories = []
+		var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = []
 
 		rows.forEach((r)=>{
 			var date = fixDate(r.date)
-			let d = datas[date]
+			let d = datasPos[date]
 			if(!d){
-				datas[date] = date
-				categories.push(date)
+				datasPos[date] = date
+				categoriesPos.push(date)
 			}
 		})
-		
-		categories.sort()
+		categoriesPos.sort()
 		rows.forEach((r)=>{
-			var tempArray = Array(categories.length).fill(null)
+			var tempArray = Array(categoriesPos.length).fill(null)
 			var date = fixDate(r.date)
-			var l = livros[r.proName]
+			var l = livrosPos[r.proName]
 			if(!l){
 				l = {
 					name: r.proName,
 					data: tempArray
 				}
-				livros[r.proName] = l;
-				series.push(l);
+				livrosPos[r.proName] = l;
+				seriesPos.push(l);
 			}
-			for (let i = 0; i < categories.length; i++){
-				if(date == categories[i]){
+			for (let i = 0; i < categoriesPos.length; i++){
+				if(date == categoriesPos[i]){
 					l.data[i] = r.proPosition
 					break
 				}
 			}
 		})
+
+		rows = await executar(`SELECT proScrapDate as date, proReview, proName
+		From Product
+		WHERE catCode = 1 and proPosition <= 5 and proName IN (Select proName FROM Product
+				WHERE proPublisher != "N/A" and catCode = 1
+				GROUP BY proName
+				ORDER by count(proName) DESC
+				LIMIT 5)
+		ORDER by proName, proScrapDate `);
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
+			if(!d){
+				datasRev[date] = date
+				categoriesRev.push(date)
+			}
+		})
 		
-		res.render("index/selfHelp", {series: JSON.stringify(series), categories: JSON.stringify(categories)})
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.proName]
+			if(!l){
+				l = {
+					name: r.proName,
+					data: tempArray
+				}
+				livrosRev[r.proName] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+		
+		res.render("index/selfHelp", {
+			seriesPos: JSON.stringify(seriesPos), 
+			categoriesPos: JSON.stringify(categoriesPos),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev)
+		})
 		
 	}
 
