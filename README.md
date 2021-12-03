@@ -3,7 +3,7 @@
 
 ## Linguagens de Programação utilizadas:
 - Python (Extração de dados com Selenium e criação de banco)
-- JavaScript (Estrutura do website)
+- Typescript (Estrutura do website)
 
 ## Libraries e Tools utilizadas:
 Função | Tool/ Library | Versão
