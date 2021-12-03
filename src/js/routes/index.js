@@ -572,7 +572,7 @@ class IndexRoute {
 				WHERE proPublisher != "N/A" and catCode = 1
 				GROUP BY proName
 				ORDER by count(proName) DESC
-				LIMIT 10)
+				LIMIT 5)
 		ORDER by proName, proScrapDate `);
         var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = [];
         rows.forEach((r) => {
