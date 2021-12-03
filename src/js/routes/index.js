@@ -987,8 +987,19 @@ class IndexRoute {
             series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 2    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 2    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
-            author_most_books: await (0, amazonbooks_1.executar)('SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.autCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;'),
-            most_consistent_author: await (0, amazonbooks_1.executar)('SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    
+				FROM Author a 
+				INNER JOIN Product p ON a.autCode = p.autCode 
+				WHERE p.catCode = 2
+				GROUP BY a.autName 
+				ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName 
+				FROM Product p 
+				INNER JOIN Author a ON p.autCode = a.autCode 
+				WHERE p.catCode = 2
+				GROUP BY p.autCode 
+				ORDER BY countAutCode 
+				DESC LIMIT 1;`),
             series_stars_page: JSON.stringify(series_stars_page),
             hq_seriesTyp: JSON.stringify(hq_seriesTyp),
             hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
@@ -1196,8 +1207,19 @@ class IndexRoute {
             series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
-            author_most_books: await (0, amazonbooks_1.executar)('SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.autCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;'),
-            most_consistent_author: await (0, amazonbooks_1.executar)('SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    
+				FROM Author a 
+				INNER JOIN Product p ON a.autCode = p.autCode 
+				WHERE p.catCode = 13
+				GROUP BY a.autName 
+				ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName 
+				FROM Product p 
+				INNER JOIN Author a ON p.autCode = a.autCode 
+				WHERE p.catCode = 13
+				GROUP BY p.autCode 
+				ORDER BY countAutCode 
+				DESC LIMIT 1;`),
             series_stars_page: JSON.stringify(series_stars_page),
             hq_seriesTyp: JSON.stringify(hq_seriesTyp),
             hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
@@ -1405,8 +1427,19 @@ class IndexRoute {
             series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
-            author_most_books: await (0, amazonbooks_1.executar)('SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.autCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;'),
-            most_consistent_author: await (0, amazonbooks_1.executar)('SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    
+				FROM Author a 
+				INNER JOIN Product p ON a.autCode = p.autCode 
+				WHERE p.catCode = 5
+				GROUP BY a.autName 
+				ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName 
+				FROM Product p 
+				INNER JOIN Author a ON p.autCode = a.autCode 
+				WHERE p.catCode = 5
+				GROUP BY p.autCode 
+				ORDER BY countAutCode 
+				DESC LIMIT 1;`),
             series_stars_page: JSON.stringify(series_stars_page),
             hq_seriesTyp: JSON.stringify(hq_seriesTyp),
             hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
@@ -1620,8 +1653,19 @@ class IndexRoute {
             series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview    FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
-            author_most_books: await (0, amazonbooks_1.executar)('SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.autCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;'),
-            most_consistent_author: await (0, amazonbooks_1.executar)('SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName    
+				FROM Author a 
+				INNER JOIN Product p ON a.autCode = p.autCode 
+				WHERE p.catCode = 4
+				GROUP BY a.autName 
+				ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName 
+				FROM Product p 
+				INNER JOIN Author a ON p.autCode = a.autCode 
+				WHERE p.catCode = 4 
+				GROUP BY p.autCode 
+				ORDER BY countAutCode 
+				DESC LIMIT 1;`),
             series_stars_page: JSON.stringify(series_stars_page),
             hq_seriesTyp: JSON.stringify(hq_seriesTyp),
             hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
