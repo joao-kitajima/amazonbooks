@@ -9,6 +9,7 @@
 
 
 <!-- NUMBER FORMAT -->
+<% mostAvgStar.data = new Intl.NumberFormat().format(mostAvgStar.data); %>
 <% mostConsistent[0].freq = new Intl.NumberFormat().format(mostConsistent[0].freq); %>
 <% mostReviewed[0].reviews = new Intl.NumberFormat().format(mostReviewed[0].reviews); %>
 <% mostExpensive[0].avgPrice = new Intl.NumberFormat().format(mostExpensive[0].avgPrice); %>
@@ -19,6 +20,16 @@
 
 <div class="best_rated_author">
   <p> Com uma média final de <span class="sp_stars"><%= mostAvgStar.data %></span> estrelas, <span class="sp_autName"><%= mostAvgStar.name %></span> obteve a melhor média de avaliações </p>
+</div>
+
+
+<!-- RIGHT MAP -->
+<div class="left-sided-chart">
+  <div class="cnt-pie-chart-parent">
+      <div id="chartPieRev" class="cnt-pie-chart-child"></div>
+  </div>
+  
+  <div id="chartLinRev" class="left-chart-class"></div>
 </div>
 
 
@@ -83,6 +94,71 @@
       </div>
   </div>
 </div>
+
+
+<!-- Date x rev -->
+<script type="text/javascript">
+  var series = JSON.parse(`<%- seriesRev %>`)
+  var categories = JSON.parse(`<%- categoriesRev %>`)
+
+  var options = {
+    chart: {
+      height: 380,
+      width: "100%",
+      type: "line"
+    },
+    series: series,
+    title: { text: 'Quantidade de Reviews ao longo do tempo' },
+    
+    xaxis: {
+      categories: categories,
+      title: { text: 'Tempo' }
+      
+    },
+    yaxis: { title: { text: 'Quantidade de Reviews' } }
+  };
+
+var chartLinRev = new ApexCharts(document.querySelector("#chartLinRev"), options);
+  
+chartLinRev.render();
+</script>
+
+
+<!--PIE rev x cat -->
+<script type="text/javascript">
+  var series = JSON.parse(`<%- pieAvgReview %>`)
+  var labels = JSON.parse(`<%- pieRevCategories %>`)
+
+  var options = {
+      series: series,
+      chart: {
+          type: 'donut'
+      },
+      title: { text: 'Média de Reviews por Categoria' },
+      legend: {
+          show: true,
+          position: 'bottom'
+      },
+      labels: labels,
+      responsive: [
+          {
+              breakpoint: 1680,
+              options: {
+                  chart: {
+                      width: '100%',
+                      height: '75%'
+                  },
+                  legend: {
+                      show: false
+                  }
+              }
+          }
+      ]
+  };
+
+  var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
+  chartPieRev.render();
+</script>
 
 
 <!-- price avg x pub  -->
