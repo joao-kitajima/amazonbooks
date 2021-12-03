@@ -3,7 +3,7 @@ autoajuda
 <div id="chartLinRev"></div>
 
 <!-- date x Pos -->
-<script>
+<script type="text/javascript">
     var series = JSON.parse(`<%- seriesPos %>`)
     var categories = JSON.parse(`<%- categoriesPos %>`)
 
@@ -14,15 +14,16 @@ autoajuda
 				type: "line"
 			},
 			series: series,
-			
+			title: { text: 'Variação de posições ao longo do tempo' },
 			
 			xaxis: {
-				categories: categories
-				
+				categories: categories,
+				title: { text: 'Tempo' }
 			},
 
             yaxis: {
-                reversed: true
+                reversed: true,
+				title: { text: 'Quantidade de Reviews' }
             }
 		};
 
@@ -32,7 +33,7 @@ autoajuda
 </script>
 
 <!-- Date x rev -->
-<script>
+<script type="text/javascript">
     var series = JSON.parse(`<%- seriesRev %>`)
     var categories = JSON.parse(`<%- categoriesRev %>`)
 
@@ -43,12 +44,14 @@ autoajuda
 				type: "line"
 			},
 			series: series,
-			
+			title: { text: 'Quantidade de Reviews ao longo do tempo' },
 			
 			xaxis: {
-				categories: categories
+				categories: categories,
+				title: { text: 'Tempo' }
 				
-			}
+			},
+			yaxis: { title: { text: 'Quantidade de Reviews' } }
 		};
 
 	var chartLinRev = new ApexCharts(document.querySelector("#chartLinRev"), options);

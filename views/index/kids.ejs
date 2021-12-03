@@ -1,73 +1,89 @@
 
 <div id="chartPieRev"></div>
 <div id="chartPiePri"></div>
+
+
 <div id="chartTreeType"></div>
 
+<!-- PIE CHARTS -->
 <!--PIE rev x cat -->
-<script>
-    var series = JSON.parse(`<%- pieAvgReview %>`)
-    var labels = JSON.parse(`<%- pieRevCategories %>`)
+<script type="text/javascript">
+  var series = JSON.parse(`<%- pieAvgReview %>`)
+  var labels = JSON.parse(`<%- pieRevCategories %>`)
 
-    var options = {
-          series: series,
-          chart: {
-          type: 'donut',
-        },
-        labels: labels,
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-              height: 600
-            },
-            legend: {
-              position: 'bottom'
-            }
+  var options = {
+      series: series,
+      chart: {
+          type: 'donut'
+      },
+      title: { text: 'Média de Reviews por Categoria' },
+      legend: {
+          show: true,
+          position: 'bottom'
+      },
+      labels: labels,
+      responsive: [
+          {
+              breakpoint: 1680,
+              options: {
+                  chart: {
+                      width: '100%',
+                      height: '75%'
+                  },
+                  legend: {
+                      show: false
+                  }
+              }
           }
-        }]
-        };
+      ]
+  };
 
-    var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
-    chartPieRev.render();
-      
-      
+  var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
+  chartPieRev.render();
+    
+    
 </script>
 
 <!-- PIE pri x cat -->
-<script>
+<script type="text/javascript">
 
-    var series = JSON.parse(`<%- pieAvgPrice %>`)
-    var labels = JSON.parse(`<%- piePriCategories %>`)
+  var series = JSON.parse(`<%- pieAvgPrice %>`)
+  var labels = JSON.parse(`<%- piePriCategories %>`)
 
-    var options = {
+  var options = {
           series: series,
           chart: {
-          type: 'donut',
-        },
-        labels: labels,
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-              height: 600
-            },
-            legend: {
+              type: 'donut',
+          },
+          legend: {
               position: 'bottom'
-            }
-          }
-        }]
-        };
+          },
+          title: { text: 'Média de Preço por Categoria' },
+          labels: labels,
+          responsive: [
+              {
+                  breakpoint: 1680,
+                  options: {
+                      chart: {
+                          width: '100%',
+                          height: '75%'
+                      },
+                      legend: {
+                          show: false
+                      }
+                  }
+              }
+          ]
+      };
 
-    var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
-    chartPiePri.render();
-      
-      
+  var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
+  chartPiePri.render();
+    
+    
 </script>
 
 <!-- TreeMap type x freq -->
-<script>
+<script type="text/javascript">
     var series = JSON.parse(`<%- treeType %>`)
 
     var options = {
