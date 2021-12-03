@@ -13,6 +13,7 @@ Raspagem de dados | Selenium (Python) | v3.141.0
 SGBD (JS) | SQLite3 | v^4.2.0 
 SGBD (Python) | SQLAlchemy | v1.3.16
 Wrapper TypeScript contendo Express.js, EJS e MySQL para construção do site | Teem | v0.0.21
+Edição do banco e teste de queries | DB Browser for SQLite | v3.12.2
 
 #### Link para o [repositório de Web Scrapping com Python3](https://github.com/FShinoda/web-scraping-amazon-books.git)
 
