@@ -51,6 +51,52 @@ class IndexRoute {
 		let mostAvgStar = {data: 0, name: ""}
 		let avgPriAut = [], freqAut = [], avgPagAut = [], autRev = []
 
+		let pieAvgReview = []
+		let pieRevCategories = []
+
+		/* PIE */
+		/* CATEGORY x AVG REVIEW */
+		rows = await executar('SELECT a.autName, ROUND(AVG(p.proReview), 2) AS avgReview FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.proReview != "N/A" AND p.proReview IS NOT NULL GROUP BY a.autName ORDER BY avgReview DESC LIMIT 5;')
+		rows.forEach((r)=>{
+			pieAvgReview.push(r.avgReview)
+			pieRevCategories.push(r.autName)
+		})
+
+
+		/* DATE GRAPH - REVIEW */
+		rows = await executar('SELECT proScrapDate AS date, proReview, autCode FROM Product WHERE proPosition <= 5 AND autCode IN (SELECT autCode FROM Product WHERE proPublisher != "N/A" GROUP BY autCode ORDER BY COUNT(autCode) DESC LIMIT 5) ORDER BY autCode, proScrapDate;');
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
+			if(!d){
+				datasRev[date] = date
+				categoriesRev.push(date)
+			}
+		})
+		
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.autCode]
+			if(!l){
+				l = {
+					name: r.autCode,
+					data: tempArray
+				}
+				livrosRev[r.autCode] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+
+
 		/* CARD */
 		/* maior estrela entre os top 10 consistentes */
 		rows = await executar(`SELECT autName, sum(a.proReview) as reviews, round(avg(a.proStar),2) as avgStars
@@ -207,9 +253,11 @@ class IndexRoute {
 			avgPriAut: JSON.stringify(avgPriAut),
 			freqAut: JSON.stringify(freqAut),
 			avgPagAut: JSON.stringify(avgPagAut),
-			autRev: JSON.stringify(autRev)
-
-
+			autRev: JSON.stringify(autRev),
+			pieAvgReview: JSON.stringify(pieAvgReview),
+			pieRevCategories: JSON.stringify(pieRevCategories),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev)
 		})
 	}
 
@@ -219,6 +267,53 @@ class IndexRoute {
 
 		let mostAvgStar = {data: 0, name: ""}
 		let pubPri = [], pubFreq = [], pubRev = []
+
+
+		let pieAvgReview = []
+		let pieRevCategories = []
+
+		/* PIE */
+		/* CATEGORY x AVG REVIEW */
+		rows = await executar('SELECT proPublisher, ROUND(AVG(proReview), 2) AS avgReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY avgReview DESC LIMIT 5;')
+		rows.forEach((r)=>{
+			pieAvgReview.push(r.avgReview)
+			pieRevCategories.push(r.proPublisher)
+		})
+
+
+		/* DATE GRAPH - REVIEW */
+		rows = await executar('SELECT proScrapDate AS date, proReview, proPublisher FROM Product WHERE proPosition <= 5 AND proPublisher IN (SELECT proPublisher FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER BY COUNT(proPublisher) DESC LIMIT 5) ORDER BY proPublisher, proScrapDate;');
+		var livrosRev = {}, seriesRev = [], datasRev = {}, categoriesRev = []
+		rows.forEach((r)=>{
+			var date = fixDate(r.date)
+			let d = datasRev[date]
+			if(!d){
+				datasRev[date] = date
+				categoriesRev.push(date)
+			}
+		})
+		
+		categoriesRev.sort()
+		rows.forEach((r)=>{
+			var tempArray = Array(categoriesRev.length).fill(null)
+			var date = fixDate(r.date)
+			var l = livrosRev[r.proPublisher]
+			if(!l){
+				l = {
+					name: r.proPublisher,
+					data: tempArray
+				}
+				livrosRev[r.proPublisher] = l;
+				seriesRev.push(l);
+			}
+			for (let i = 0; i < categoriesRev.length; i++){
+				if(date == categoriesRev[i]){
+					l.data[i] = r.proReview
+					break
+				}
+			}
+		})
+
 
 		/* CARD */
 		/* maior estrela entre os top 10 consistentes */
@@ -329,7 +424,11 @@ class IndexRoute {
 			pubFreq: JSON.stringify(pubFreq),
 			pubRev: JSON.stringify(pubRev),
 			most_reviewed_publisher: await executar('SELECT proPublisher, MAX(proReview) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL	GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
-			highest_avg_reviews_publisher: await executar('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;')
+			highest_avg_reviews_publisher: await executar('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
+			pieAvgReview: JSON.stringify(pieAvgReview),
+			pieRevCategories: JSON.stringify(pieRevCategories),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev)
 		});
 	}
 
