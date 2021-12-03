@@ -169,6 +169,20 @@ class IndexRoute {
         rows.forEach((r) => {
             freqAut.push({ name: r.autName, data: r.freq });
         });
+        /* TREEMAP */
+        let treeType = [{ data: [] }];
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.autName, count(p.autCode) as freq
+		FROM Product p
+		INNER JOIN Author a ON a.autCode = p.autCode
+		GROUP BY p.autCode 
+		ORDER BY freq DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            treeType[0].data.push({
+                x: r.autName,
+                y: r.freq
+            });
+        });
         res.render('index/authors', {
             mostConsistent: await (0, amazonbooks_1.executar)(`Select a.autName, count(p.autCode) as freq FROM Product p
 			INNER JOIN Author a ON a.autCode = p.autCode
@@ -243,7 +257,8 @@ class IndexRoute {
             pieAvgReview: JSON.stringify(pieAvgReview),
             pieRevCategories: JSON.stringify(pieRevCategories),
             seriesRev: JSON.stringify(seriesRev),
-            categoriesRev: JSON.stringify(categoriesRev)
+            categoriesRev: JSON.stringify(categoriesRev),
+            treeType: JSON.stringify(treeType)
         });
     }
     /* EDITORAS */
@@ -352,6 +367,20 @@ class IndexRoute {
         rows.forEach((r) => {
             pubRev.push({ name: r.proPublisher, data: r.reviews });
         });
+        /* TREEMAP */
+        let treeType = [{ data: [] }];
+        rows = await (0, amazonbooks_1.executar)(`SELECT proPublisher, count(proPublisher) as freq
+		FROM Product 
+		WHERE proPublisher != "N/A"
+		GROUP BY proPublisher
+		ORDER BY freq DESC
+		LIMIT 10;`);
+        rows.forEach((r) => {
+            treeType[0].data.push({
+                x: r.proPublisher,
+                y: r.freq
+            });
+        });
         res.render("index/publishers", {
             mostConsistent: await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product
 			WHERE proPublisher != "N/A"
@@ -400,7 +429,8 @@ class IndexRoute {
             pieAvgReview: JSON.stringify(pieAvgReview),
             pieRevCategories: JSON.stringify(pieRevCategories),
             seriesRev: JSON.stringify(seriesRev),
-            categoriesRev: JSON.stringify(categoriesRev)
+            categoriesRev: JSON.stringify(categoriesRev),
+            treeType: JSON.stringify(treeType)
         });
     }
     /* VISÃO GERAL */

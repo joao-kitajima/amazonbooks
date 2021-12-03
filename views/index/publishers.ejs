@@ -29,7 +29,7 @@
       <div id="chartPieRev" class="cnt-pie-chart-child"></div>
   </div>
   
-  <div id="chartLinRev" class="left-chart-class"></div>
+  <div id="chartTreeFreq" class="left-chart-class"></div>
 </div>
 
 
@@ -134,7 +134,7 @@ chartLinRev.render();
       chart: {
           type: 'donut'
       },
-      title: { text: 'Média de Reviews por Categoria' },
+      title: { text: 'Média de Reviews por Editora' },
       legend: {
           show: true,
           position: 'bottom'
@@ -288,5 +288,59 @@ chartLinRev.render();
     chartPubRev.render();
 </script>
 
+
+<!-- TREEMAP: PUB x FREQ -->
+<script type="text/javascript">
+  var series = JSON.parse(`<%- treeType %>`)
+
+  var options = {
+  series: series,
+  legend: {
+  show: false
+  },
+  chart: {
+      height: '350px',
+      width: '100%',
+      type: 'treemap'
+  },
+  title: {
+      text: 'Mapa de Árvore - Frequência por Editora'
+  },
+  dataLabels: {
+      enabled: true,
+      style: {
+      fontSize: '16px',
+      },
+      formatter: function(text, op) {
+      return [text, op.value]
+      },
+      offsetY: -4
+  },
+  plotOptions: {
+      treemap: {
+      enableShades: true,
+      shadeIntensity: 0.5,
+      reverseNegativeShade: true,
+      colorScale: {
+          ranges: [
+          {
+              from: -6,
+              to: 0,
+              color: '#CD363A'
+          },
+          {
+              from: 0.001,
+              to: 6,
+              color: '#52B12C'
+          }
+          ]
+      }
+      }
+  }
+  };
+
+  var chartTreeFreq = new ApexCharts(document.querySelector("#chartTreeFreq"), options);
+  chartTreeFreq.render();
+</script>
 
 
