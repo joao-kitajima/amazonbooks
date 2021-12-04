@@ -1,0 +1,165 @@
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+
+
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/styles/authorsStyle.ejs") %>
+<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+
+
+<!-- NUMBER FORMAT -->
+<% mostExpensive[0].avgPrice = new Intl.NumberFormat().format(mostExpensive[0].avgPrice); %>
+<% leastExpensive[0].avgPrice = new Intl.NumberFormat().format(leastExpensive[0].avgPrice); %>
+<% most_reviewed_publisher[0].proReview = new Intl.NumberFormat().format(most_reviewed_publisher[0].proReview); %>
+<% highest_avg_reviews_publisher[0].proReview = new Intl.NumberFormat().format(highest_avg_reviews_publisher[0].proReview); %>
+<% more_published[0].countProName = new Intl.NumberFormat().format(more_published[0].countProName); %>
+
+
+<div class="best_rated_author">
+  <p> Com um total de <span class="sp_stars"><%= more_published[0].countProName %></span> livros, a <span class="sp_autName"><%= more_published[0].proPublisher %></span> foi a editora com mais publicações </p>
+</div>
+
+
+<div class="left-sided-chart">
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>EDITORA COM MAIOR MÉDIA DE PREÇOS</span>
+  
+            <p class="cnt-card-p1"><%= mostExpensive[0].proPublisher %></p>
+            <p class="cnt-card-p2"><span>R$<%= mostExpensive[0].avgPrice %></span></p>
+        </div>
+  
+        <div class="cnt-card cnt-c2">
+            <span>EDITORA COM MENOR MÉDIA DE PREÇOS</span>
+  
+            <p class="cnt-card-p1"><%= leastExpensive[0].proPublisher %></p>
+            <p class="cnt-card-p2"><span>R$<%= leastExpensive[0].avgPrice %></span></p>
+        </div>
+    </div>
+    
+    <div id="chartPubFreq" class="left-chart-class"></div>
+</div>
+
+
+<div class="left-sided-chart">
+    <div id="chartPubRev" class="left-chart-class"></div>
+  
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>EDITORA COM MAIS REVIEWS</span>
+  
+            <p class="cnt-card-p1"><%= most_reviewed_publisher[0].proPublisher %></p>
+            <p class="cnt-card-p2"><span><%= most_reviewed_publisher[0].proReview %></span> reviews</p>
+        </div>
+  
+        <div class="cnt-card cnt-c2">
+            <span>EDITORA COM MAIOR MÉDIA DE REVIEWS</span>
+  
+            <p class="cnt-card-p1"><%= highest_avg_reviews_publisher[0].proPublisher %></p>
+            <p class="cnt-card-p2"><span><%= highest_avg_reviews_publisher[0].proReview %></span> reviews</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- PAGE NAV -->
+<div class="pageBtnDiv">
+  <div class="BtnDiv BtnDivLeft">
+    <a href="/editoras"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
+  </div>
+
+  <div class="actPageDiv">
+    <h6>2</h6>
+  </div>
+
+  <div class="BtnDiv BtnDivRight pageBtn_ISPAGE">
+    <a> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+  </div>
+</div>
+
+
+<!-- reviews x pub  -->
+<script>
+    var aux = JSON.parse(`<%- pubRev %>`)
+    var series = [{name: "Qtde reviews", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+          title: { text: 'Quantidade total de reviews' }
+        },
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras com maior quantidade de reviews' }
+    };
+
+    var chartPubRev = new ApexCharts(document.querySelector("#chartPubRev"), options);
+    chartPubRev.render();
+</script>
+
+
+<!-- freq x pub  -->
+<script>
+    var aux = JSON.parse(`<%- pubFreq %>`)
+    var series = [{name: "Total de registros", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+          series: series,
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+    
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: categories,
+          title: { text: 'Total de Registros' }
+        },
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras mais consistentes' }
+    };
+
+    var chartPubFreq = new ApexCharts(document.querySelector("#chartPubFreq"), options);
+    chartPubFreq.render();
+</script>

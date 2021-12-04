@@ -1199,7 +1199,7 @@ class IndexRoute {
     async editoras(req, res) {
         let rows;
         let mostAvgStar = { data: 0, name: "" };
-        let pubPri = [], pubFreq = [], pubRev = [];
+        let pubPri = [];
         let pieAvgReview = [];
         let pieRevCategories = [];
         /* PIE */
@@ -1255,18 +1255,6 @@ class IndexRoute {
         rows.forEach((r) => {
             pubPri.push({ name: r.proPublisher, data: r.avgPrice });
         });
-        /* TOP */
-        /* pub x freq */
-        rows = await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product p WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 10`);
-        rows.forEach((r) => {
-            pubFreq.push({ name: r.proPublisher, data: r.freq });
-        });
-        /* TOP */
-        /* pub x review */
-        rows = await (0, amazonbooks_1.executar)(`SELECT a.proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by a.proPublisher ORDER BY reviews DESC LIMIT 10;`);
-        rows.forEach((r) => {
-            pubRev.push({ name: r.proPublisher, data: r.reviews });
-        });
         /* TREEMAP */
         let treeType = [{ data: [] }];
         rows = await (0, amazonbooks_1.executar)(`SELECT proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER BY freq DESC LIMIT 10;`);
@@ -1280,19 +1268,40 @@ class IndexRoute {
         res.render("index/publishers", {
             mostConsistent: await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 1;`),
             mostReviewed: await (0, amazonbooks_1.executar)(`SELECT proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by proPublisher ORDER BY reviews DESC LIMIT 1;`),
-            mostExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice),2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != -1 and a.proPrice != "N/A" and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice DESC LIMIT 1;`),
-            leastExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice LIMIT 1;`),
             mostAvgStar: mostAvgStar,
             pubPri: JSON.stringify(pubPri),
-            pubFreq: JSON.stringify(pubFreq),
-            pubRev: JSON.stringify(pubRev),
-            most_reviewed_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, MAX(proReview) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
-            highest_avg_reviews_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
             pieAvgReview: JSON.stringify(pieAvgReview),
             pieRevCategories: JSON.stringify(pieRevCategories),
             seriesRev: JSON.stringify(seriesRev),
             categoriesRev: JSON.stringify(categoriesRev),
             treeType: JSON.stringify(treeType)
+        });
+    }
+    /* EDITORAS - PG 2 */
+    async editoras_2(req, res) {
+        let rows;
+        let pubFreq = [], pubRev = [];
+        /* TOP */
+        /* pub x freq */
+        rows = await (0, amazonbooks_1.executar)(`Select proPublisher, count(proPublisher) as freq FROM Product p WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 10`);
+        rows.forEach((r) => {
+            pubFreq.push({ name: r.proPublisher, data: r.freq });
+        });
+        /* TOP */
+        /* pub x review */
+        rows = await (0, amazonbooks_1.executar)(`SELECT a.proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by a.proPublisher ORDER BY reviews DESC LIMIT 10;`);
+        rows.forEach((r) => {
+            pubRev.push({ name: r.proPublisher, data: r.reviews });
+        });
+        /* RENDER */
+        res.render("index/publishers2", {
+            pubFreq: JSON.stringify(pubFreq),
+            mostExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice),2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != -1 and a.proPrice != "N/A" and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice DESC LIMIT 1;`),
+            leastExpensive: await (0, amazonbooks_1.executar)(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice LIMIT 1;`),
+            pubRev: JSON.stringify(pubRev),
+            most_reviewed_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, MAX(proReview) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
+            highest_avg_reviews_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
+            more_published: await (0, amazonbooks_1.executar)('SELECT proPublisher,  COUNT(DISTINCT proName) AS countProName FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL GROUP BY proPublisher ORDER BY countProName DESC LIMIT 1;')
         });
     }
     /* RELATÓRIO */

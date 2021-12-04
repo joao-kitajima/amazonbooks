@@ -1484,7 +1484,7 @@ class IndexRoute {
 		let rows: any[];
 
 		let mostAvgStar = {data: 0, name: ""}
-		let pubPri = [], pubFreq = [], pubRev = []
+		let pubPri = []
 
 
 		let pieAvgReview = []
@@ -1553,6 +1553,39 @@ class IndexRoute {
 		})
 
 
+		/* TREEMAP */
+		let treeType = [{data: []}]
+		rows = await executar(`SELECT proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER BY freq DESC LIMIT 10;`);
+		rows.forEach((r)=>{
+			treeType[0].data.push({
+				x: r.proPublisher,
+				y: r.freq
+			})
+		})
+		
+		
+		/* RENDER */
+		res.render("index/publishers", {
+			mostConsistent: await executar(`Select proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 1;`),
+			mostReviewed: await executar(`SELECT proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by proPublisher ORDER BY reviews DESC LIMIT 1;`),
+			mostAvgStar: mostAvgStar,
+			pubPri: JSON.stringify(pubPri),
+			pieAvgReview: JSON.stringify(pieAvgReview),
+			pieRevCategories: JSON.stringify(pieRevCategories),
+			seriesRev: JSON.stringify(seriesRev), 
+			categoriesRev: JSON.stringify(categoriesRev),
+			treeType: JSON.stringify(treeType)
+		});
+	}
+
+
+	/* EDITORAS - PG 2 */
+	public async editoras_2(req: amazonbooks.Request, res: amazonbooks.Response) {
+		let rows: any[];
+		
+		let pubFreq = [], pubRev = [];
+
+
 		/* TOP */
 		/* pub x freq */
 		rows = await executar(`Select proPublisher, count(proPublisher) as freq FROM Product p WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 10`);
@@ -1569,34 +1602,15 @@ class IndexRoute {
 		})
 
 
-		/* TREEMAP */
-		let treeType = [{data: []}]
-		rows = await executar(`SELECT proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER BY freq DESC LIMIT 10;`);
-		rows.forEach((r)=>{
-			treeType[0].data.push({
-				x: r.proPublisher,
-				y: r.freq
-			})
-		})
-		
-		
 		/* RENDER */
-		res.render("index/publishers", {
-			mostConsistent: await executar(`Select proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 1;`),
-			mostReviewed: await executar(`SELECT proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by proPublisher ORDER BY reviews DESC LIMIT 1;`),
+		res.render("index/publishers2", {
+			pubFreq: JSON.stringify(pubFreq),
 			mostExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != -1 and a.proPrice != "N/A" and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice DESC LIMIT 1;`),
 			leastExpensive: await executar(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice LIMIT 1;`),
-			mostAvgStar: mostAvgStar,
-			pubPri: JSON.stringify(pubPri),
-			pubFreq: JSON.stringify(pubFreq),
 			pubRev: JSON.stringify(pubRev),
 			most_reviewed_publisher: await executar('SELECT proPublisher, MAX(proReview) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
 			highest_avg_reviews_publisher: await executar('SELECT proPublisher, ROUND(AVG(proReview), 2) AS proReview FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND proReview != "N/A" AND proReview IS NOT NULL GROUP BY proPublisher ORDER BY proReview DESC LIMIT 1;'),
-			pieAvgReview: JSON.stringify(pieAvgReview),
-			pieRevCategories: JSON.stringify(pieRevCategories),
-			seriesRev: JSON.stringify(seriesRev), 
-			categoriesRev: JSON.stringify(categoriesRev),
-			treeType: JSON.stringify(treeType)
+			more_published: await executar('SELECT proPublisher,  COUNT(DISTINCT proName) AS countProName FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL GROUP BY proPublisher ORDER BY countProName DESC LIMIT 1;')
 		});
 	}
 
