@@ -1,0 +1,107 @@
+<style type="text/css">
+    /* FONTS */
+    @font-face {
+        font-family: 'Bookerly';
+        src: url(/public/fonts/Bookerly-Regular.ttf) format("truetype");
+    }
+
+    @font-face {
+        font-family: 'Bookerly-Italic';
+        src: url(/public/fonts/Bookerly-Italic.ttf) format("truetype");
+    }
+    
+    
+    /* PAGE NAV */
+    .pageBtnDiv {
+        width: 100%;
+        height: 2.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .BtnDiv {
+        margin-top: .375em;
+    }
+
+    .BtnDiv:hover {
+        color: #f90;
+    }
+
+    .BtnDivLeft {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .BtnDivRight {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .actPageDiv {
+        background: radial-gradient(circle, rgba(35,47,62,1) 50%, rgba(19,25,33,1) 100%);
+        height: 28px;
+        width: 28px;
+        border-radius: 8.75px;
+        color: #fff;
+        box-shadow: 0px 0px 2.15px 2.15px rgba(0,0,0,.075);
+        text-shadow: 2px 7px 5px rgba(0,0,0,0.3), 
+        0px -4px 10px rgba(255,255,255,0.3);
+        font-family: 'Bookerly-Italic';
+        display: flex;
+        justify-content: center;
+        font-size: .9rem;
+    }
+
+    .actPageDiv h6 {
+        font-weight: normal;
+        margin-top: -.075rem;
+    }
+
+    .pageBtn-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .pageBtn_ISPAGE, .pageBtn_ISPAGE:hover {
+        color: transparent;
+    }
+
+
+    /* RESPONSIVENESS */
+    @media only screen and (min-width: 1280px) {
+        .actPageDiv {
+            height: 32px;
+            width: 32px;
+            font-size: 1rem;
+        }
+
+        .actPageDiv h6 {
+            margin-top: -.1rem;
+        }
+        
+        .pageBtn-icon {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    @media only screen and (min-width: 1920px) {
+        .actPageDiv {
+            height: 36px;
+            width: 36px;
+            font-size: 1.25rem;
+        }
+
+        .actPageDiv h6 {
+            margin-top: -.175rem;
+        }
+        
+        .pageBtn-icon {
+            width: 42px;
+            height: 42px;
+        }
+    }
+</style>
