@@ -6,14 +6,13 @@
 
 <!-- CUSTOM DESIGN -->
 <%- include("../partials/dashboard/styles/authorsStyle.ejs") %>
+<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- NUMBER FORMAT -->
 <% mostAvgStar.data = new Intl.NumberFormat().format(mostAvgStar.data); %>
 <% mostConsistent[0].freq = new Intl.NumberFormat().format(mostConsistent[0].freq); %>
 <% mostReviewed[0].reviews = new Intl.NumberFormat().format(mostReviewed[0].reviews); %>
-<% mostExpensive[0].avgPrice = new Intl.NumberFormat().format(mostExpensive[0].avgPrice); %>
-<% leastExpensive[0].avgPrice = new Intl.NumberFormat().format(leastExpensive[0].avgPrice); %>
 
 
 <div class="best_rated_author">
@@ -53,32 +52,19 @@
 </div>
 
 
-<!-- AUTORES MAIS CONSISTENTES -->
-<div class="left-sided-chart">
-  <div class="content-card">
-      <div class="cnt-card cnt-c1">
-          <span>AUTOR COM MAIOR MÉDIA DE PREÇOS</span>
-
-          <p class="cnt-card-p1"><%= mostExpensive[0].autName %></p>
-          <p class="cnt-card-p2"><span>R$<%= mostExpensive[0].avgPrice %></span></p>
-      </div>
-
-      <div class="cnt-card cnt-c2">
-          <span>AUTOR COM MENOR MÉDIA DE PREÇOS</span>
-
-          <p class="cnt-card-p1"><%= leastExpensive[0].autName %></p>
-          <p class="cnt-card-p2"><span>R$<%= leastExpensive[0].avgPrice %></span></p>
-      </div>
+<!-- PAGE NAV -->
+<div class="pageBtnDiv">
+  <div class="BtnDiv BtnDivLeft pageBtn_ISPAGE">
+    <a> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
   </div>
-  
-  <div id="chartFreqAut" class="left-chart-class"></div>
-</div>
 
+  <div class="actPageDiv">
+    <h6>1</h6>
+  </div>
 
-<div class="equal-charts">
-  <div id="chartPagAut" class="equal-chart"></div>
-
-  <div  id="chartAutRev"class="equal-chart"></div>
+  <div class="BtnDiv BtnDivRight">
+    <a href="/autores_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+  </div>
 </div>
 
 
@@ -151,48 +137,6 @@ chartLinRev.render();
 </script>
 
 
-<!-- pages avg x autor  -->
-<script>
-    var aux = JSON.parse(`<%- avgPagAut %>`)
-    var series = [{name: "Média de páginas", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-    
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: categories,
-          title: { text: 'Média de Páginas' }
-        },
-        yaxis: { title: { text: 'Autores' } },
-        title: { text: 'Autores com maior média de páginas' }
-    };
-
-    var chartPagAut = new ApexCharts(document.querySelector("#chartPagAut"), options);
-    chartPagAut.render();
-</script>
-
 <!-- price avg x autor  -->
 <script>
     var aux = JSON.parse(`<%- avgPriAut %>`)
@@ -239,90 +183,6 @@ chartLinRev.render();
     chartPriAut.render();
 </script>
 
-<!-- freq x autor  -->
-<script>
-    var aux = JSON.parse(`<%- freqAut %>`)
-    var series = [{name: "Total de registros", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-    
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: categories,
-          title: { text: 'Total de Registros' }
-        },
-        yaxis: { title: { text: 'Autores' } },
-        title: { text: 'Autores mais consistentes' }
-    };
-
-    var chartFreqAut = new ApexCharts(document.querySelector("#chartFreqAut"), options);
-    chartFreqAut.render();
-</script>
-
-
-<!-- reviews x autor  -->
-<script>
-    var aux = JSON.parse(`<%- autRev %>`)
-    var series = [{name: "Qtde reviews", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-    
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: categories,
-          title: { text: 'Quantidade de Reviews' }
-        },
-        yaxis: { title: { text: 'Autores' } },
-        title: { text: 'Autores com mais Reviews' }
-    };
-
-    var chartAutRev = new ApexCharts(document.querySelector("#chartAutRev"), options);
-    chartAutRev.render();
-</script>
 
 <!-- TREEMAP: AUT x FREQ -->
 <script type="text/javascript">

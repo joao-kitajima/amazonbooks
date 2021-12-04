@@ -1354,7 +1354,7 @@ class IndexRoute {
 		let rows: any[];
 
 		let mostAvgStar = {data: 0, name: ""}
-		let avgPriAut = [], freqAut = [], avgPagAut = [], autRev = []
+		let avgPriAut = []
 
 		let pieAvgReview = []
 		let pieRevCategories = []
@@ -1421,30 +1421,6 @@ class IndexRoute {
 			avgPriAut.push({name: r.autName, data: r.avgPrice }) 
 		})
 
-
-		/* TOP */
-		/* Autor media pag registrados */
-		rows = await executar(`SELECT round(avg(a.proPages),2) as avgPages, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE  a.proPages != "N/A" GROUP BY a.autCode ORDER BY avgPages DESC LIMIT 10;`);
-		rows.forEach((r)=>{
-			avgPagAut.push({name: r.autName, data: r.avgPages }) 
-		})
-
-		
-		/* TOP */
-		/* autor x review */
-		rows = await executar(`SELECT autName, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proReview != "N/A" GROUP by a.autCode ORDER BY reviews DESC LIMIT 10;`);
-		rows.forEach((r)=>{
-			autRev.push({name: r.autName, data: r.reviews }) 
-		})
-
-
-		/* TOP */
-		/* Freq autor pos */
-		rows = await executar(`Select a.autName, count(p.autCode) as freq FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY p.autCode ORDER by freq DESC LIMIT 10`);
-		rows.forEach((r)=>{
-			freqAut.push({name: r.autName, data: r.freq }) 
-		})
-
 		
 		/* TREEMAP */
 		let treeType = [{data: []}]
@@ -1462,20 +1438,58 @@ class IndexRoute {
 			mostConsistent: await executar(`Select a.autName, count(p.autCode) as freq FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY p.autCode ORDER by freq DESC LIMIT 1`),
 			mostReviewed: await executar(`SELECT autName, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proReview != "N/A" GROUP by a.autCode ORDER BY reviews DESC LIMIT 1;`),
 			mostAvgStar: mostAvgStar,
-			mostExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice DESC LIMIT 1;`),
-			leastExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice LIMIT 1;`),
 			mostPages: await executar(`SELECT round(avg(a.proPages),0) as avgPages, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE  a.proPages != "N/A" GROUP BY a.autCode ORDER BY avgPages DESC LIMIT 1;`),
 			leastPages: await executar(`SELECT round(avg(a.proPages),0) as avgPages, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE  a.proPages != "N/A" GROUP BY a.autCode ORDER BY avgPages LIMIT 1;`),
 			avgPriAut: JSON.stringify(avgPriAut),
-			freqAut: JSON.stringify(freqAut),
-			avgPagAut: JSON.stringify(avgPagAut),
-			autRev: JSON.stringify(autRev),
 			pieAvgReview: JSON.stringify(pieAvgReview),
 			pieRevCategories: JSON.stringify(pieRevCategories),
 			seriesRev: JSON.stringify(seriesRev), 
 			categoriesRev: JSON.stringify(categoriesRev),
 			treeType: JSON.stringify(treeType)
 		})
+	}
+
+
+	/* AUTORES - PG 2 */
+	public async autores_2(req: amazonbooks.Request, res: amazonbooks.Response) {
+		let rows: any[];
+
+		let avgPagAut = [], autRev = [], freqAut = [];
+
+
+		/* TOP */
+		/* Freq autor pos */
+		rows = await executar(`Select a.autName, count(p.autCode) as freq FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY p.autCode ORDER by freq DESC LIMIT 10`);
+		rows.forEach((r)=>{
+			freqAut.push({name: r.autName, data: r.freq }) 
+		})
+		
+
+		/* TOP */
+		/* Autor media pag registrados */
+		rows = await executar(`SELECT round(avg(a.proPages),2) as avgPages, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE  a.proPages != "N/A" GROUP BY a.autCode ORDER BY avgPages DESC LIMIT 10;`);
+		rows.forEach((r)=>{
+			avgPagAut.push({name: r.autName, data: r.avgPages }) 
+		})
+
+		
+		/* TOP */
+		/* autor x review */
+		rows = await executar(`SELECT autName, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proReview != "N/A" GROUP by a.autCode ORDER BY reviews DESC LIMIT 10;`);
+		rows.forEach((r)=>{
+			autRev.push({name: r.autName, data: r.reviews }) 
+		})
+
+
+		/* RENDER */
+		res.render("index/authors2", {
+			mostExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice DESC LIMIT 1;`),
+			leastExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice LIMIT 1;`),
+			freqAut: JSON.stringify(freqAut),
+			avgPagAut: JSON.stringify(avgPagAut),
+			autRev: JSON.stringify(autRev),
+			more_published: await executar('SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode GROUP BY a.autName ORDER BY countProName DESC;')
+		});
 	}
 
 
