@@ -1,7 +1,10 @@
 <!-- CHART CSS DESIGN  -->
 <%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
 <%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+
+
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- BIG NUMBER FORMAT -->
@@ -11,35 +14,6 @@
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
 <% total_books = new Intl.NumberFormat().format(total_books); %>
 <% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
-
-
-<!-- NUMBER FORMAT -->
-<% sumRevCat.max.data = new Intl.NumberFormat().format(sumRevCat.max.data); %>
-<% sumRevCat.min.data = new Intl.NumberFormat().format(sumRevCat.min.data); %>
-<% sumAutCat.max.data = new Intl.NumberFormat().format(sumAutCat.max.data); %>
-<% sumAutCat.min.data = new Intl.NumberFormat().format(sumAutCat.min.data); %>
-<% avgPagCat.max.data = new Intl.NumberFormat().format(avgPagCat.max.data); %>
-<% avgPagCat.min.data = new Intl.NumberFormat().format(avgPagCat.min.data); %>
-<% avgPriCat.max.data = new Intl.NumberFormat().format(avgPriCat.max.data); %>
-<% avgPriCat.min.data = new Intl.NumberFormat().format(avgPriCat.min.data); %>
-
-
-<!-- DATE FORMAT -->
-<%
-  minMaxDate.max.data = minMaxDate.max.data.slice(0,11).replace(/-/g, '/');
-  var ob_day = minMaxDate.max.data.slice(8);
-  var ob_month = minMaxDate.max.data.slice(4, 8);
-  var ob_year = minMaxDate.max.data.slice(0, 4);
-  minMaxDate.max.data = (ob_day + ob_month + ob_year).replace(' ', '');
-%>
-
-<%
-  minMaxDate.min.data = minMaxDate.min.data.slice(0,11).replace(/-/g, '/');
-  var ob_day = minMaxDate.min.data.slice(8);
-  var ob_month = minMaxDate.min.data.slice(4, 8);
-  var ob_year = minMaxDate.min.data.slice(0, 4);
-  minMaxDate.min.data = (ob_day + ob_month + ob_year).replace(' ', '');
-%>
 
 
 <!-- BIG NUMBERS -->
@@ -147,122 +121,23 @@
 </div>
 
 
-<!-- REVIEWS x PÁGINAS -->
-<div class="left-sided-chart">
-    <div id="chartRevPag" class="left-chart-class"></div>
+<!-- TREE MAP -->
+<div id="chartTreeType"></div>
 
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>CATEGORIA COM MAIS REVIEWS</span>
 
-            <p class="cnt-card-p1"><%= sumRevCat.max.name %></p>
-            <p class="cnt-card-p2"><span><%= sumRevCat.max.data %></span> reviews</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>CATEGORIA COM MENOS REVIEWS</span>
-
-            <p class="cnt-card-p1"><%= sumRevCat.min.name %></p>
-            <p class="cnt-card-p2"><span><%= sumRevCat.min.data %></span> reviews</p>
-        </div>
+<!-- PAGE NAV -->
+<div class="pageBtnDiv">
+    <div class="BtnDiv BtnDivLeft pageBtn_ISPAGE">
+      <a> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
     </div>
-</div>
-
-
-<!-- ESTRELAS x PÁGINAS -->
-<div class="left-sided-chart">
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>CATEGORIA COM MAIS AUTORES</span>
-
-            <p class="cnt-card-p1"><%= sumAutCat.max.name %></p>
-            <p class="cnt-card-p2"><span><%= sumAutCat.max.data %></span> autores</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>CATEGORIA COM MENOS AUTORES</span>
-
-            <p class="cnt-card-p1"><%= sumAutCat.min.name %></p>
-            <p class="cnt-card-p2"><span><%= sumAutCat.min.data %></span> autores</p>
-        </div>
+  
+    <div class="actPageDiv">
+      <h6>1</h6>
     </div>
-    
-    <div id="chartStrPag" class="left-chart-class"></div>
-</div>
-
-
-<!-- TIPO x FREQUÊNCIA -->
-<div class="left-sided-chart">
-    <div id="chartTypRev" class="left-chart-class"></div>
-
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>CATEGORIA COM MAIOR MÉDIA PÁGINAS</span>
-
-            <p class="cnt-card-p1"><%= avgPagCat.max.name %></p>
-            <p class="cnt-card-p2"><span><%= avgPagCat.max.data %></span> páginas</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>CATEGORIA COM MENOR MÉDIA PÁGINAS</span>
-
-            <p class="cnt-card-p1"><%= avgPagCat.min.name %></p>
-            <p class="cnt-card-p2"><span><%= avgPagCat.min.data %></span> páginas</p>
-        </div>
+  
+    <div class="BtnDiv BtnDivRight">
+      <a href="/visao_geral_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
     </div>
-</div>
-
-
-<!-- PREÇO x PÁGINAS -->
-<div class="left-sided-chart">
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>CATEGORIA COM PREÇO MÉDIO MAIOR</span>
-
-            <p class="cnt-card-p1"><%= avgPriCat.max.name %></p>
-            <p class="cnt-card-p2"><span>R$<%= avgPriCat.max.data %></span></p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>CATEGORIA COM PREÇO MÉDIO MENOR</span>
-
-            <p class="cnt-card-p1"><%= avgPriCat.min.name %></p>
-            <p class="cnt-card-p2"><span>R$<%= avgPriCat.min.data %></span></p>
-        </div>
-    </div>
-    
-    <div id="chartPriPag" class="left-chart-class"></div>
-</div>
-
-
-<!-- PREÇO x ESTRELAS -->
-<div class="left-sided-chart">
-    <div id="chartPriStr" class="left-chart-class"></div>
-
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>PUBLICAÇÃO MAIS RECENTE</span>
-
-            <p class="cnt-card-p1"><%= minMaxDate.max.name%></p>
-            <p class="cnt-card-p2"><span><%= minMaxDate.max.data%></span></p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>PUBLICAÇÃO MAIS ANTIGA</span>
-
-            <p class="cnt-card-p1"><%= minMaxDate.min.name%></p>
-            <p class="cnt-card-p2"><span><%= minMaxDate.min.data%></span></p>
-        </div>
-    </div>
-</div>
-
-
-<div class="equal-charts">
-    <!-- PREÇO x CATEGORIA -->
-    <div id="chartPriCat" class="equal-chart"></div>
-
-    <!-- PRODUTO x CATEGORIA -->
-    <div id="chartProCat" class="equal-chart"></div>
 </div>
 
 
@@ -276,7 +151,10 @@
 			chart: {
 				height: 380,
 				width: "100%",
-				type: "line"
+				type: "line",
+                animations: {
+                    enabled: false
+                }
 			},
 			series: series,
 			title: { text: 'Variação de posições ao longo do tempo' },
@@ -306,7 +184,10 @@
 			chart: {
 				height: 380,
 				width: "100%",
-				type: "line"
+				type: "line",
+                animations: {
+                    enabled: false
+                }
 			},
 			series: series,
 			title: { text: 'Quantidade de Reviews ao longo do tempo' },
@@ -334,7 +215,10 @@
     var options = {
         series: series,
         chart: {
-            type: 'donut'
+            type: 'donut',
+            animations: {
+                enabled: true
+            }
         },
         title: { text: 'Média de Reviews por Categoria' },
         legend: {
@@ -360,9 +244,8 @@
 
     var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
     chartPieRev.render();
-      
-      
 </script>
+
 
 <!-- PIE pri x cat -->
 <script type="text/javascript">
@@ -374,6 +257,9 @@
             series: series,
             chart: {
                 type: 'donut',
+                animations: {
+                    enabled: true
+                }
             },
             legend: {
                 position: 'bottom'
@@ -400,333 +286,6 @@
     chartPiePri.render();
 </script>
 
-
-<!-- TREE MAP -->
-<div id="chartTreeType"></div>
-
-
-<!-- Review x Pages -->
-<script type="text/javascript">
-    var seriesRevPag = `<%- seriesRevPag %>`
-
-    var optionsRevPag = {
-        series: JSON.parse(seriesRevPag),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy'
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Quantidade de Reviews'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Número de Páginas'
-            }
-        },
-        title: {
-            text: 'Correlação entre a Quantidade de Reviews e o Número de Páginas'
-        }
-    };
-
-    var chartRevPag = new ApexCharts(document.querySelector("#chartRevPag"), optionsRevPag);
-    chartRevPag.render();
-</script>
-
-
-<!-- Stars x Pages -->
-<script type="text/javascript">
-    var series = `<%- seriesStrPag %>`
-
-    var options = {
-        series: JSON.parse(series),
-            chart: {
-                height: 350,
-                type: 'scatter',
-                zoom: {
-                    enabled: true,
-                    type: 'xy'
-                },
-                animations: {
-                    enabled: false,
-                    speed: 175
-                }
-            },
-            xaxis: {
-                tickAmount: 10,
-                labels: {
-                    formatter: function(val) {
-                        return parseFloat(val).toFixed(1)
-                    }
-                },
-                title: {
-                    text: 'Estrelas de Avaliações'
-                }
-            },
-            yaxis: {
-                tickAmount: 7,
-                title: {
-                    text: 'Número de Páginas'
-                }
-            },
-            title: {
-                text: 'Correlação entre Estrelas de Avaliações e o Número de Páginas'
-            }
-    };
-
-    var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
-    chartStrPag.render();
-</script>
-
-
-<!-- Price x Pages -->
-<script type="text/javascript">
-    var series = `<%- seriesPriPag %>`
-
-    var options = {
-    series: JSON.parse(series),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy',
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Preço'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Número de Páginas'
-            }
-        },
-        title: {
-            text: 'Correlação entre Preço e o Número de Páginas'
-        }
-    };
-
-    var chartPriPag = new ApexCharts(document.querySelector("#chartPriPag"), options);
-    chartPriPag.render();
-</script>
-
-
-<!-- Price x Stars -->
-<script type="text/javascript">
-    var series = `<%- seriesPriStr %>`
-
-    var options = {
-    series: JSON.parse(series),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy',
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Preço'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Estrelas de Avaliação'
-            }
-        },
-        title: {
-            text: 'Correlação entre o Preço e Avaliação'
-        }
-    };
-
-    var chartPriStr = new ApexCharts(document.querySelector("#chartPriStr"), options);
-    chartPriStr.render();
-</script>
-
-<!-- Freq produto / categoria -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- freqProCat %>`)
-    var series = [{name: "Total de registros", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-        series: series,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-        plotOptions: {
-            bar: {
-              borderRadius: 4,
-              horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: categories,
-            title: {
-                text: 'Total de Registros'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Categoria de Livros'
-            }
-        },
-        title: {
-            text: 'Número Total de Registros por Categoria'
-        }
-    };
-
-    var chartProCat = new ApexCharts(document.querySelector("#chartProCat"), options);
-    chartProCat.render();
-</script>
-
-<!-- Soma preço / categoria -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- sumPriCat %>`)
-    var series = [{name: "Preço total", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-        series: series,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-        plotOptions: {
-            bar: {
-              borderRadius: 4,
-              horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: categories,
-            title: {
-                text: 'Preço Total'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Categoria de Livros'
-            }
-        },
-        title: {
-            text: 'Preço Total dos Livros por Categoria'
-        }
-    };
-
-    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
-    chartPriCat.render();
-</script>
-
-<!-- Freq type -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- seriesTyp %>`)
-    var categories = JSON.parse(`<%- categoriesTyp %>`)
-    series = [{name: "Total de registros", data: aux[0].data}]
-
-    var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-    
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: categories,
-          title: {
-              text: 'Número Total de Registros'
-          }
-        },
-        yaxis: {
-            title: {
-                text: 'Tipo de Acabamento'
-            }
-        },
-        title: {
-            text: 'Frequência de cada Tipo de Acabamento do Livro'
-        }
-    };
-
-    var chartTypRev = new ApexCharts(document.querySelector("#chartTypRev"), options);
-    chartTypRev.render();
-</script>
 
 <!-- TREEMAP: TYPE x FREQ -->
 <script type="text/javascript">
