@@ -673,121 +673,6 @@ class IndexRoute {
 	public async infantil(req: amazonbooks.Request, res: amazonbooks.Response){
 		let rows: any[];
 
-		/* GRAPHS VARS */
-		let hq_catTyp = { data: []};
-		let book_reviews_page = {}, book_stars_page = {}, hq_catPriPag = {}, hq_catPriStr = {};
-		let series_reviews_page = [], series_stars_page = [], hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = [], hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = [];
-
-
-		/* DSP */
-		/* REVIEWS x PAGES */
-		rows = await executar('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');	
-		
-		rows.forEach((r)=> {
-			var revpag = book_reviews_page[r.proName]
-
-			if(!revpag){
-				revpag = {
-					name: r.proName,
-					data: []
-				}
-				book_reviews_page[r.proName] = revpag;
-				series_reviews_page.push(revpag);
-			}
-
-			revpag.data.push([r.proReview, r.proPages]);
-		});
-
-
-		/* DSP */
-		/* STARS x PAGES */
-		rows = await executar('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 13 ORDER BY a.catCode;');
-		
-		rows.forEach((r)=> {
-			var sp = book_stars_page[r.catName]
-
-			if(!sp){
-				sp = {
-					name: r.catName,
-					data: []
-				}
-				book_stars_page[r.catName] = sp;
-				series_stars_page.push(sp);
-			}
-
-			sp.data.push([r.proStar, r.proPages]);
-		});
-
-
-		/* TOP */
-		/* FREQ x TYPE */
-		rows = await executar('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 13 GROUP BY proType ORDER BY freq DESC');
-
-		rows.forEach((r)=>{
-			hq_catTyp.data.push(r.freq);
-			hq_categoriesTyp.push(r.proType);
-		});
-
-		hq_seriesTyp.push(hq_catTyp);
-
-
-		/* DSP */
-		/* PRICE x STARS */
-		rows = await executar('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');
-
-		rows.forEach((r)=>{
-			var pp = hq_catPriPag[r.catName]
-
-			if(!pp){
-				pp = {
-					name: r.catName,
-					data: []
-				}
-				hq_catPriPag[r.catName] = pp;
-				hq_seriesPriPag.push(pp);
-			}
-
-			pp.data.push([r.proPrice, r.proPages]);
-		});
-
-
-		/* DSP */
-		/* PRICE x STARS */
-		rows = await executar('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');
-
-		rows.forEach((r)=>{
-			var pp = hq_catPriStr[r.catName]
-
-			if(!pp){
-				pp = {
-					name: r.catName,
-					data: []
-				}
-				hq_catPriStr[r.catName] = pp;
-				hq_seriesPriStr.push(pp);
-			}
-
-			pp.data.push([r.proPrice, r.proStar]);
-		});
-
-
-		/* TOP */
-		/* MOST EXPENSIVE BOOKS */
-		rows = await executar('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
-
-		rows.forEach((r)=>{
-			hq_sumPriCat.push({name: r.proName, data: r.totalPrice }) 
-		})
-
-
-		/* TOP */
-		/* MOST CONSISTENT BOOKS */
-		rows = await executar('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
-
-		rows.forEach((r)=>{
-			hq_most_book.push({name: r.proName, data: r.totalReview }) 
-		})
-
 
 		/* DATE GRAPHS */
 		rows = await executar('SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE catCode = 13 AND proPosition <= 5 AND proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND catCode = 13 GROUP BY proName ORDER by COUNT(proName) DESC LIMIT 5) ORDER BY proName, proScrapDate;');
@@ -899,24 +784,6 @@ class IndexRoute {
 				total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 13;'),
 				total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 13;'),
 				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 13;'),
-				series_reviews_page: JSON.stringify(series_reviews_page),
-				most_reviewed_book: await executar('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
-                least_reviewed_book: await executar('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
-                author_most_books: await executar(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 13 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
-                most_consistent_author: await executar(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 13 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
-				series_stars_page: JSON.stringify(series_stars_page),
-				hq_seriesTyp: JSON.stringify(hq_seriesTyp),
-				hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
-				most_pages: await executar('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
-				least_pages: await executar('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
-				hq_seriesPriPag: JSON.stringify(hq_seriesPriPag),
-				most_expensive_book: await executar('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 13 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
-				cheapest_book: await executar('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 13 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
-				hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
-				newest_book: await executar('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 13 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
-				oldest_book: await executar('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 13 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
-				hq_sumPriCat: JSON.stringify(hq_sumPriCat),
-				hq_most_book: JSON.stringify(hq_most_book),
 				seriesPos: JSON.stringify(seriesPos), 
 				categoriesPos: JSON.stringify(categoriesPos),
 				seriesRev: JSON.stringify(seriesRev), 
@@ -926,6 +793,201 @@ class IndexRoute {
 				pieAvgPrice: JSON.stringify(pieAvgPrice),
 				piePriCategories: JSON.stringify(piePriCategories),
 				treeType: JSON.stringify(treeType)
+			}
+		);
+	}
+
+
+	/* INFANTIL - PG 2 */
+	public async infantil_2(req: amazonbooks.Request, res: amazonbooks.Response){
+		let rows: any[];
+
+		let book_reviews_page = {}, book_stars_page = {}
+		let series_reviews_page = [], series_stars_page = []
+
+
+		/* DSP */
+		/* REVIEWS x PAGES */
+		rows = await executar('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');	
+		
+		rows.forEach((r)=> {
+			var revpag = book_reviews_page[r.proName]
+
+			if(!revpag){
+				revpag = {
+					name: r.proName,
+					data: []
+				}
+				book_reviews_page[r.proName] = revpag;
+				series_reviews_page.push(revpag);
+			}
+
+			revpag.data.push([r.proReview, r.proPages]);
+		});
+
+
+		/* DSP */
+		/* STARS x PAGES */
+		rows = await executar('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 13 ORDER BY a.catCode;');
+		
+		rows.forEach((r)=> {
+			var sp = book_stars_page[r.catName]
+
+			if(!sp){
+				sp = {
+					name: r.catName,
+					data: []
+				}
+				book_stars_page[r.catName] = sp;
+				series_stars_page.push(sp);
+			}
+
+			sp.data.push([r.proStar, r.proPages]);
+		});
+
+
+		/* RENDER */
+		res.render(
+			'index/kids2',
+			{
+				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+				total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 13;'),
+				total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 13;'),
+				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 13;'),
+				series_reviews_page: JSON.stringify(series_reviews_page),
+				most_reviewed_book: await executar('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
+                least_reviewed_book: await executar('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
+				author_most_books: await executar(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 13 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
+                most_consistent_author: await executar(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 13 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
+				series_stars_page: JSON.stringify(series_stars_page)
+			}
+		);
+	}
+
+
+	/* INFANTIL - PG 3 */
+	public async infantil_3(req: amazonbooks.Request, res: amazonbooks.Response){
+		let rows: any[];
+
+		let hq_catTyp = { data: []};
+		let hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = []
+		let hq_catPriPag = {}
+
+
+		/* TOP */
+		/* FREQ x TYPE */
+		rows = await executar('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 13 GROUP BY proType ORDER BY freq DESC');
+
+		rows.forEach((r)=>{
+			hq_catTyp.data.push(r.freq);
+			hq_categoriesTyp.push(r.proType);
+		});
+
+		hq_seriesTyp.push(hq_catTyp);
+		
+
+		/* DSP */
+		/* PRICE x PAGES */
+		rows = await executar('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');
+
+		rows.forEach((r)=>{
+			var pp = hq_catPriPag[r.catName]
+
+			if(!pp){
+				pp = {
+					name: r.catName,
+					data: []
+				}
+				hq_catPriPag[r.catName] = pp;
+				hq_seriesPriPag.push(pp);
+			}
+
+			pp.data.push([r.proPrice, r.proPages]);
+		});
+
+
+		/* RENDER */
+		res.render(
+			'index/kids3',
+			{
+				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+				total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 13;'),
+				total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 13;'),
+				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 13;'),
+				hq_seriesTyp: JSON.stringify(hq_seriesTyp),
+				hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
+				most_pages: await executar('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
+				least_pages: await executar('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
+				most_expensive_book: await executar('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 13 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
+				cheapest_book: await executar('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 13 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
+				hq_seriesPriPag: JSON.stringify(hq_seriesPriPag)
+			}
+		);
+	}
+
+
+	/* INFANTIL - PG 4 */
+	public async infantil_4(req: amazonbooks.Request, res: amazonbooks.Response){
+		let rows: any[];
+
+		let hq_catPriStr = {}
+		let hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = []
+
+
+		/* DSP */
+		/* PRICE x STARS */
+		rows = await executar('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 13 ORDER BY a.catCode;');
+
+		rows.forEach((r)=>{
+			var pp = hq_catPriStr[r.catName]
+
+			if(!pp){
+				pp = {
+					name: r.catName,
+					data: []
+				}
+				hq_catPriStr[r.catName] = pp;
+				hq_seriesPriStr.push(pp);
+			}
+
+			pp.data.push([r.proPrice, r.proStar]);
+		});
+
+
+		/* TOP */
+		/* MOST EXPENSIVE BOOKS */
+		rows = await executar('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
+
+		rows.forEach((r)=>{
+			hq_sumPriCat.push({name: r.proName, data: r.totalPrice }) 
+		})
+
+
+		/* TOP */
+		/* MOST CONSISTENT BOOKS */
+		rows = await executar('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 13 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
+
+		rows.forEach((r)=>{
+			hq_most_book.push({name: r.proName, data: r.totalReview }) 
+		})
+
+
+		/* RENDER */
+		res.render(
+			'index/kids4',
+			{
+				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+				total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 13;'),
+				total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 13;'),
+				total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 13;'),
+				hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
+				newest_book: await executar('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 13 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
+				oldest_book: await executar('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 13 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
+				hq_sumPriCat: JSON.stringify(hq_sumPriCat),
+				hq_most_book: JSON.stringify(hq_most_book)
 			}
 		);
 	}
