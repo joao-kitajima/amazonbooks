@@ -1,0 +1,314 @@
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+
+
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+
+
+<!-- BIG NUMBER FORMAT -->
+<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<% total_records = new Intl.NumberFormat().format(total_records); %>
+<% total_sum = new Intl.NumberFormat().format(total_sum); %>
+<% total_authors = new Intl.NumberFormat().format(total_authors); %>
+<% total_books = new Intl.NumberFormat().format(total_books); %>
+<% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
+
+
+<!-- DATE FORMAT -->
+<%
+  newest_book[0].dataMax = newest_book[0].dataMax.slice(0,11).replace(/-/g, '/');
+  var ob_day = newest_book[0].dataMax.slice(8);
+  var ob_month = newest_book[0].dataMax.slice(4, 8);
+  var ob_year = newest_book[0].dataMax.slice(0, 4);
+  newest_book[0].dataMax = (ob_day + ob_month + ob_year).replace(' ', '');
+%>
+
+<%
+  oldest_book[0].dataMin = oldest_book[0].dataMin.slice(0,11).replace(/-/g, '/');
+  var ob_day = oldest_book[0].dataMin.slice(8);
+  var ob_month = oldest_book[0].dataMin.slice(4, 8);
+  var ob_year = oldest_book[0].dataMin.slice(0, 4);
+  oldest_book[0].dataMin = (ob_day + ob_month + ob_year).replace(' ', '');
+%>
+
+
+<!-- BIG NUMBERS -->
+<div class="bigNumbers">
+    <div class="bn-card bn-c-1">
+        <div class="bn-card-header">
+            <p>Registros Coletados</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_records %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-2">
+        <div class="bn-card-header">
+            <p>Valor Total</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right bn-c-2p">
+                <p>R$<%= total_sum %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-3">
+        <div class="bn-card-header">
+            <p>Total de Autores</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_authors %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-4">
+        <div class="bn-card-header">
+            <p>Total de Livros</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_books %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bn-card bn-c-5">
+        <div class="bn-card-header">
+            <p>Total de Editoras</p>
+        </div>
+
+        <div class="bn-card-bot">
+            <div class="bn-card-left">
+                <!-- <span class="iconify bn-icon" data-icon="fluent:arrow-trending-lines-24-filled"></span> -->
+            </div>
+    
+            <div class="bn-card-right">
+                <p><%= total_publishers %></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRICE x STARS -->
+<div class="left-sided-chart">
+    <div id="chartPriStr" class="left-chart-class"></div>
+
+    <div class="content-card">
+        <div class="cnt-card cnt-c1">
+            <span>PUBLICAÇÃO MAIS RECENTE</span>
+
+            <p class="cnt-card-p1"><%= newest_book[0].proName %></p>
+            <p class="cnt-card-p2"><span><%= newest_book[0].dataMax %></span></p>
+        </div>
+
+        <div class="cnt-card cnt-c2">
+            <span>PUBLICAÇÃO MAIS ANTIGA</span>
+
+            <p class="cnt-card-p1"><%= oldest_book[0].proName %></p>
+            <p class="cnt-card-p2"><span><%= oldest_book[0].dataMin %></span></p>
+        </div>
+    </div>
+</div>
+
+
+<div class="equal-charts">
+    <!-- PRICE x BOOK -->
+    <div id="chartPriCat" class="equal-chart"></div>
+
+    <!-- REVIEW x BOOK -->
+    <div id="chartMostRev" class="equal-chart"></div>
+</div>
+
+
+<!-- PAGE NAV -->
+<div class="pageBtnDiv">
+    <div class="BtnDiv BtnDivLeft">
+      <a href="/direito_3"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
+    </div>
+
+    <a href="/direito" class="otPages"> <h6>1</h6> </a>
+    <a href="/direito_2" class="otPages"> <h6>2</h6> </a>
+    <a href="/direito_3" class="otPages"> <h6>3</h6> </a>
+  
+    <div class="actPageDiv">
+      <h6>4</h6>
+    </div>
+  
+    <div class="BtnDiv BtnDivRight pageBtn_ISPAGE">
+      <a> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+    </div>
+</div>
+
+
+<!-- PRICE x STARS -->
+<script type="text/javascript">
+    var series = `<%- hq_seriesPriStr %>`
+
+    var options = {
+    series: JSON.parse(series),
+        chart: {
+            height: 350,
+            type: 'scatter',
+            zoom: {
+                enabled: true,
+                type: 'xy',
+            },
+            animations: {
+                enabled: false,
+                speed: 175
+            }
+        },
+        xaxis: {
+            tickAmount: 10,
+            labels: {
+                formatter: function(val) {
+                    return parseFloat(val).toFixed(1)
+                }
+            },
+            title: {
+                text: 'Preço'
+            }
+        },
+        yaxis: {
+            tickAmount: 7,
+            title: {
+                text: 'Estrelas de Avaliação'
+            }
+        },
+        title: {
+            text: 'Correlação entre o Preço e Avaliação'
+        }
+    };
+
+    var chartPriStr = new ApexCharts(document.querySelector("#chartPriStr"), options);
+    chartPriStr.render();
+</script>
+
+
+<!-- PRICE x BOOK -->
+<script type="text/javascript">
+    var aux = JSON.parse(`<%- hq_sumPriCat %>`)
+    var series = [{name: "Preço total", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+        plotOptions: {
+            bar: {
+              borderRadius: 4,
+              horizontal: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Preço Total'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Livro'
+            }
+        },
+        title: {
+            text: 'Livros mais caros'
+        }
+    };
+
+    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
+    chartPriCat.render();
+</script>
+
+
+<!-- REVIEW x BOOK -->
+<script type="text/javascript">
+    var aux = JSON.parse(`<%- hq_most_book %>`)
+    var series = [{name: "Total de Registros", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+        plotOptions: {
+            bar: {
+              borderRadius: 4,
+              horizontal: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Total de Registros'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Livro'
+            }
+        },
+        title: {
+            text: 'Livros mais consistentes'
+        }
+    };
+
+    var chartMostRev = new ApexCharts(document.querySelector("#chartMostRev"), options);
+    chartMostRev.render();
+</script>

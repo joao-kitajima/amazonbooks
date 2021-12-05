@@ -4,6 +4,10 @@
 <%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
+<!-- CUSTOM DESIGN -->
+<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+
+
 <!-- BIG NUMBER FORMAT -->
 <%- include("../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
@@ -11,35 +15,6 @@
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
 <% total_books = new Intl.NumberFormat().format(total_books); %>
 <% total_publishers = new Intl.NumberFormat().format(total_publishers); %>
-
-
-<!-- NUMBER FORMAT -->
-<% most_reviewed_book[0].proReview = new Intl.NumberFormat().format(most_reviewed_book[0].proReview); %>
-<% least_reviewed_book[0].proReview = new Intl.NumberFormat().format(least_reviewed_book[0].proReview); %>
-<% author_most_books[0].countProName = new Intl.NumberFormat().format(author_most_books[0].countProName); %>
-<% most_consistent_author[0].countAutCode = new Intl.NumberFormat().format(most_consistent_author[0].countAutCode); %>
-<% most_pages[0].proPages = new Intl.NumberFormat().format(most_pages[0].proPages); %>
-<% least_pages[0].proPages = new Intl.NumberFormat().format(least_pages[0].proPages); %>
-<% most_expensive_book[0].proPrice = new Intl.NumberFormat().format(most_expensive_book[0].proPrice); %>
-<% cheapest_book[0].proPrice = new Intl.NumberFormat().format(cheapest_book[0].proPrice); %>
-
-
-<!-- DATE FORMAT -->
-<%
-  newest_book[0].dataMax = newest_book[0].dataMax.slice(0,11).replace(/-/g, '/');
-  var ob_day = newest_book[0].dataMax.slice(8);
-  var ob_month = newest_book[0].dataMax.slice(4, 8);
-  var ob_year = newest_book[0].dataMax.slice(0, 4);
-  newest_book[0].dataMax = (ob_day + ob_month + ob_year).replace(' ', '');
-%>
-
-<%
-  oldest_book[0].dataMin = oldest_book[0].dataMin.slice(0,11).replace(/-/g, '/');
-  var ob_day = oldest_book[0].dataMin.slice(8);
-  var ob_month = oldest_book[0].dataMin.slice(4, 8);
-  var ob_year = oldest_book[0].dataMin.slice(0, 4);
-  oldest_book[0].dataMin = (ob_day + ob_month + ob_year).replace(' ', '');
-%>
 
 
 <!-- BIG NUMBERS -->
@@ -147,123 +122,27 @@
 </div>
 
 
-<!-- [ CHART HTML ] -->
-<!-- REVIEWS x PAGES -->
-<div class="left-sided-chart">
-    <div id="chartRevPag" class="left-chart-class"></div>
+<!-- TREE MAP -->
+<div id="chartTreeType"></div>
 
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>LIVRO COM MAIS REVIEWS</span>
 
-            <p class="cnt-card-p1"><%= most_reviewed_book[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= most_reviewed_book[0].proReview %></span> reviews</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>LIVRO COM MENOS REVIEWS</span>
-
-            <p class="cnt-card-p1"><%= least_reviewed_book[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= least_reviewed_book[0].proReview %></span> reviews</p>
-        </div>
+<!-- PAGE NAV -->
+<div class="pageBtnDiv">
+    <div class="BtnDiv BtnDivLeft pageBtn_ISPAGE">
+      <a> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
     </div>
-</div>
-
-
-<!-- STARS x PAGES -->
-<div class="left-sided-chart">
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>AUTOR COM MAIS PUBLICAÇÕES</span>
-
-            <p class="cnt-card-p1"><%= author_most_books[0].autName %></p>
-            <p class="cnt-card-p2"><span><%= author_most_books[0].countProName %></span> publicações</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>AUTOR MAIS CONSISTENTE</span>
-
-            <p class="cnt-card-p1"><%= most_consistent_author[0].autName %></p>
-            <p class="cnt-card-p2"><span><%= most_consistent_author[0].countAutCode %></span> registros</p>
-        </div>
+  
+    <div class="actPageDiv">
+      <h6>1</h6>
     </div>
-    
-    <div id="chartStrPag" class="left-chart-class"></div>
-</div>
 
-
-<!-- FREQ x TYPE -->
-<div class="left-sided-chart">
-    <div id="chartTypRev" class="left-chart-class"></div>
-
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>LIVRO COM MAIS PÁGINAS</span>
-
-            <p class="cnt-card-p1"><%= most_pages[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= most_pages[0].proPages %></span> páginas</p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>LIVRO COM MENOS PÁGINAS</span>
-
-            <p class="cnt-card-p1"><%= least_pages[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= least_pages[0].proPages %></span> páginas</p>
-        </div>
+    <a href="/direito_2" class="otPages"> <h6>2</h6> </a>
+    <a href="/direito_3" class="otPages"> <h6>3</h6> </a>
+    <a href="/direito_4" class="otPages"> <h6>4</h6> </a>
+  
+    <div class="BtnDiv BtnDivRight">
+      <a href="/direito_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
     </div>
-</div>
-
-
-<!-- PRICE x PAGES -->
-<div class="left-sided-chart">
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>LIVRO MAIS CARO</span>
-
-            <p class="cnt-card-p1"><%= most_expensive_book[0].proName %></p>
-            <p class="cnt-card-p2"><span>R$<%= most_expensive_book[0].proPrice %></span></p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>LIVRO MAIS BARATO</span>
-
-            <p class="cnt-card-p1"><%= cheapest_book[0].proName %></p>
-            <p class="cnt-card-p2"><span>R$<%= cheapest_book[0].proPrice %></span></p>
-        </div>
-    </div>
-    
-    <div id="chartPriPag" class="left-chart-class"></div>
-</div>
-
-
-<!-- PRICE x STARS -->
-<div class="left-sided-chart">
-    <div id="chartPriStr" class="left-chart-class"></div>
-
-    <div class="content-card">
-        <div class="cnt-card cnt-c1">
-            <span>PUBLICAÇÃO MAIS RECENTE</span>
-
-            <p class="cnt-card-p1"><%= newest_book[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= newest_book[0].dataMax %></span></p>
-        </div>
-
-        <div class="cnt-card cnt-c2">
-            <span>PUBLICAÇÃO MAIS ANTIGA</span>
-
-            <p class="cnt-card-p1"><%= oldest_book[0].proName %></p>
-            <p class="cnt-card-p2"><span><%= oldest_book[0].dataMin %></span></p>
-        </div>
-    </div>
-</div>
-
-
-<div class="equal-charts">
-    <!-- PRICE x BOOK -->
-    <div id="chartPriCat" class="equal-chart"></div>
-
-    <!-- REVIEW x BOOK -->
-    <div id="chartMostRev" class="equal-chart"></div>
 </div>
 
 
@@ -276,7 +155,10 @@
 			chart: {
 				height: 380,
 				width: "100%",
-				type: "line"
+				type: "line",
+                animations: {
+                    enabled: false
+                }
 			},
 			series: series,
 			title: { text: 'Variação de posições ao longo do tempo' },
@@ -297,6 +179,7 @@
 	chartLinPos.render();
 </script>
 
+
 <!-- Date x rev -->
 <script type="text/javascript">
     var series = JSON.parse(`<%- seriesRev %>`)
@@ -306,7 +189,10 @@
 			chart: {
 				height: 380,
 				width: "100%",
-				type: "line"
+				type: "line",
+                animations: {
+                    enabled: false
+                }
 			},
 			series: series,
 			title: { text: 'Quantidade de Reviews ao longo do tempo' },
@@ -334,7 +220,10 @@
   var options = {
       series: series,
       chart: {
-          type: 'donut'
+          type: 'donut',
+          animations: {
+                    enabled: true
+                }
       },
       title: { text: 'Média de Reviews por produto' },
       legend: {
@@ -374,6 +263,9 @@
           series: series,
           chart: {
               type: 'donut',
+              animations: {
+                    enabled: true
+                }
           },
           legend: {
               position: 'bottom'
@@ -398,338 +290,6 @@
 
   var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
   chartPiePri.render();
-</script>
-
-
-<!-- TREE MAP -->
-<div id="chartTreeType"></div>
-
-
-<!-- [ SCRIPT CHART ] -->
-<!-- REVIEWS x PAGES -->
-<script type="text/javascript">
-    var series_reviews_page = `<%- series_reviews_page %>`
-
-    var optionsRevPag = {
-        series: JSON.parse(series_reviews_page),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy'
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Quantidade de Reviews'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Número de Páginas'
-            }
-        },
-        title: {
-            text: 'Correlação entre a Quantidade de Reviews e o Número de Páginas'
-        }
-    };
-
-    var chartRevPag = new ApexCharts(document.querySelector("#chartRevPag"), optionsRevPag);
-    chartRevPag.render();
-</script>
-
-
-<!-- STARS x PAGES -->
-<script type="text/javascript">
-    var series = `<%- series_stars_page %>`
-
-    var options = {
-        series: JSON.parse(series),
-            chart: {
-                height: 350,
-                type: 'scatter',
-                zoom: {
-                    enabled: true,
-                    type: 'xy'
-                },
-                animations: {
-                    enabled: false,
-                    speed: 175
-                }
-            },
-            xaxis: {
-                tickAmount: 10,
-                labels: {
-                    formatter: function(val) {
-                        return parseFloat(val).toFixed(1)
-                    }
-                },
-                title: {
-                    text: 'Estrelas de Avaliações'
-                }
-            },
-            yaxis: {
-                tickAmount: 7,
-                title: {
-                    text: 'Número de Páginas'
-                }
-            },
-            title: {
-                text: 'Correlação entre Estrelas de Avaliações e o Número de Páginas'
-            }
-    };
-
-    var chartStrPag = new ApexCharts(document.querySelector("#chartStrPag"), options);
-    chartStrPag.render();
-</script>
-
-
-<!-- FREQ x TYPE -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- hq_seriesTyp %>`)
-    var categories = JSON.parse(`<%- hq_categoriesTyp %>`)
-    series = [{name: "Total de registros", data: aux[0].data}]
-
-    var options = {
-          series: series,
-          chart: {
-          type: 'bar',
-          height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-    
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: categories,
-          title: {
-              text: 'Número Total de Registros'
-          }
-        },
-        yaxis: {
-            title: {
-                text: 'Tipo de Acabamento'
-            }
-        },
-        title: {
-            text: 'Frequência de cada Tipo de Acabamento do Livro'
-        }
-    };
-
-    var chartTypRev = new ApexCharts(document.querySelector("#chartTypRev"), options);
-    chartTypRev.render();
-</script>
-
-
-<!-- PRICE x PAGES -->
-<script type="text/javascript">
-    var series = `<%- hq_seriesPriPag %>`
-
-    var options = {
-    series: JSON.parse(series),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy',
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Preço'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Número de Páginas'
-            }
-        },
-        title: {
-            text: 'Correlação entre Preço e o Número de Páginas'
-        }
-    };
-
-    var chartPriPag = new ApexCharts(document.querySelector("#chartPriPag"), options);
-    chartPriPag.render();
-</script>
-
-
-<!-- PRICE x STARS -->
-<script type="text/javascript">
-    var series = `<%- hq_seriesPriStr %>`
-
-    var options = {
-    series: JSON.parse(series),
-        chart: {
-            height: 350,
-            type: 'scatter',
-            zoom: {
-                enabled: true,
-                type: 'xy',
-            },
-            animations: {
-                enabled: false,
-                speed: 175
-            }
-        },
-        xaxis: {
-            tickAmount: 10,
-            labels: {
-                formatter: function(val) {
-                    return parseFloat(val).toFixed(1)
-                }
-            },
-            title: {
-                text: 'Preço'
-            }
-        },
-        yaxis: {
-            tickAmount: 7,
-            title: {
-                text: 'Estrelas de Avaliação'
-            }
-        },
-        title: {
-            text: 'Correlação entre o Preço e Avaliação'
-        }
-    };
-
-    var chartPriStr = new ApexCharts(document.querySelector("#chartPriStr"), options);
-    chartPriStr.render();
-</script>
-
-
-<!-- PRICE x BOOK -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- hq_sumPriCat %>`)
-    var series = [{name: "Preço total", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-        series: series,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-        plotOptions: {
-            bar: {
-              borderRadius: 4,
-              horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: categories,
-            title: {
-                text: 'Preço Total'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Livro'
-            }
-        },
-        title: {
-            text: 'Livros mais caros'
-        }
-    };
-
-    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
-    chartPriCat.render();
-</script>
-
-
-<!-- REVIEW x BOOK -->
-<script type="text/javascript">
-    var aux = JSON.parse(`<%- hq_most_book %>`)
-    var series = [{name: "Total de Registros", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-        series: series,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-        plotOptions: {
-            bar: {
-              borderRadius: 4,
-              horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: categories,
-            title: {
-                text: 'Total de Registros'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Livro'
-            }
-        },
-        title: {
-            text: 'Livros mais consistentes'
-        }
-    };
-
-    var chartMostRev = new ApexCharts(document.querySelector("#chartMostRev"), options);
-    chartMostRev.render();
 </script>
 
 

@@ -789,90 +789,6 @@ class IndexRoute {
     /* DIREITO */
     async direito(req, res) {
         let rows;
-        /* GRAPHS VARS */
-        let hq_catTyp = { data: [] };
-        let book_reviews_page = {}, book_stars_page = {}, hq_catPriPag = {}, hq_catPriStr = {};
-        let series_reviews_page = [], series_stars_page = [], hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = [], hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = [];
-        /* DSP */
-        /* REVIEWS x PAGES */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
-        rows.forEach((r) => {
-            var revpag = book_reviews_page[r.proName];
-            if (!revpag) {
-                revpag = {
-                    name: r.proName,
-                    data: []
-                };
-                book_reviews_page[r.proName] = revpag;
-                series_reviews_page.push(revpag);
-            }
-            revpag.data.push([r.proReview, r.proPages]);
-        });
-        /* DSP */
-        /* STARS x PAGES */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 5 ORDER BY a.catCode;');
-        rows.forEach((r) => {
-            var sp = book_stars_page[r.catName];
-            if (!sp) {
-                sp = {
-                    name: r.catName,
-                    data: []
-                };
-                book_stars_page[r.catName] = sp;
-                series_stars_page.push(sp);
-            }
-            sp.data.push([r.proStar, r.proPages]);
-        });
-        /* TOP */
-        /* FREQ x TYPE */
-        rows = await (0, amazonbooks_1.executar)('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 5 GROUP BY proType ORDER BY freq DESC');
-        rows.forEach((r) => {
-            hq_catTyp.data.push(r.freq);
-            hq_categoriesTyp.push(r.proType);
-        });
-        hq_seriesTyp.push(hq_catTyp);
-        /* DSP */
-        /* PRICE x STARS */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
-        rows.forEach((r) => {
-            var pp = hq_catPriPag[r.catName];
-            if (!pp) {
-                pp = {
-                    name: r.catName,
-                    data: []
-                };
-                hq_catPriPag[r.catName] = pp;
-                hq_seriesPriPag.push(pp);
-            }
-            pp.data.push([r.proPrice, r.proPages]);
-        });
-        /* DSP */
-        /* PRICE x STARS */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
-        rows.forEach((r) => {
-            var pp = hq_catPriStr[r.catName];
-            if (!pp) {
-                pp = {
-                    name: r.catName,
-                    data: []
-                };
-                hq_catPriStr[r.catName] = pp;
-                hq_seriesPriStr.push(pp);
-            }
-            pp.data.push([r.proPrice, r.proStar]);
-        });
-        /* TOP */
-        /* MOST EXPENSIVE BOOKS */
-        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
-        rows.forEach((r) => {
-            hq_sumPriCat.push({ name: r.proName, data: r.totalPrice });
-        });
-        /* TOP */
-        /* MOST CONSISTENT BOOKS */
-        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
-        rows.forEach((r) => {
-            hq_most_book.push({ name: r.proName, data: r.totalReview });
-        });
         /* DATE GRAPHS */
         rows = await (0, amazonbooks_1.executar)('SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE catCode = 5 AND proPosition <= 5 AND proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND catCode = 5 GROUP BY proName ORDER by COUNT(proName) DESC LIMIT 5) ORDER BY proName, proScrapDate;');
         var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = [];
@@ -966,24 +882,16 @@ class IndexRoute {
             total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 5;'),
             total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 5;'),
             total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 5;'),
-            series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
             author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 5 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
             most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 5 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
-            series_stars_page: JSON.stringify(series_stars_page),
-            hq_seriesTyp: JSON.stringify(hq_seriesTyp),
-            hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
             most_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
             least_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
-            hq_seriesPriPag: JSON.stringify(hq_seriesPriPag),
             most_expensive_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 5 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
             cheapest_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 5 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
-            hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
             newest_book: await (0, amazonbooks_1.executar)('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 5 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
             oldest_book: await (0, amazonbooks_1.executar)('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 5 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
-            hq_sumPriCat: JSON.stringify(hq_sumPriCat),
-            hq_most_book: JSON.stringify(hq_most_book),
             seriesPos: JSON.stringify(seriesPos),
             categoriesPos: JSON.stringify(categoriesPos),
             seriesRev: JSON.stringify(seriesRev),
@@ -995,16 +903,14 @@ class IndexRoute {
             treeType: JSON.stringify(treeType)
         });
     }
-    /* HQs e MANGÁS */
-    async hqs_mangas(req, res) {
+    /* DIREITO - PG 2 */
+    async direito_2(req, res) {
         let rows;
-        /* GRAPHS VARS */
-        let hq_catTyp = { data: [] };
-        let book_reviews_page = {}, book_stars_page = {}, hq_catPriPag = {}, hq_catPriStr = {};
-        let series_reviews_page = [], series_stars_page = [], hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = [], hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = [];
+        let book_reviews_page = {}, book_stars_page = {};
+        let series_reviews_page = [], series_stars_page = [];
         /* DSP */
         /* REVIEWS x PAGES */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
         rows.forEach((r) => {
             var revpag = book_reviews_page[r.proName];
             if (!revpag) {
@@ -1019,7 +925,7 @@ class IndexRoute {
         });
         /* DSP */
         /* STARS x PAGES */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 4 ORDER BY a.catCode;');
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 5 ORDER BY a.catCode;');
         rows.forEach((r) => {
             var sp = book_stars_page[r.catName];
             if (!sp) {
@@ -1032,17 +938,38 @@ class IndexRoute {
             }
             sp.data.push([r.proStar, r.proPages]);
         });
+        /* RENDER */
+        res.render("index/laws2", {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 5;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 5;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 5;'),
+            series_reviews_page: JSON.stringify(series_reviews_page),
+            most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
+            least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 5 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 5 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
+            series_stars_page: JSON.stringify(series_stars_page)
+        });
+    }
+    /* DIREITO - PG 3 */
+    async direito_3(req, res) {
+        let rows;
+        let hq_catTyp = { data: [] };
+        let hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = [];
+        let hq_catPriPag = {};
         /* TOP */
         /* FREQ x TYPE */
-        rows = await (0, amazonbooks_1.executar)('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 4 GROUP BY proType ORDER BY freq DESC');
+        rows = await (0, amazonbooks_1.executar)('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 5 GROUP BY proType ORDER BY freq DESC');
         rows.forEach((r) => {
             hq_catTyp.data.push(r.freq);
             hq_categoriesTyp.push(r.proType);
         });
         hq_seriesTyp.push(hq_catTyp);
         /* DSP */
-        /* PRICE x STARS */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        /* PRICE x PAGES */
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
         rows.forEach((r) => {
             var pp = hq_catPriPag[r.catName];
             if (!pp) {
@@ -1055,9 +982,30 @@ class IndexRoute {
             }
             pp.data.push([r.proPrice, r.proPages]);
         });
+        /* RENDER */
+        res.render('index/laws3', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 5;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 5;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 5;'),
+            hq_seriesTyp: JSON.stringify(hq_seriesTyp),
+            hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
+            most_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
+            least_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
+            most_expensive_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 5 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
+            cheapest_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 5 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
+            hq_seriesPriPag: JSON.stringify(hq_seriesPriPag)
+        });
+    }
+    /* DIREITO - PG 4 */
+    async direito_4(req, res) {
+        let rows;
+        let hq_catPriStr = {};
+        let hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = [];
         /* DSP */
         /* PRICE x STARS */
-        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 5 ORDER BY a.catCode;');
         rows.forEach((r) => {
             var pp = hq_catPriStr[r.catName];
             if (!pp) {
@@ -1072,16 +1020,33 @@ class IndexRoute {
         });
         /* TOP */
         /* MOST EXPENSIVE BOOKS */
-        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
+        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
         rows.forEach((r) => {
             hq_sumPriCat.push({ name: r.proName, data: r.totalPrice });
         });
         /* TOP */
         /* MOST CONSISTENT BOOKS */
-        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
+        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 5 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
         rows.forEach((r) => {
             hq_most_book.push({ name: r.proName, data: r.totalReview });
         });
+        /* RENDER */
+        res.render('index/laws4', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 5;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 5;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 5;'),
+            hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
+            newest_book: await (0, amazonbooks_1.executar)('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 5 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
+            oldest_book: await (0, amazonbooks_1.executar)('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 5 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
+            hq_sumPriCat: JSON.stringify(hq_sumPriCat),
+            hq_most_book: JSON.stringify(hq_most_book)
+        });
+    }
+    /* HQs e MANGÁS */
+    async hqs_mangas(req, res) {
+        let rows;
         /* DATE GRAPHS */
         rows = await (0, amazonbooks_1.executar)('SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE catCode = 4 AND proPosition <= 5 AND proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND catCode = 4 GROUP BY proName ORDER by COUNT(proName) DESC LIMIT 5) ORDER BY proName, proScrapDate;');
         var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = [];
@@ -1175,24 +1140,16 @@ class IndexRoute {
             total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 4;'),
             total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 4;'),
             total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 4;'),
-            series_reviews_page: JSON.stringify(series_reviews_page),
             most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
             author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
             most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
-            series_stars_page: JSON.stringify(series_stars_page),
-            hq_seriesTyp: JSON.stringify(hq_seriesTyp),
-            hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
             most_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
             least_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
-            hq_seriesPriPag: JSON.stringify(hq_seriesPriPag),
             most_expensive_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 4 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
             cheapest_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 4 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
-            hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
             newest_book: await (0, amazonbooks_1.executar)('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
             oldest_book: await (0, amazonbooks_1.executar)('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
-            hq_sumPriCat: JSON.stringify(hq_sumPriCat),
-            hq_most_book: JSON.stringify(hq_most_book),
             seriesPos: JSON.stringify(seriesPos),
             categoriesPos: JSON.stringify(categoriesPos),
             seriesRev: JSON.stringify(seriesRev),
@@ -1202,6 +1159,147 @@ class IndexRoute {
             pieAvgPrice: JSON.stringify(pieAvgPrice),
             piePriCategories: JSON.stringify(piePriCategories),
             treeType: JSON.stringify(treeType)
+        });
+    }
+    /* HQs e MANGÁS - PG 2 */
+    async hqs_mangas_2(req, res) {
+        let rows;
+        let book_reviews_page = {}, book_stars_page = {};
+        let series_reviews_page = [], series_stars_page = [];
+        /* DSP */
+        /* REVIEWS x PAGES */
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proReview, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proReview != "N/A" and a.proPages != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        rows.forEach((r) => {
+            var revpag = book_reviews_page[r.proName];
+            if (!revpag) {
+                revpag = {
+                    name: r.proName,
+                    data: []
+                };
+                book_reviews_page[r.proName] = revpag;
+                series_reviews_page.push(revpag);
+            }
+            revpag.data.push([r.proReview, r.proPages]);
+        });
+        /* DSP */
+        /* STARS x PAGES */
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proStar, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proStar != "N/A" and a.proPages != "N/A" AND c.catCode = 4 ORDER BY a.catCode;');
+        rows.forEach((r) => {
+            var sp = book_stars_page[r.catName];
+            if (!sp) {
+                sp = {
+                    name: r.catName,
+                    data: []
+                };
+                book_stars_page[r.catName] = sp;
+                series_stars_page.push(sp);
+            }
+            sp.data.push([r.proStar, r.proPages]);
+        });
+        /* RENDER */
+        res.render('index/hqs_mangas2', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 4;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 4;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 4;'),
+            series_reviews_page: JSON.stringify(series_reviews_page),
+            most_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
+            least_reviewed_book: await (0, amazonbooks_1.executar)('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
+            author_most_books: await (0, amazonbooks_1.executar)(`SELECT a.autName, COUNT(DISTINCT p.proName) AS countProName FROM Author a INNER JOIN Product p ON a.autCode = p.autCode WHERE p.catCode = 4 GROUP BY a.autName ORDER BY countProName DESC LIMIT 1;`),
+            most_consistent_author: await (0, amazonbooks_1.executar)(`SELECT COUNT(p.autCode) AS countAutCode, a.autName FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.catCode = 4 GROUP BY p.autCode ORDER BY countAutCode DESC LIMIT 1;`),
+            series_stars_page: JSON.stringify(series_stars_page)
+        });
+    }
+    /* HQs e MANGÁS - PG 3 */
+    async hqs_mangas_3(req, res) {
+        let rows;
+        let hq_catTyp = { data: [] };
+        let hq_categoriesTyp = [], hq_seriesTyp = [], hq_seriesPriPag = [];
+        let hq_catPriPag = {};
+        /* TOP */
+        /* FREQ x TYPE */
+        rows = await (0, amazonbooks_1.executar)('SELECT proType, count(proType) as freq FROM Product WHERE proType != "Not Exists" and proType != "Not exists" AND catCode = 4 GROUP BY proType ORDER BY freq DESC');
+        rows.forEach((r) => {
+            hq_catTyp.data.push(r.freq);
+            hq_categoriesTyp.push(r.proType);
+        });
+        hq_seriesTyp.push(hq_catTyp);
+        /* DSP */
+        /* PRICE x PAGES */
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proPages, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPages != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        rows.forEach((r) => {
+            var pp = hq_catPriPag[r.catName];
+            if (!pp) {
+                pp = {
+                    name: r.catName,
+                    data: []
+                };
+                hq_catPriPag[r.catName] = pp;
+                hq_seriesPriPag.push(pp);
+            }
+            pp.data.push([r.proPrice, r.proPages]);
+        });
+        /* RENDER */
+        res.render('index/hqs_mangas3', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 4;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 4;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 4;'),
+            hq_seriesTyp: JSON.stringify(hq_seriesTyp),
+            hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
+            most_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
+            least_pages: await (0, amazonbooks_1.executar)('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY proPages ASC LIMIT 1'),
+            most_expensive_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 4 GROUP BY proName ORDER BY proPrice DESC LIMIT 1;'),
+            cheapest_book: await (0, amazonbooks_1.executar)('SELECT proName, proPrice FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND proPrice > 0 AND catCode = 4 GROUP BY proName ORDER BY proPrice ASC LIMIT 1;'),
+            hq_seriesPriPag: JSON.stringify(hq_seriesPriPag)
+        });
+    }
+    /* HQs e MANGÁS - PG 4 */
+    async hqs_mangas_4(req, res) {
+        let rows;
+        let hq_catPriStr = {};
+        let hq_seriesPriStr = [], hq_sumPriCat = [], hq_most_book = [];
+        /* DSP */
+        /* PRICE x STARS */
+        rows = await (0, amazonbooks_1.executar)('SELECT a.proPrice, a.proStar, c.catName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proStar != "N/A" AND a.catCode = 4 ORDER BY a.catCode;');
+        rows.forEach((r) => {
+            var pp = hq_catPriStr[r.catName];
+            if (!pp) {
+                pp = {
+                    name: r.catName,
+                    data: []
+                };
+                hq_catPriStr[r.catName] = pp;
+                hq_seriesPriStr.push(pp);
+            }
+            pp.data.push([r.proPrice, r.proStar]);
+        });
+        /* TOP */
+        /* MOST EXPENSIVE BOOKS */
+        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proPrice) AS totalPrice	FROM Product WHERE proPrice != "N/A" AND proPrice IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY totalPrice DESC LIMIT 10;');
+        rows.forEach((r) => {
+            hq_sumPriCat.push({ name: r.proName, data: r.totalPrice });
+        });
+        /* TOP */
+        /* MOST CONSISTENT BOOKS */
+        rows = await (0, amazonbooks_1.executar)('SELECT proName, MAX(proReview) AS totalReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 4 GROUP BY proName ORDER BY totalReview DESC LIMIT 10;');
+        rows.forEach((r) => {
+            hq_most_book.push({ name: r.proName, data: r.totalReview });
+        });
+        /* RENDER */
+        res.render('index/hqs_mangas4', {
+            total_records: await (0, amazonbooks_1.scalar)('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+            total_sum: await (0, amazonbooks_1.scalar)('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+            total_authors: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 4;'),
+            total_books: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 4;'),
+            total_publishers: await (0, amazonbooks_1.scalar)('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 4;'),
+            hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
+            newest_book: await (0, amazonbooks_1.executar)('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
+            oldest_book: await (0, amazonbooks_1.executar)('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 4 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
+            hq_sumPriCat: JSON.stringify(hq_sumPriCat),
+            hq_most_book: JSON.stringify(hq_most_book)
         });
     }
     /* AUTORES */
