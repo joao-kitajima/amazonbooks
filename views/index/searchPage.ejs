@@ -1,0 +1,108 @@
+<!-- CHART CSS DESIGN  -->
+<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+
+
+<input id="search-bar-input" name="query" type="search" placeholder="Busque aqui ..." />
+
+<button onclick="searchBoxInput()" > CLIQUE PARA BUSCAR </button>
+
+
+<div id="chartLinPos" ></div>
+
+
+<script type="text/javascript">
+    const searchInput = document.getElementById("search-bar-input");
+
+
+    function fixDate(date) {
+        let hour = date.split(" ")[1];
+        hour = hour.split(":")[0]
+        let dateTime = date.split(" ")[0]
+        dateTime= dateTime.split("-")
+        let year = dateTime[0]
+        let month = dateTime[1]
+        let day = dateTime[2]
+        dateTime = new Date(year, month - 1, day, hour, 0, 0)
+        dateTime = dateTime.toISOString().replace("T", " ").split(".")[0]
+
+        return dateTime;
+    }
+
+
+    function searchBoxInput() {
+        axios.post('/rotaBuscas', {
+            query: searchInput.value
+        })
+        .then(function (response) {
+            console.log(response.data);
+
+            let rows = response.data
+		
+		    var livrosPos = {}, seriesPos = [], datasPos = {}, categoriesPos = []
+
+		    rows.forEach((r)=>{
+		    	var date = fixDate(r.date)
+		    	let d = datasPos[date]
+		    	if(!d){
+		    		datasPos[date] = date
+		    		categoriesPos.push(date)
+		    	}
+		    })
+
+		    categoriesPos.sort()
+		    rows.forEach((r)=>{
+		    	var tempArray = Array(categoriesPos.length).fill(null)
+		    	var date = fixDate(r.date)
+		    	var l = livrosPos[r.proName]
+		    	if(!l){
+		    		l = {
+		    			name: r.proName,
+		    			data: tempArray
+		    		}
+		    		livrosPos[r.proName] = l;
+		    		seriesPos.push(l);
+		    	}
+		    	for (let i = 0; i < categoriesPos.length; i++){
+		    		if(date == categoriesPos[i]){
+		    			l.data[i] = r.proPosition
+		    			break
+		    		}
+		    	}
+		    })
+
+
+            var series = seriesPos, categories = categoriesPos
+
+
+            var options = {
+	            chart: {
+	            	height: 380,
+	            	width: "100%",
+	            	type: "line",
+                    animations: {
+                        enabled: false
+                    }
+	            },
+	            series: series,
+	            title: { text: 'Variação de posições ao longo do tempo' },
+            
+	            xaxis: {
+	            	categories: categories,
+	            	title: { text: 'Tempo' }
+	            },
+            
+                yaxis: {
+                    reversed: true,
+	            	title: { text: 'Posição' }
+                }
+	        };
+            
+	        var chartLinPos = new ApexCharts(document.querySelector("#chartLinPos"), options);
+            
+	        chartLinPos.render();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+</script>

@@ -1970,17 +1970,28 @@ class IndexRoute {
 	}
 
 
-	/* ROTA PARA BUSCAS */
-	@amazonbooks.http.post()
-	// @amazonbooks.route.formData()
-	public async rotaTeste(req: amazonbooks.Request, res:amazonbooks.Response) {
+	/* PÁGINA DE BUSCAS */
+	// @amazonbooks.http.post()
+	public async buscar(req: amazonbooks.Request, res: amazonbooks.Response) {
 		
 
-		let sql = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
+		res.render("index/searchPage", {
+			
 
-		let response = await executarParam(sql, [req.body.query])
+		});
+	}
 
+
+	/* ROTA DE BUSCAS */
+	@amazonbooks.http.post()
+	public async rotaBuscas(req: amazonbooks.Request, res:amazonbooks.Response) {
+		let scrapDate = 'SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND proName = ? GROUP BY proName ORDER by COUNT(proName)) ORDER BY proName, proScrapDate;';
+		let response = await executarParam(scrapDate, [req.body.query])
 		res.json(response)
+
+		// let sql2 = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
+		// let response2 = await executarParam(sql2, [req.body.query])
+		// res.json(response2)
 	}
 }
 

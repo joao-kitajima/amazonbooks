@@ -1554,15 +1554,23 @@ class IndexRoute {
             most_consistent_publisher: await (0, amazonbooks_1.executar)('SELECT proPublisher, COUNT(proPublisher) AS proPublisherCount FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL GROUP BY proPublisher ORDER BY COUNT(proPublisher) DESC LIMIT 1;')
         });
     }
-    /* ROTA PARA BUSCAS */
-    async rotaTeste(req, res) {
-        let sql = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
-        let response = await (0, amazonbooks_1.executarParam)(sql, [req.body.query]);
+    /* PÁGINA DE BUSCAS */
+    // @amazonbooks.http.post()
+    async buscar(req, res) {
+        res.render("index/searchPage", {});
+    }
+    /* ROTA DE BUSCAS */
+    async rotaBuscas(req, res) {
+        let scrapDate = 'SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND proName = ? GROUP BY proName ORDER by COUNT(proName)) ORDER BY proName, proScrapDate;';
+        let response = await (0, amazonbooks_1.executarParam)(scrapDate, [req.body.query]);
         res.json(response);
+        // let sql2 = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';
+        // let response2 = await executarParam(sql2, [req.body.query])
+        // res.json(response2)
     }
 }
 __decorate([
     amazonbooks.http.post()
-], IndexRoute.prototype, "rotaTeste", null);
+], IndexRoute.prototype, "rotaBuscas", null);
 module.exports = IndexRoute;
 //# sourceMappingURL=index.js.map
