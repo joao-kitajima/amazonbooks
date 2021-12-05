@@ -1,15 +1,15 @@
 <!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
 <!-- CUSTOM DESIGN -->
-<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+<%- include("../../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- BIG NUMBER FORMAT -->
-<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<%- include("../../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
 <% total_sum = new Intl.NumberFormat().format(total_sum); %>
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
@@ -19,19 +19,19 @@
 
 <!-- DATE FORMAT -->
 <%
-  minMaxDate.max.data = minMaxDate.max.data.slice(0,11).replace(/-/g, '/');
-  var ob_day = minMaxDate.max.data.slice(8);
-  var ob_month = minMaxDate.max.data.slice(4, 8);
-  var ob_year = minMaxDate.max.data.slice(0, 4);
-  minMaxDate.max.data = (ob_day + ob_month + ob_year).replace(' ', '');
+  newest_book[0].dataMax = newest_book[0].dataMax.slice(0,11).replace(/-/g, '/');
+  var ob_day = newest_book[0].dataMax.slice(8);
+  var ob_month = newest_book[0].dataMax.slice(4, 8);
+  var ob_year = newest_book[0].dataMax.slice(0, 4);
+  newest_book[0].dataMax = (ob_day + ob_month + ob_year).replace(' ', '');
 %>
 
 <%
-  minMaxDate.min.data = minMaxDate.min.data.slice(0,11).replace(/-/g, '/');
-  var ob_day = minMaxDate.min.data.slice(8);
-  var ob_month = minMaxDate.min.data.slice(4, 8);
-  var ob_year = minMaxDate.min.data.slice(0, 4);
-  minMaxDate.min.data = (ob_day + ob_month + ob_year).replace(' ', '');
+  oldest_book[0].dataMin = oldest_book[0].dataMin.slice(0,11).replace(/-/g, '/');
+  var ob_day = oldest_book[0].dataMin.slice(8);
+  var ob_month = oldest_book[0].dataMin.slice(4, 8);
+  var ob_year = oldest_book[0].dataMin.slice(0, 4);
+  oldest_book[0].dataMin = (ob_day + ob_month + ob_year).replace(' ', '');
 %>
 
 
@@ -118,8 +118,7 @@
     </div>
 </div>
 
-
-<!-- PREÇO x ESTRELAS -->
+<!-- PRICE x STARS -->
 <div class="left-sided-chart">
     <div id="chartPriStr" class="left-chart-class"></div>
 
@@ -127,38 +126,38 @@
         <div class="cnt-card cnt-c1">
             <span>PUBLICAÇÃO MAIS RECENTE</span>
 
-            <p class="cnt-card-p1"><%= minMaxDate.max.name%></p>
-            <p class="cnt-card-p2"><span><%= minMaxDate.max.data%></span></p>
+            <p class="cnt-card-p1"><%= newest_book[0].proName %></p>
+            <p class="cnt-card-p2"><span><%= newest_book[0].dataMax %></span></p>
         </div>
 
         <div class="cnt-card cnt-c2">
             <span>PUBLICAÇÃO MAIS ANTIGA</span>
 
-            <p class="cnt-card-p1"><%= minMaxDate.min.name%></p>
-            <p class="cnt-card-p2"><span><%= minMaxDate.min.data%></span></p>
+            <p class="cnt-card-p1"><%= oldest_book[0].proName %></p>
+            <p class="cnt-card-p2"><span><%= oldest_book[0].dataMin %></span></p>
         </div>
     </div>
 </div>
 
 
 <div class="equal-charts">
-    <!-- PREÇO x CATEGORIA -->
+    <!-- PRICE x BOOK -->
     <div id="chartPriCat" class="equal-chart"></div>
 
-    <!-- PRODUTO x CATEGORIA -->
-    <div id="chartProCat" class="equal-chart"></div>
+    <!-- REVIEW x BOOK -->
+    <div id="chartMostRev" class="equal-chart"></div>
 </div>
 
 
 <!-- PAGE NAV -->
 <div class="pageBtnDiv">
     <div class="BtnDiv BtnDivLeft">
-      <a href="/visao_geral_3"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
+      <a href="/infantil_3"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link" data-rotate="180deg"></span> </a>
     </div>
 
-    <a href="/visao_geral" class="otPages"> <h6>1</h6> </a>
-    <a href="/visao_geral_2" class="otPages"> <h6>2</h6> </a>
-    <a href="/visao_geral_3" class="otPages"> <h6>3</h6> </a>
+    <a href="/infantil" class="otPages"> <h6>1</h6> </a>
+    <a href="/infantil_2" class="otPages"> <h6>2</h6> </a>
+    <a href="/infantil_3" class="otPages"> <h6>3</h6> </a>
   
     <div class="actPageDiv">
       <h6>4</h6>
@@ -170,59 +169,9 @@
 </div>
 
 
-<!-- Soma preço / categoria -->
+<!-- PRICE x STARS -->
 <script type="text/javascript">
-    var aux = JSON.parse(`<%- sumPriCat %>`)
-    var series = [{name: "Preço total", data: []}]
-    var categories = []
-    aux.forEach((r)=>{
-        series[0].data.push(r.data)
-        categories.push(r.name);
-    })
-
-    var options = {
-        series: series,
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        animations: {
-            enabled: true,
-            speed: 175
-        },
-        plotOptions: {
-            bar: {
-              borderRadius: 4,
-              horizontal: true,
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: categories,
-            title: {
-                text: 'Preço Total'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Categoria de Livros'
-            }
-        },
-        title: {
-            text: 'Preço Total dos Livros por Categoria'
-        }
-    };
-
-    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
-    chartPriCat.render();
-</script>
-
-
-<!-- Price x Stars -->
-<script type="text/javascript">
-    var series = `<%- seriesPriStr %>`
+    var series = `<%- hq_seriesPriStr %>`
 
     var options = {
     series: JSON.parse(series),
@@ -265,10 +214,60 @@
 </script>
 
 
-<!-- Freq produto / categoria -->
+<!-- PRICE x BOOK -->
 <script type="text/javascript">
-    var aux = JSON.parse(`<%- freqProCat %>`)
-    var series = [{name: "Total de registros", data: []}]
+    var aux = JSON.parse(`<%- hq_sumPriCat %>`)
+    var series = [{name: "Preço total", data: []}]
+    var categories = []
+    aux.forEach((r)=>{
+        series[0].data.push(r.data)
+        categories.push(r.name);
+    })
+
+    var options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        animations: {
+            enabled: true,
+            speed: 175
+        },
+        plotOptions: {
+            bar: {
+              borderRadius: 4,
+              horizontal: true,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: categories,
+            title: {
+                text: 'Preço Total'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Livro'
+            }
+        },
+        title: {
+            text: 'Livros mais caros'
+        }
+    };
+
+    var chartPriCat = new ApexCharts(document.querySelector("#chartPriCat"), options);
+    chartPriCat.render();
+</script>
+
+
+<!-- REVIEW x BOOK -->
+<script type="text/javascript">
+    var aux = JSON.parse(`<%- hq_most_book %>`)
+    var series = [{name: "Total de Registros", data: []}]
     var categories = []
     aux.forEach((r)=>{
         series[0].data.push(r.data)
@@ -302,14 +301,14 @@
         },
         yaxis: {
             title: {
-                text: 'Categoria de Livros'
+                text: 'Livro'
             }
         },
         title: {
-            text: 'Número Total de Registros por Categoria'
+            text: 'Livros mais consistentes'
         }
     };
 
-    var chartProCat = new ApexCharts(document.querySelector("#chartProCat"), options);
-    chartProCat.render();
+    var chartMostRev = new ApexCharts(document.querySelector("#chartMostRev"), options);
+    chartMostRev.render();
 </script>

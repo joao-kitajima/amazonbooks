@@ -1,15 +1,15 @@
 <!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
 <!-- CUSTOM DESIGN -->
-<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+<%- include("../../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- BIG NUMBER FORMAT -->
-<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<%- include("../../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
 <% total_sum = new Intl.NumberFormat().format(total_sum); %>
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>

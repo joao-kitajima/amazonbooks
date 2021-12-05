@@ -119,7 +119,7 @@ class IndexRoute {
 
 		
 		/* RENDER */
-		res.render("index/general", 
+		res.render("index/general/general", 
 		{
 			dateCat: dateCat,
 			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
@@ -204,7 +204,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/general2", {
+		res.render("index/general/general2", {
 			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
 			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
 			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
@@ -273,7 +273,7 @@ class IndexRoute {
 	
 
 		/* RENDER */
-		res.render("index/general3", {
+		res.render("index/general/general3", {
 			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
 			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
 			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
@@ -340,7 +340,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/general4", {
+		res.render("index/general/general4", {
 			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
 			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
 			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
@@ -462,7 +462,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/selfHelp',
+			'index/selfHelp/selfHelp',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 2 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 2 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -532,12 +532,12 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/selfHelp2", {
-			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
-			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
-			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
-			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
-			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;'),
+		res.render("index/selfHelp/selfHelp2", {
+			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 2 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 2 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+			total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 2;'),
+			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 2;'),
+			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 2;'),
 			series_reviews_page: JSON.stringify(series_reviews_page),
 			most_reviewed_book: await executar('SELECT proName, MAX(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 2    GROUP BY proName ORDER BY proReview DESC LIMIT 1;'),
             least_reviewed_book: await executar('SELECT proName, MIN(proReview) AS proReview FROM Product WHERE proReview != "N/A" AND proReview IS NOT NULL AND catCode = 2    GROUP BY proName ORDER BY proReview ASC LIMIT 1;'),
@@ -590,12 +590,12 @@ class IndexRoute {
 		
 
 		/* RENDER */
-		res.render("index/selfHelp3", {
-			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
-			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
-			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
-			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
-			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;'),
+		res.render("index/selfHelp/selfHelp3", {
+			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 2 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 2 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+			total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 2;'),
+			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 2;'),
+			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 2;'),
 			hq_seriesTyp: JSON.stringify(hq_seriesTyp),
 			hq_categoriesTyp: JSON.stringify(hq_categoriesTyp),
 			most_pages: await executar('SELECT proName, proPages FROM Product WHERE proPages != "N/A" AND proPages IS NOT NULL AND catCode = 2 GROUP BY proName ORDER BY proPages DESC LIMIT 1'),
@@ -654,12 +654,12 @@ class IndexRoute {
 		
 
 		/* RENDER */
-		res.render("index/selfHelp4", {
-			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE proCode != "N/A" AND proCode IS NOT NULL;'),
-			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
-			total_authors: await scalar('SELECT COUNT(DISTINCT autCode) FROM Author WHERE autCode != "N/A" AND autCode IS NOT NULL;'),
-			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL;'),
-			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL;'),
+		res.render("index/selfHelp/selfHelp4", {
+			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 2 AND proCode != "N/A" AND proCode IS NOT NULL;'),
+			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 2 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
+			total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 2;'),
+			total_books: await scalar('SELECT COUNT(DISTINCT proName) FROM Product WHERE proName != "N/A" AND proName IS NOT NULL AND catCode = 2;'),
+			total_publishers: await scalar('SELECT COUNT(DISTINCT proPublisher) FROM Product WHERE proPublisher != "N/A" AND proPublisher IS NOT NULL AND catCode = 2;'),
 			hq_seriesPriStr: JSON.stringify(hq_seriesPriStr),
 			newest_book: await executar('SELECT max(a.proPublishedDate) as dataMax, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 2 GROUP BY a.catCode ORDER BY dataMax DESC limit 1;'),
 			oldest_book: await executar('SELECT min(a.proPublishedDate) as dataMin, a.proName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Category c ON c.catCode = a.catCode WHERE a.proPublishedDate != "N/A" AND a.catCode = 2 GROUP BY a.catCode ORDER BY dataMin limit 1;'),
@@ -777,7 +777,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/kids',
+			'index/kids/kids',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -848,7 +848,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/kids2',
+			'index/kids/kids2',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -909,7 +909,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/kids3',
+			'index/kids/kids3',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -976,7 +976,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/kids4',
+			'index/kids/kids4',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 13 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 13 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1101,7 +1101,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/laws',
+			'index/laws/laws',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1181,7 +1181,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/laws2", {
+		res.render("index/laws/laws2", {
 			total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 			total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
 			total_authors: await scalar('SELECT COUNT(DISTINCT p.autCode) FROM Product p INNER JOIN Author a ON p.autCode = a.autCode WHERE p.autCode != "N/A" AND p.autCode IS NOT NULL AND p.catCode = 5;'),
@@ -1240,7 +1240,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/laws3',
+			'index/laws/laws3',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1307,7 +1307,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/laws4',
+			'index/laws/laws4',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 5 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 5 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1432,7 +1432,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/hqs_mangas',
+			'index/hqs_mangas/hqs_mangas',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1513,7 +1513,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/hqs_mangas2',
+			'index/hqs_mangas/hqs_mangas2',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1574,7 +1574,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/hqs_mangas3',
+			'index/hqs_mangas/hqs_mangas3',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1641,7 +1641,7 @@ class IndexRoute {
 
 		/* RENDER */
 		res.render(
-			'index/hqs_mangas4',
+			'index/hqs_mangas/hqs_mangas4',
 			{
 				total_records: await scalar('SELECT COUNT(proCode) FROM Product WHERE catCode = 4 AND proCode != "N/A" AND proCode IS NOT NULL;'),
 				total_sum: await scalar('SELECT ROUND(SUM(proPrice), 2) AS sumPrice FROM (SELECT proName, proPrice FROM Product WHERE catCode = 4 AND proPrice > 0 AND proPrice IS NOT NULL AND proPrice != "N/A" GROUP BY proName);'),
@@ -1743,7 +1743,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render('index/authors', {
+		res.render('index/authors/authors', {
 			mostConsistent: await executar(`Select a.autName, count(p.autCode) as freq FROM Product p INNER JOIN Author a ON a.autCode = p.autCode GROUP BY p.autCode ORDER by freq DESC LIMIT 1`),
 			mostReviewed: await executar(`SELECT autName, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proReview != "N/A" GROUP by a.autCode ORDER BY reviews DESC LIMIT 1;`),
 			mostAvgStar: mostAvgStar,
@@ -1791,7 +1791,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/authors2", {
+		res.render("index/authors/authors2", {
 			mostExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice DESC LIMIT 1;`),
 			leastExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, at.autName FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode INNER JOIN Author at ON at.autCode = a.autCode WHERE a.proPrice != -1 and a.proPrice != "N/A" GROUP BY a.autCode ORDER BY avgPrice LIMIT 1;`),
 			freqAut: JSON.stringify(freqAut),
@@ -1888,7 +1888,7 @@ class IndexRoute {
 		
 		
 		/* RENDER */
-		res.render("index/publishers", {
+		res.render("index/publishers/publishers", {
 			mostConsistent: await executar(`Select proPublisher, count(proPublisher) as freq FROM Product WHERE proPublisher != "N/A" GROUP BY proPublisher ORDER by freq DESC LIMIT 1;`),
 			mostReviewed: await executar(`SELECT proPublisher, sum(a.proReview) as reviews FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proReview != "N/A" and a.proPublisher != "N/A" GROUP by proPublisher ORDER BY reviews DESC LIMIT 1;`),
 			mostAvgStar: mostAvgStar,
@@ -1926,7 +1926,7 @@ class IndexRoute {
 
 
 		/* RENDER */
-		res.render("index/publishers2", {
+		res.render("index/publishers/publishers2", {
 			pubFreq: JSON.stringify(pubFreq),
 			mostExpensive: await executar(`SELECT round(avg(a.proPrice),2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != -1 and a.proPrice != "N/A" and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice DESC LIMIT 1;`),
 			leastExpensive: await executar(`SELECT round(avg(a.proPrice), 2) as avgPrice, a.proPublisher FROM Product a INNER JOIN (SELECT proName, MAX(proCode) as proCode FROM Product GROUP BY proName) AS b ON a.proName = b.proName and a.proCode = b.proCode WHERE a.proPrice != "N/A" and a.proPrice != -1 and a.proPublisher != "N/A" GROUP BY a.proPublisher ORDER BY avgPrice LIMIT 1;`),

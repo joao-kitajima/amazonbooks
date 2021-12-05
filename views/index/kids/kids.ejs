@@ -1,14 +1,14 @@
 <!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
 <!-- CUSTOM DESIGN -->
-<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+<%- include("../../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- BIG NUMBER FORMAT -->
-<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<%- include("../../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
 <% total_sum = new Intl.NumberFormat().format(total_sum); %>
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
@@ -135,17 +135,16 @@
       <h6>1</h6>
     </div>
 
-    <a href="/visao_geral_2" class="otPages"> <h6>2</h6> </a>
-    <a href="/visao_geral_3" class="otPages"> <h6>3</h6> </a>
-    <a href="/visao_geral_4" class="otPages"> <h6>4</h6> </a>
+    <a href="/infantil_2" class="otPages"> <h6>2</h6> </a>
+    <a href="/infantil_3" class="otPages"> <h6>3</h6> </a>
+    <a href="/infantil_4" class="otPages"> <h6>4</h6> </a>
   
     <div class="BtnDiv BtnDivRight">
-      <a href="/visao_geral_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+      <a href="/infantil_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
     </div>
 </div>
 
 
-<!-- DATA CHARTS -->
 <!-- date x Pos -->
 <script type="text/javascript">
     var series = JSON.parse(`<%- seriesPos %>`)
@@ -213,81 +212,82 @@
 <!-- PIE CHARTS -->
 <!--PIE rev x cat -->
 <script type="text/javascript">
-    var series = JSON.parse(`<%- pieAvgReview %>`)
-    var labels = JSON.parse(`<%- pieRevCategories %>`)
+  var series = JSON.parse(`<%- pieAvgReview %>`)
+  var labels = JSON.parse(`<%- pieRevCategories %>`)
 
-    var options = {
-        series: series,
-        chart: {
-            type: 'donut',
-            animations: {
-                enabled: true
-            }
-        },
-        title: { text: 'Média de Reviews por Categoria' },
-        legend: {
-            show: true,
-            position: 'bottom'
-        },
-        labels: labels,
-        responsive: [
-            {
-                breakpoint: 1680,
-                options: {
-                    chart: {
-                        width: '100%',
-                        height: '75%'
-                    },
-                    legend: {
-                        show: false
-                    }
+  var options = {
+      series: series,
+      chart: {
+          type: 'donut',
+          animations: {
+                    enabled: true
                 }
-            }
-        ]
-    };
+      },
+      title: { text: 'Média de Reviews por produto' },
+      legend: {
+          show: true,
+          position: 'bottom'
+      },
+      labels: labels,
+      responsive: [
+          {
+              breakpoint: 1680,
+              options: {
+                  chart: {
+                      width: '100%',
+                      height: '75%'
+                  },
+                  legend: {
+                      show: false
+                  }
+              }
+          }
+      ]
+  };
 
-    var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
-    chartPieRev.render();
+  var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
+  chartPieRev.render();
+    
+    
 </script>
-
 
 <!-- PIE pri x cat -->
 <script type="text/javascript">
 
-    var series = JSON.parse(`<%- pieAvgPrice %>`)
-    var labels = JSON.parse(`<%- piePriCategories %>`)
+  var series = JSON.parse(`<%- pieAvgPrice %>`)
+  var labels = JSON.parse(`<%- piePriCategories %>`)
 
-    var options = {
-            series: series,
-            chart: {
-                type: 'donut',
-                animations: {
+  var options = {
+          series: series,
+          chart: {
+              type: 'donut',
+              animations: {
                     enabled: true
                 }
-            },
-            legend: {
-                position: 'bottom'
-            },
-            title: { text: 'Média de Preço por Categoria' },
-            labels: labels,
-            responsive: [
-                {
-                    breakpoint: 1680,
-                    options: {
-                        chart: {
-                            width: '100%',
-                            height: '75%'
-                        },
-                        legend: {
-                            show: false
-                        }
-                    }
-                }
-            ]
-        };
+          },
+          legend: {
+              position: 'bottom'
+          },
+          title: { text: 'Média de Preço por produto' },
+          labels: labels,
+          responsive: [
+              {
+                  breakpoint: 1680,
+                  options: {
+                      chart: {
+                          width: '100%',
+                          height: '75%'
+                      },
+                      legend: {
+                          show: false
+                      }
+                  }
+              }
+          ]
+      };
 
-    var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
-    chartPiePri.render();
+  var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
+  chartPiePri.render();
 </script>
 
 

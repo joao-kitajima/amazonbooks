@@ -1,14 +1,15 @@
 <!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
 <!-- CUSTOM DESIGN -->
-<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+<%- include("../../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- BIG NUMBER FORMAT -->
-<%- include("../partials/dashboard/styles/big_numbers.ejs") %>
+<%- include("../../partials/dashboard/styles/big_numbers.ejs") %>
 <% total_records = new Intl.NumberFormat().format(total_records); %>
 <% total_sum = new Intl.NumberFormat().format(total_sum); %>
 <% total_authors = new Intl.NumberFormat().format(total_authors); %>
@@ -135,12 +136,12 @@
       <h6>1</h6>
     </div>
 
-    <a href="/infantil_2" class="otPages"> <h6>2</h6> </a>
-    <a href="/infantil_3" class="otPages"> <h6>3</h6> </a>
-    <a href="/infantil_4" class="otPages"> <h6>4</h6> </a>
+    <a href="/hqs_mangas_2" class="otPages"> <h6>2</h6> </a>
+    <a href="/hqs_mangas_3" class="otPages"> <h6>3</h6> </a>
+    <a href="/hqs_mangas_4" class="otPages"> <h6>4</h6> </a>
   
     <div class="BtnDiv BtnDivRight">
-      <a href="/infantil_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+      <a href="/hqs_mangas_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
     </div>
 </div>
 
@@ -247,9 +248,8 @@
 
   var chartPieRev = new ApexCharts(document.querySelector("#chartPieRev"), options);
   chartPieRev.render();
-    
-    
 </script>
+
 
 <!-- PIE pri x cat -->
 <script type="text/javascript">
@@ -288,61 +288,6 @@
 
   var chartPiePri = new ApexCharts(document.querySelector("#chartPiePri"), options);
   chartPiePri.render();
-</script>
-
-
-<!-- TREEMAP: TYPE x FREQ -->
-<script type="text/javascript">
-    var series = JSON.parse(`<%- treeType %>`)
-
-    var options = {
-    series: series,
-    legend: {
-    show: false
-    },
-    chart: {
-        height: '350px',
-        width: '100%',
-        type: 'treemap'
-    },
-    title: {
-        text: 'Mapa de Árvore - Frequência por Tipo de Acabamento'
-    },
-    dataLabels: {
-        enabled: true,
-        style: {
-        fontSize: '16px',
-        },
-        formatter: function(text, op) {
-        return [text, op.value]
-        },
-        offsetY: -4
-    },
-    plotOptions: {
-        treemap: {
-        enableShades: true,
-        shadeIntensity: 0.5,
-        reverseNegativeShade: true,
-        colorScale: {
-            ranges: [
-            {
-                from: -6,
-                to: 0,
-                color: '#CD363A'
-            },
-            {
-                from: 0.001,
-                to: 6,
-                color: '#52B12C'
-            }
-            ]
-        }
-        }
-    }
-    };
-
-    var chartTreeType = new ApexCharts(document.querySelector("#chartTreeType"), options);
-    chartTreeType.render();
 </script>
 
 <br />

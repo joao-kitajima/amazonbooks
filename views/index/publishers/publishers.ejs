@@ -1,12 +1,12 @@
 <!-- CHART CSS DESIGN  -->
-<%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
-<%- include("../partials/dashboard/utils/equal_chart.ejs") %>
-<%- include("../partials/dashboard/utils/left_sided_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
+<%- include("../../partials/dashboard/utils/equal_chart.ejs") %>
+<%- include("../../partials/dashboard/utils/left_sided_chart.ejs") %>
 
 
 <!-- CUSTOM DESIGN -->
-<%- include("../partials/dashboard/styles/authorsStyle.ejs") %>
-<%- include("../partials/dashboard/utils/pageBtnStyle.ejs") %>
+<%- include("../../partials/dashboard/styles/authorsStyle.ejs") %>
+<%- include("../../partials/dashboard/utils/pageBtnStyle.ejs") %>
 
 
 <!-- NUMBER FORMAT -->
@@ -30,22 +30,21 @@
 </div>
 
 
-<!-- PREÇO x AUTOR -->
 <div class="left-sided-chart">
-  <div id="chartPriAut" class="left-chart-class"></div>
+  <div id="chartPubPri" class="left-chart-class"></div>
 
   <div class="content-card">
       <div class="cnt-card cnt-c1">
-          <span>AUTOR MAIS CONSISTENTE</span>
+          <span>EDITORA MAIS CONSISTENTE</span>
 
-          <p class="cnt-card-p1"><%= mostConsistent[0].autName %></p>
+          <p class="cnt-card-p1"><%= mostConsistent[0].proPublisher %></p>
           <p class="cnt-card-p2"><span><%= mostConsistent[0].freq %></span> registros</p>
       </div>
 
       <div class="cnt-card cnt-c2">
-          <span>AUTOR COM MAIS AVALIAÇÕES</span>
+          <span>EDITORA COM MAIS AVALIAÇÕES</span>
 
-          <p class="cnt-card-p1"><%= mostReviewed[0].autName %></p>
+          <p class="cnt-card-p1"><%= mostReviewed[0].proPublisher %></p>
           <p class="cnt-card-p2"><span><%= mostReviewed[0].reviews %></span> avaliações</p>
       </div>
   </div>
@@ -63,13 +62,9 @@
   </div>
 
   <div class="BtnDiv BtnDivRight">
-    <a href="/autores_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
+    <a href="/editoras_2"> <span class="iconify pageBtn-icon" data-icon="grommet-icons:form-next-link"></span> </a>
   </div>
 </div>
-
-
-<!-- <p><b>Autor com mais quantidade média de páginas:</b> <%#= mostPages[0].autName %> com <%#= mostPages[0].avgPages %> páginas</p>
-<p><b>Autor com mais quantidade média de páginas:</b> <%#= leastPages[0].autName %> com <%#= leastPages[0].avgPages %> páginas</p> -->
 
 
 <!-- Date x rev -->
@@ -110,7 +105,7 @@ chartLinRev.render();
       chart: {
           type: 'donut'
       },
-      title: { text: 'Média de Reviews por Autor' },
+      title: { text: 'Média de Reviews por Editora' },
       legend: {
           show: true,
           position: 'bottom'
@@ -137,9 +132,9 @@ chartLinRev.render();
 </script>
 
 
-<!-- price avg x autor  -->
+<!-- price avg x pub  -->
 <script>
-    var aux = JSON.parse(`<%- avgPriAut %>`)
+    var aux = JSON.parse(`<%- pubPri %>`)
     var series = [{name: "Média de preço", data: []}]
     var categories = []
     aux.forEach((r)=>{
@@ -169,22 +164,18 @@ chartLinRev.render();
         },
         xaxis: {
           categories: categories,
-          title: {
-            text: 'Média de Preço'
-          }
+          title: { text: 'Média de Preço' },
         },
-        yaxis: {
-          title: { text: 'Autores' }
-        },
-        title: { text: 'Autores com maior média de preços' }
+        yaxis: { title: { text: 'Editoras' } },
+        title: { text: 'Editoras com maior média de preço' }
     };
 
-    var chartPriAut = new ApexCharts(document.querySelector("#chartPriAut"), options);
-    chartPriAut.render();
+    var chartPubPri = new ApexCharts(document.querySelector("#chartPubPri"), options);
+    chartPubPri.render();
 </script>
 
 
-<!-- TREEMAP: AUT x FREQ -->
+<!-- TREEMAP: PUB x FREQ -->
 <script type="text/javascript">
   var series = JSON.parse(`<%- treeType %>`)
 
@@ -199,7 +190,7 @@ chartLinRev.render();
       type: 'treemap'
   },
   title: {
-      text: 'Mapa de Árvore - Frequência por Autor'
+      text: 'Mapa de Árvore - Frequência por Editora'
   },
   dataLabels: {
       enabled: true,
@@ -237,5 +228,3 @@ chartLinRev.render();
   var chartTreeFreq = new ApexCharts(document.querySelector("#chartTreeFreq"), options);
   chartTreeFreq.render();
 </script>
-
-<br />
