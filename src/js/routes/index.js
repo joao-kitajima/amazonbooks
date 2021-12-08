@@ -1561,7 +1561,7 @@ class IndexRoute {
     }
     /* ROTA DE BUSCAS */
     async rotaBuscas(req, res) {
-        let scrapDate = 'SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND proName = ? GROUP BY proName ORDER by COUNT(proName)) ORDER BY proName, proScrapDate;';
+        let scrapDate = 'SELECT proScrapDate AS date, proPosition, proName FROM Product WHERE proName IN (SELECT proName FROM Product WHERE proPublisher != "N/A" AND proName LIKE ? GROUP BY proName ORDER by COUNT(proName)) ORDER BY proName, proScrapDate;';
         let response = await (0, amazonbooks_1.executarParam)(scrapDate, [req.body.query]);
         res.json(response);
         // let sql2 = 'SELECT * FROM Product WHERE proName = ? GROUP BY proName;';

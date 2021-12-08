@@ -2,6 +2,11 @@
 <%- include("../partials/dashboard/utils/apexcharts-frontSettings.ejs") %>
 
 
+<style type="text/css">
+	
+</style>
+
+
 <input id="search-bar-input" name="query" type="search" placeholder="Busque aqui ..." />
 
 <button onclick="searchBoxInput()" > CLIQUE PARA BUSCAR </button>
@@ -31,7 +36,7 @@
 
     function searchBoxInput() {
         axios.post('/rotaBuscas', {
-            query: searchInput.value
+            query: '%' + searchInput.value + '%'
         })
         .then(function (response) {
             console.log(response.data);
