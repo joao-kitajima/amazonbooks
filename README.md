@@ -31,7 +31,7 @@ Database management and queries testing | DB Browser for SQLite | v3.12.2
 
 #### Português
 
-> Nossa intenção com esse projeto foi retirar informações dos livros do site da Amazon a fim de estudar relações entre os dados (eg. Preço x Avaliações), analisar produtos, autores, editoras e categorias, montando visualizações com os seus respectivos dados obtidos.
+> Nossa intenção com esse projeto foi retirar informações dos livros do site da Amazon a fim de estudar relações entre os dados (ex. Preço x Avaliações), analisar produtos, autores, editoras e categorias, montando visualizações com os seus respectivos dados obtidos.
 
 ```
 O projeto foi realizado apenas com intenções de estudo.
